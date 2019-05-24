@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "eu.planlos.pcfeedback.adminpassword",
+    "type": "java.lang.String",
+    "description": "Password which is used to authenticate the admin user"
+  },
+  {
+    "name": "eu.planlos.pcfeedback.adminuser",
+    "type": "java.lang.String",
+    "description": "Username which is used to authenticate the admin user"
+  }
+]}
