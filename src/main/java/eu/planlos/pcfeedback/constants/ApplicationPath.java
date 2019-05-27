@@ -2,8 +2,9 @@ package eu.planlos.pcfeedback.constants;
 
 public class ApplicationPath {
 
+	
 	/*
-	 * PUBLIC
+	 * GLOBAL
 	 */
 	public static final String URL_HOME 						= "/";
 	public static final String URL_IMPRESSUM 					= "redirect: https://teennight.de/Impressum";
@@ -11,14 +12,18 @@ public class ApplicationPath {
 
 	public static final String RES_HOME 						= "home";
 	
+	
 	/*
 	 * PARTICIPATION
 	 */
-	public static final String URL_FEEDBACK_START 				= "/start";
+	public static final String URL_FEEDBACK_START 				= "/feedbackstart";
 	public static final String URL_FEEDBACK		 				= "/feedback";
+	public static final String URL_RESTART	 					= "/restart";
 	
 	public static final String RES_FEEDBACK_START 				= "feedbackstart";
-	public static final String RES_PARTICIPATION_QUESTIONING 	= "feedback";
+	public static final String RES_FEEDBACK 					= "feedback";
+	public static final String RES_FEEDBACK_END 				= "feedbackend";
+	
 	
 	/*
 	 * LOGIN
@@ -28,12 +33,15 @@ public class ApplicationPath {
 	public static final String URL_LOGOUT						= "/logout";
 
 	public static final String RES_LOGIN_FORM					= "loginform";
+	
+	
 	/*
 	 * ADMINISTRATION
 	 */
-	public static final String URL_ADMIN						= "admin/config";
-	public static final String URL_ADMIN_RATINGOBJECTS			= "admin/ratingobjects";
-	public static final String URL_ADMIN_EXPORT					= "admin/export";
+	public static final String URL_ADMIN						= "/admin";
+	public static final String URL_ADMIN_CONFIG					= "/admin/config"; //TODO
+	public static final String URL_ADMIN_RATINGOBJECTS			= "/admin/ratingobjects";
+	public static final String URL_ADMIN_EXPORT					= "/admin/export";
 
 
 	/*

@@ -26,9 +26,8 @@ public class FeedbackStartController {
 		Participant participant = new Participant();
 		model.addAttribute(participant);
 		
-		model.addAttribute("FEEDBACKSTART_ACTION", ApplicationPath.URL_FEEDBACK_START);
-		
-		mfs.fill(model);
+		mfs.fillStartFeedback(model);
+		mfs.fillGlobal(model);
 		
 		return ApplicationPath.RES_FEEDBACK_START;
 	}
@@ -38,9 +37,8 @@ public class FeedbackStartController {
 		
 		if(bindingResult.hasErrors()) {
 			
-			model.addAttribute("FEEDBACKSTART_ACTION", ApplicationPath.URL_FEEDBACK_START);
-			
-			mfs.fill(model);
+			mfs.fillStartFeedback(model);
+			mfs.fillGlobal(model);
 			
 			return ApplicationPath.RES_FEEDBACK_START;
 		}

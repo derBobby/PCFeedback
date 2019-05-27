@@ -16,9 +16,8 @@ public class HomeController {
 	@RequestMapping(ApplicationPath.URL_HOME)
 	public String home(Model model) {
 
-		model.addAttribute("URL_FEEDBACK_START", ApplicationPath.URL_FEEDBACK_START);
-		
-		mfs.fill(model);
+		mfs.fillStartFeedback(model);
+		mfs.fillGlobal(model);
 		
 		return ApplicationPath.RES_HOME;
 	}

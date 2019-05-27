@@ -9,6 +9,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import eu.planlos.pcfeedback.constants.ApplicationPath;
+import eu.planlos.pcfeedback.constants.ApplicationRole;
 import eu.planlos.pcfeedback.service.LoginAuthenticationSuccessHandler;
 import eu.planlos.pcfeedback.service.UserDetailsServiceImpl;
 
@@ -34,12 +35,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		//
 		http.csrf().disable()
-		
+			
+			/*
+			 * Session config
+			 */
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
 				
 			.and().authorizeRequests()
 				
+			
 				/*
 				 * PUBLIC
 				 */
@@ -51,15 +56,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(
 						ApplicationPath.URL_HOME,
 						ApplicationPath.URL_FEEDBACK_START,
-						ApplicationPath.URL_FEEDBACK,
 						ApplicationPath.URL_LOGIN_FORM,
 						ApplicationPath.URL_LOGIN,
 						ApplicationPath.URL_ERROR_DEFAULT
 					).permitAll()
+				
+				
+				/*
+				 * PARTICIPANT
+				 */
+				.antMatchers(
+						ApplicationPath.URL_FEEDBACK
+					).hasAnyRole(
+							ApplicationRole.ROLE_PARTICIPANT + ","
+						)
+						
 
 				/*
 				 * ADMIN
 				 */
+				.antMatchers(
+						ApplicationPath.URL_ADMIN + "/**"
+					).hasAnyRole(
+							ApplicationRole.ROLE_ADMIN
+						)
 				
 				
 				/*
@@ -68,7 +88,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/**")
 					.denyAll()
 					
-			// Login procedure
+			
+			/*
+			 * Login procedure
+			 */
 			.and().formLogin()
 				
 				// Overrides the default created login form site
@@ -86,14 +109,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// Which site to load after login error
 				.failureUrl(ApplicationPath.URL_LOGIN_FORM)
 										
-			// Logout procedure
+			/*
+			 * Logout procedure
+			 */
 			.and().logout()
 				.logoutUrl(ApplicationPath.URL_LOGOUT)
 				.logoutSuccessUrl(ApplicationPath.URL_HOME)
 				.invalidateHttpSession(true)
 				.clearAuthentication(true)
 				
-			// Exception handling
+			/*
+			 * Exception handling
+			 */
 			.and().exceptionHandling()
 			
 				// Use either own handler or
