@@ -5,51 +5,59 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.constants.ApplicationConfig;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
+import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 
+//TODO Loggin
 @Service
 public class RatingQuestionService {
 
+	private static final Logger logger = LoggerFactory.getLogger(RatingQuestionService.class);
+	
 	@Autowired
-	private RatingQuestionRepository ratingQuestionRepo;
+	private RatingQuestionRepository ratingQuestionRepository;
 	
-	//TODO
-//	@Autowired
-//	private ConfigurationRepository configRepo;
-	
-	public List<RatingQuestion> loadForGender(String gender) throws RatingQuestionsNotExistentException {
+	public List<RatingQuestion> loadForGender(Gender gender) throws RatingQuestionsNotExistentException {
 		
+		logger.debug("Get the ids of ratingQuestions with lowest voted count");
 		List<Integer> questionIds = chooseIdsOfLowestCountVoted(gender);
-		List<RatingQuestion> questions = ratingQuestionRepo.findAllByIdRatingQuestion(questionIds);
+		
+		logger.debug("Get the ratingQuestions with lowest voted count");
+		List<RatingQuestion> questions = ratingQuestionRepository.findByIdRatingQuestion(questionIds);
 		
 		return questions;			
 	}
 	
-	private List<Integer> chooseIdsOfLowestCountVoted(String gender) throws RatingQuestionsNotExistentException {
+	private List<Integer> chooseIdsOfLowestCountVoted(Gender gender) throws RatingQuestionsNotExistentException {
 		
+		logger.debug("Needed ratingQuestion count is: " + ApplicationConfig.NEEDED_QUESTION_COUNT);
 		Integer neededCount = ApplicationConfig.NEEDED_QUESTION_COUNT;
 		
-		//Load the minimum count of answers for pairing gender and project
-		int lowestCountVoted = getLowestVotedCount(gender);
+		logger.debug("Get the lowest number a ratingQuestion is voted for gender: " + gender.toString());
+		int lowestCount = getLowestCountRatingQuestionIsVoted(gender);
 		
+		logger.debug("Start adding ratingQuestions to result set");
 		List<Integer> newQuestionIds = new ArrayList<Integer>();
-			
 		while(newQuestionIds.size() < neededCount) {
 			
 			// Load IDs with minimum count of answers
 			// SELECT id FROM RatingQuestion WHERE countVoted = :countVoted AND Q.gender = :gender
-			List<Integer> loadedIds = ratingQuestionRepo.loadByGenderAndCountVoted(gender, lowestCountVoted);
+			logger.debug("Load all questions for lowest number voted: " + lowestCount);
+			List<Integer> loadedIds = ratingQuestionRepository.findByGenderAndCountVoted(gender.toString(), lowestCount);
 			
 			// If exact amount is found
 			if(loadedIds.size() == neededCount) {
 
-				//TODO Logger
+				logger.debug("Required count was loaded, add to result set and stop");
 				newQuestionIds.addAll(loadedIds);
 				break;
 			}
@@ -57,7 +65,7 @@ public class RatingQuestionService {
 			//If more questions are available chose random ones
 			if(loadedIds.size() > neededCount) {
 
-				//TODO Logger
+				logger.debug("More than required count was loaded, get random ratingQuestions of that list");
 				List<Integer> randomIds = getRandomQuestionIds(neededCount, loadedIds);
 				newQuestionIds.addAll(randomIds);
 				break;
@@ -66,30 +74,33 @@ public class RatingQuestionService {
 			//If not enough questions are available
 			if(loadedIds.size() < neededCount) {
 				
+				logger.debug("Lesser than required count was loaded, get new lowest number voted");
 				newQuestionIds.addAll(loadedIds);
-				lowestCountVoted = getLowestVotedCount(gender, lowestCountVoted);		
+				lowestCount = getLowestCountRatingQuestionIsVoted(gender, lowestCount);		
 			}
 		}
+		logger.debug("End of adding ratingQuestions to result set");
 		
 		return newQuestionIds;
 	}
 
-	private int getLowestVotedCount(String gender) throws RatingQuestionsNotExistentException {
-		
-		return getLowestVotedCount(gender, -1);
+	private int getLowestCountRatingQuestionIsVoted(Gender gender) throws RatingQuestionsNotExistentException {
+		return getLowestCountRatingQuestionIsVoted(gender, -1);
 	}
 	
-	private int getLowestVotedCount(String gender, int chosenCount) throws RatingQuestionsNotExistentException {
-		
+	private int getLowestCountRatingQuestionIsVoted(Gender gender, int chosenCount) throws RatingQuestionsNotExistentException {
+
+		//TODO is it really int?
 		// Get the count of the least voted question so the least voted or least+1 voted questions can be loaded  
-		// SELECT min(countVoted) FROM RatingQuestion WHERE project = :project AND countVoted > :chosenCount AND gender = :gender
-		int questionCount = ratingQuestionRepo.findMinCountVotedByCountVotedGreaterThanAndGender(chosenCount, gender);
+		int voteCount = ratingQuestionRepository.findFirstCountVotedByCountVotedGreaterThanAndGenderOrderByCountVotedAsc(chosenCount, gender.toString());
 		
-		if(questionCount == 0) {
-			throw new RatingQuestionsNotExistentException();
+		if(voteCount == 0) {
+			//TODO message needed?
+			logger.debug("Whoopsie Doopsie");
+			throw new RatingQuestionsNotExistentException("Whoopsie Doopsie");
 		}
 			
-		return questionCount;
+		return voteCount;
 	}
 	
 	/**
@@ -100,6 +111,7 @@ public class RatingQuestionService {
 	 */
 	private List<Integer> getRandomQuestionIds(int neededCount, List<Integer> questionIds) {
 
+		logger.debug("Shuffle question ids in list");
 		Collections.shuffle(questionIds);
 
 		List<Integer> newQuestionIds = new ArrayList<Integer>();
@@ -107,11 +119,32 @@ public class RatingQuestionService {
 
 		while(neededCount > 0) {
 			
-			Integer randomQuestion = questionIdsIterator.next();
+			int randomQuestion = questionIdsIterator.next();
 			newQuestionIds.add(randomQuestion);
 			neededCount--;
+			
+			logger.debug("Added question id from shuffled list: " + randomQuestion);
 		}
 		
 		return newQuestionIds;
 	}
+
+	//TODO does this work? :D
+	@Transactional
+	public void saveFeedback(List<RatingQuestion> ratingQuestionList) {
+
+		logger.debug("Save feedback to database");
+		
+		for(RatingQuestion ratingQuestion : ratingQuestionList) {
+
+			long idRatingQuestion = ratingQuestion.getIdRatingQuestion();
+			int votesOne = ratingQuestion.getVotesOne();
+			int votesTwo = ratingQuestion.getVotesTwo();
+			
+			logger.debug("Save ratingQuestion id=" + idRatingQuestion + " with votesOne=" + votesOne + " votesTwo=" + votesTwo);
+			
+			ratingQuestionRepository.addVotes(idRatingQuestion, votesOne, votesTwo);
+		}	
+	}
+	
 }

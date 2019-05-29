@@ -97,6 +97,11 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-csv</artifactId>
+		    <version>1.6</version>
+		</dependency>
 		
 		<!-- Webjars -->
 		<dependency>
@@ -130,9 +135,7 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
-<!-- 		
-			<scope>test</scope>
--->
+			<!-- <scope>test</scope> -->
 		</dependency>
 	</dependencies>
 

@@ -38,10 +38,10 @@ public class ApplicationPath {
 	/*
 	 * ADMINISTRATION
 	 */
-	public static final String URL_ADMIN						= "/admin";
+	public static final String URL_ADMIN						= "/admin"; //TODO
 	public static final String URL_ADMIN_CONFIG					= "/admin/config"; //TODO
-	public static final String URL_ADMIN_RATINGOBJECTS			= "/admin/ratingobjects";
-	public static final String URL_ADMIN_EXPORT					= "/admin/export";
+	public static final String URL_ADMIN_RATINGOBJECTS			= "/admin/ratingobjects"; //TODO
+	public static final String URL_ADMIN_EXPORT					= "/admin/export"; //TODO
 
 
 	/*

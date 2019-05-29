@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 
@@ -30,7 +31,7 @@ public class RatingQuestionFactory {
 				ratingQuestionM.setVotesOne(0);
 				ratingQuestionM.setVotesTwo(0);
 				ratingQuestionM.setCountVoted(0);
-				ratingQuestionM.setGender("männlich");
+				ratingQuestionM.setGender(Gender.MALE);
 				ratingQuestionM.setObjectOne(ratingObjectOne);
 				ratingQuestionM.setObjectTwo(ratingObjectTwo);
 				
@@ -40,7 +41,7 @@ public class RatingQuestionFactory {
 				ratingQuestionW.setVotesOne(0);
 				ratingQuestionW.setVotesTwo(0);
 				ratingQuestionW.setCountVoted(0);
-				ratingQuestionW.setGender("weiblich");
+				ratingQuestionW.setGender(Gender.FEMALE);
 				ratingQuestionW.setObjectOne(ratingObjectOne);
 				ratingQuestionW.setObjectTwo(ratingObjectTwo);
 

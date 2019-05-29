@@ -30,7 +30,7 @@ public class RatingQuestion implements Serializable {
 	private long idRatingQuestion;
 	
 	@Column(name="gender", nullable=false)
-	private String gender;
+	private Gender gender;
 
 	@Column(name="votesOne", nullable=false)
 	private int votesOne;
@@ -60,11 +60,11 @@ public class RatingQuestion implements Serializable {
 		this.idRatingQuestion = idRatingQuestion;
 	}
 
-	public String getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 

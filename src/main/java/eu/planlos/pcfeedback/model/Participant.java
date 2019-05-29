@@ -16,7 +16,9 @@ import javax.validation.constraints.NotBlank;
 @Table(
 		uniqueConstraints={
 			@UniqueConstraint(columnNames = {"idParticipant"}),
-			@UniqueConstraint(columnNames = {"prename", "name", "gender"}),
+			@UniqueConstraint(columnNames = {"prename", "name"}),
+			@UniqueConstraint(columnNames = {"email"}),
+			@UniqueConstraint(columnNames = {"mobile"}),
 })
 public class Participant implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -44,7 +46,7 @@ public class Participant implements Serializable{
 	
 	@Column(nullable=false)
 	@NotBlank
-	private String gender;
+	private Gender gender;
 	
 	@Column(nullable=false)
 	@NotBlank
@@ -82,7 +84,7 @@ public class Participant implements Serializable{
 		this.email = email;
 	}
 
-	public String getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
@@ -94,7 +96,7 @@ public class Participant implements Serializable{
 		return mobile;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 
