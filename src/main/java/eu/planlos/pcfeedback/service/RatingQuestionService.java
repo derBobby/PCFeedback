@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import eu.planlos.pcfeedback.constants.ApplicationConfig;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
+import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 
@@ -147,4 +148,52 @@ public class RatingQuestionService {
 		}	
 	}
 	
+	public List<RatingQuestion> create(List<?> ratingObjectListOne) {
+		
+		List<RatingQuestion> ratingQuestions = new ArrayList<RatingQuestion>();
+		
+		for (Iterator<?> ratingObjectsOneIterator = ratingObjectListOne.iterator(); ratingObjectsOneIterator.hasNext();) {
+			
+			RatingObject ratingObjectOne = (RatingObject) ratingObjectsOneIterator.next();
+			
+			for (Iterator<?> ratingObjectsTwoIterator = ratingObjectListOne.iterator(); ratingObjectsTwoIterator.hasNext();) {
+				
+				RatingObject ratingObjectTwo = (RatingObject) ratingObjectsTwoIterator.next();
+
+				if(ratingObjectOne.equals(ratingObjectTwo)) break;
+				
+				RatingQuestion ratingQuestionM = new RatingQuestion();
+				ratingQuestionM.setVotesOne(0);
+				ratingQuestionM.setVotesTwo(0);
+				ratingQuestionM.setCountVoted(0);
+				ratingQuestionM.setGender(Gender.MALE);
+				ratingQuestionM.setObjectOne(ratingObjectOne);
+				ratingQuestionM.setObjectTwo(ratingObjectTwo);
+				
+				ratingQuestions.add(ratingQuestionM);
+				
+				RatingQuestion ratingQuestionW = new RatingQuestion();
+				ratingQuestionW.setVotesOne(0);
+				ratingQuestionW.setVotesTwo(0);
+				ratingQuestionW.setCountVoted(0);
+				ratingQuestionW.setGender(Gender.FEMALE);
+				ratingQuestionW.setObjectOne(ratingObjectOne);
+				ratingQuestionW.setObjectTwo(ratingObjectTwo);
+
+				ratingQuestions.add(ratingQuestionW);
+
+			}
+		}
+		return ratingQuestions;
+	}
+	
+	public int maxQuestionCountForNumberOfRatingObjects(int existingRatingItems) {
+		
+		int possibleQuestionCount = 0;
+		for(int i=0; i<existingRatingItems; i++) {
+			possibleQuestionCount+=i;
+		}
+		
+		return possibleQuestionCount;
+	}
 }

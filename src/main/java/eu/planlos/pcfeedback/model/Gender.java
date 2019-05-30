@@ -1,19 +1,20 @@
 package eu.planlos.pcfeedback.model;
 
-public enum Gender {
-	MALE(0, "männlich"), FEMALE(1, "weiblich");
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-	private long id;
+@Entity
+public enum Gender {
+	MALE("männlich"), FEMALE("weiblich");
+
+	@Id
+	@SuppressWarnings("unused")
+	private long idGender;
 	private String gender;
 
-	private Gender(long id, String gender) {
-		this.id = id;
+	private Gender(String gender) {
+		this.idGender = ordinal();
 		this.gender = gender;
-	}
-	
-	//TODO necessary or is ordinal() enough?
-	public long getId() {
-		return this.id;
 	}
 
 	public String toString() {

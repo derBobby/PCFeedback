@@ -10,25 +10,30 @@
 	            	<div class="card-header"></div>
 		            <div class="card-block p-3">
 						<div class="form-group">
-							<label th:for="prename">Vorname</label>
+							<label th:for="prename">Mein Vorname</label>
 							<input th:field="*{prename}" class="form-control" />
 							<span th:errors="*{prename}" class="text-warning"></span>
                  		</div>
                  		
 						<div class="form-group">
-							<label th:for="name">Nachname</label>
+							<label th:for="name">Mein Nachname</label>
 							<input th:field="*{name}" class="form-control" />
 							<span th:errors="*{name}" class="text-warning"></span>
                  		</div>
                  		
 						<div class="form-group">
-							<label th:for="mobile">Mobile Nummmer</label>
+							<label th:for="gender">Ich bin:</label>
+	                 		<input th:field="*{gender}" type="checkbox" checked data-toggle="toggle" data-on="<i class='fas fa-venus'></i> W" data-off="<i class='fas fa-mars'></i> M">
+                 		</div>
+                 		
+						<div class="form-group">
+							<label th:for="mobile">Meine Handynummmer</label>
 							<input th:field="*{mobile}" class="form-control" />
 							<span th:errors="*{mobile}" class="text-warning"></span>
                  		</div>
                  		
 						<div class="form-group">
-							<label th:for="email">Email</label>
+							<label th:for="email">Meine Emailadresse</label>
 							<input th:field="*{email}" class="form-control" />
 							<span th:errors="*{email}" class="text-warning"></span>
                  		</div>

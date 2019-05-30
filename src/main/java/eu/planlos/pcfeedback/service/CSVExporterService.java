@@ -77,8 +77,8 @@ public class CSVExporterService {
 			String prename = participant.getPrename();
 			String name = participant.getName();
 			Gender gender = participant.getGender();
-			String participationDate = participant.getParticipationDate();
-
+			String participationDate = participant.getformattedParticipationDateString();
+			
 			List<Object> participantRecord = new ArrayList<Object>();
 			participantRecord.add(prename);
 			participantRecord.add(name);

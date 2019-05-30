@@ -1,6 +1,9 @@
 package eu.planlos.pcfeedback.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -11,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
+
+import eu.planlos.pcfeedback.constants.ApplicationConfig;
 
 @Entity
 @Table(
@@ -50,8 +55,19 @@ public class Participant implements Serializable{
 	
 	@Column(nullable=false)
 	@NotBlank
-	private String participationDate;
+	private LocalDateTime participationDate;
 
+	public Participant() {}
+
+	public Participant(String prename, String name, String email, String mobile, Gender gender) {
+		setPrename(prename);
+		setName(name);
+		setEmail(email);
+		setMobile(mobile);
+		setGender(gender);
+		setParticipationDate();
+	}
+	
 	public long getIdParticipant() {
 		return idParticipant;
 	}
@@ -100,12 +116,18 @@ public class Participant implements Serializable{
 		this.gender = gender;
 	}
 
-	public String getParticipationDate() {
+	public LocalDateTime getParticipationDate() {
 		return participationDate;
 	}
 
-	public void setParticipationDate(String participationDate) {
-		this.participationDate = participationDate;
+	public String getformattedParticipationDateString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		return participationDate.format(formatter);
+	}
+
+	public void setParticipationDate() {
+		ZoneId timeZone = ZoneId.of(ApplicationConfig.TIME_ZONE);
+		this.participationDate = LocalDateTime.now(timeZone);
 	}
 	
 	/*
