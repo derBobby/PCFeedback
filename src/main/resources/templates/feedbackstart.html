@@ -23,7 +23,7 @@
                  		
 						<div class="form-group">
 							<label th:for="gender">Ich bin:</label>
-	                 		<input th:field="*{gender}" type="checkbox" checked data-toggle="toggle" data-on="<i class='fas fa-venus'></i> W" data-off="<i class='fas fa-mars'></i> M">
+	                 		<input th:field="*{gender}" type="checkbox" th:value="*{gender}" checked data-toggle="toggle" data-on="<i class='fas fa-venus'></i> W" data-off="<i class='fas fa-mars'></i> M">
                  		</div>
                  		
 						<div class="form-group">
