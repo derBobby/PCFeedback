@@ -22,9 +22,10 @@ public class ParticipantService {
 		// Throws exception if participant is already existing
 		exists(participant);
 		logger.debug("Participant does not exist, saving: " + participant.toString());
+		participant.setParticipationDate();
 		
+		logger.debug("Saving participant: " + participant.toString());
 		participantRepository.save(participant);
-		logger.debug("Participant saved");
 	}
 
 	public boolean exists(Participant participant) throws ParticipantAlreadyExistsException {

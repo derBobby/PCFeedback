@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import eu.planlos.pcfeedback.constants.ApplicationConfig;
 
@@ -50,11 +51,10 @@ public class Participant implements Serializable{
 	private String mobile;
 	
 	@Column(nullable=false)
-	@NotBlank
+	@NotNull
 	private Gender gender;
 	
 	@Column(nullable=false)
-	@NotBlank
 	private LocalDateTime participationDate;
 
 	public Participant() {}
