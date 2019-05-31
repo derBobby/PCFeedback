@@ -13,8 +13,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import eu.planlos.pcfeedback.constants.ApplicationParticipant;
 import eu.planlos.pcfeedback.constants.ApplicationRole;
 
 @Service
@@ -30,17 +32,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String loginName) throws UsernameNotFoundException {
+
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		List<GrantedAuthority> authoritiesList = new ArrayList<>();
 		
 		if(loginName.equals(adminUser)) {
-			logger.debug("Login fehlgeschlagen. Angegebener Benutzer: " + loginName);
-			throw new UsernameNotFoundException("Login fehlgeschlagen.");
+			logger.debug("Erstelle Benutzer aus Konfiguration: " + loginName + " (" + ApplicationRole.ROLE_ADMIN + ")");
+			authoritiesList.add(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN));
+			return new User(loginName, bCryptPasswordEncoder.encode(adminPassword), authoritiesList);
 		}
 		
-		List<GrantedAuthority> authoritiesList = new ArrayList<>();
-		authoritiesList.add(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN));
+		if(loginName.equals(ApplicationParticipant.PARTICIPANT_NAME)) {
+			logger.debug("Erstelle Benutzer aus Konfiguration: " + loginName + " (" + ApplicationRole.ROLE_PARTICIPANT + ")");
+			authoritiesList.add(new SimpleGrantedAuthority(ApplicationRole.ROLE_PARTICIPANT));
+			return new User(loginName, bCryptPasswordEncoder.encode(ApplicationParticipant.PARTICIPANT_PASSWORD), authoritiesList);
+		}
 		
-		logger.debug("Erstelle Benutzer aus Konfiguration: " + loginName + " (" + ApplicationRole.ROLE_ADMIN + ")");
-		
-		return new User(loginName, adminPassword, authoritiesList);
+		logger.debug("Login fehlgeschlagen. Angegebener Benutzer: " + loginName);
+		throw new UsernameNotFoundException("Login fehlgeschlagen.");
 	}
 }

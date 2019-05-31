@@ -67,8 +67,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				 */
 				.antMatchers(
 						ApplicationPath.URL_FEEDBACK
-					).hasAnyAuthority(
-							ApplicationRole.ROLE_PARTICIPANT + ","
+					).hasAnyRole(
+							ApplicationRole.ROLE_PARTICIPANT
 						)
 						
 

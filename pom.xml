@@ -69,6 +69,7 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
 		</dependency>
+		
 		<!-- Automatic restart of app, if changes in code occur -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -93,10 +94,6 @@
 
 
 		<!-- Own -->
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
-		</dependency>
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-csv</artifactId>
