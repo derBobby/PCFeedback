@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-5">
+   	        <div class="card mb-3">
+	            <div class="card-header"></div>
+	            <div class="card-block p-0">
+					<!-- Page Content -->
+					<div class="col-lg-12 text-center mb-5">
+						<h1 class="mt-5" th:inline="text">[[${errorTitle}]] - [[${statusCode}]]</h1>
+						<p class="lead">Bleibt nur schmollen! ¯\_(ツ)_/¯</p>
+						<p class="lead">Und vielleicht den Fehler zu melden?</p>
+						<div th:remove="tag" th:if="${errorMessage}" class="table-responsive">
+							<table class="table table-bordered table-hover table-striped m-0 text-left ">
+								<tr>
+									<td>Message</td><td th:inline="text"><pre>[[${errorMessage}]]</pre></td>
+								</tr>
+								<tr>
+									<td>Exception</td><td th:inline="text"><pre>[[${errorException}]]</pre></td>
+								</tr>
+								<tr>
+									<td>Stack</td><td th:inline="text"><pre>[[${errorTrace}]]</pre></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+	            </div>
+	            <div class="card-footer">
+	            	&nbsp;
+	            </div>			
+			</div>	
+		</main>
+	    <footer th:replace="template :: footer"></footer>		
+	</body>
+</html>

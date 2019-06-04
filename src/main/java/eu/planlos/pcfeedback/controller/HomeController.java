@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.pcfeedback.constants.ApplicationPath;
+import eu.planlos.pcfeedback.service.ModelFillerService;
 
 @Controller
 public class HomeController {
@@ -16,6 +17,7 @@ public class HomeController {
 	@RequestMapping(ApplicationPath.URL_HOME)
 	public String home(Model model) {
 
+		mfs.fillAnonymous(model);
 		mfs.fillStartFeedback(model);
 		mfs.fillGlobal(model);
 		

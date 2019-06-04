@@ -20,6 +20,12 @@ import javax.persistence.UniqueConstraint;
 public class RatingObject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Required for JPA and reflection stuff.
+	 */
+	public RatingObject() {
+	}
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="idRatingObject", unique=true, nullable=false)
@@ -29,7 +35,6 @@ public class RatingObject implements Serializable {
 	private String name;
 
 	public RatingObject(String name) {
-		
 		this.name = name;
 	}
 
@@ -38,7 +43,6 @@ public class RatingObject implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		
 		return name;
 	}
 	

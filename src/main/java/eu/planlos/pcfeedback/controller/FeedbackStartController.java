@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -23,8 +22,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.pcfeedback.constants.ApplicationParticipant;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
@@ -32,6 +31,7 @@ import eu.planlos.pcfeedback.constants.SessionAttribute;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistsException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 
 @Controller
@@ -45,7 +45,7 @@ public class FeedbackStartController {
 	@Autowired
 	private ParticipantService participantService;
 
-	@GetMapping(path = ApplicationPath.URL_FEEDBACK_START)
+	@RequestMapping(path = ApplicationPath.URL_FEEDBACK_START)
 	public String feedbackStart(Model model) {
 
 		Participant participant = new Participant("A", "B", "ab@example.com", "123", Gender.FEMALE);
@@ -84,11 +84,11 @@ public class FeedbackStartController {
 		 * 
 		 */
 		logger.debug("Adding role_participant to security context");
-//		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_PARTICIPANT");
+		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_PARTICIPANT");
 		List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-//		authorityList.add(authority);
+		authorityList.add(authority);
 	    User user = new User(ApplicationParticipant.PARTICIPANT_NAME, ApplicationParticipant.PARTICIPANT_PASSWORD, authorityList);
-	    Authentication auth = new UsernamePasswordAuthenticationToken(user, null, new ArrayList<GrantedAuthority>());
+	    Authentication auth = new UsernamePasswordAuthenticationToken(user, null, authorityList);
 	    SecurityContextHolder.getContext().setAuthentication(auth);
 	    /*
 		 * 

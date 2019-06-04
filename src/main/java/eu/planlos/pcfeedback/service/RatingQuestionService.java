@@ -18,7 +18,7 @@ import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 
-//TODO Loggin
+//TODO Logging
 @Service
 public class RatingQuestionService {
 
@@ -29,60 +29,56 @@ public class RatingQuestionService {
 	
 	public List<RatingQuestion> loadForGender(Gender gender) throws RatingQuestionsNotExistentException {
 		
-		logger.debug("Get the ids of ratingQuestions with lowest voted count");
-		List<Integer> questionIds = chooseIdsOfLowestCountVoted(gender);
-		
 		logger.debug("Get the ratingQuestions with lowest voted count");
-		List<RatingQuestion> questions = ratingQuestionRepository.findByIdRatingQuestion(questionIds);
-		
-		return questions;			
+		List<RatingQuestion> ratingQuestions = chooseLowestVotedCount(gender);
+				
+		return ratingQuestions;			
 	}
 	
-	private List<Integer> chooseIdsOfLowestCountVoted(Gender gender) throws RatingQuestionsNotExistentException {
+	private List<RatingQuestion> chooseLowestVotedCount(Gender gender) throws RatingQuestionsNotExistentException {
 		
 		logger.debug("Needed ratingQuestion count is: " + ApplicationConfig.NEEDED_QUESTION_COUNT);
 		Integer neededCount = ApplicationConfig.NEEDED_QUESTION_COUNT;
 		
 		logger.debug("Get the lowest number a ratingQuestion is voted for gender: " + gender.toString());
-		int lowestCount = getLowestCountRatingQuestionIsVoted(gender);
+		int lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender);
 		
 		logger.debug("Start adding ratingQuestions to result set");
-		List<Integer> newQuestionIds = new ArrayList<Integer>();
-		while(newQuestionIds.size() < neededCount) {
+		List<RatingQuestion> usedQuestions = new ArrayList<>();
+		while(usedQuestions.size() < neededCount) {
 			
 			// Load IDs with minimum count of answers
-			// SELECT id FROM RatingQuestion WHERE countVoted = :countVoted AND Q.gender = :gender
-			logger.debug("Load all questions for lowest number voted: " + lowestCount);
-			List<Integer> loadedIds = ratingQuestionRepository.findByGenderAndCountVoted(gender.toString(), lowestCount);
+			logger.debug("Load all questions for lowest number voted: " + lowestVotedCount);
+			List<RatingQuestion> loadedQuestions = ratingQuestionRepository.findByGenderAndCountVoted(gender, lowestVotedCount);
 			
 			// If exact amount is found
-			if(loadedIds.size() == neededCount) {
+			if(loadedQuestions.size() == neededCount) {
 
 				logger.debug("Required count was loaded, add to result set and stop");
-				newQuestionIds.addAll(loadedIds);
+				usedQuestions.addAll(loadedQuestions);
 				break;
 			}
 			
 			//If more questions are available chose random ones
-			if(loadedIds.size() > neededCount) {
+			if(loadedQuestions.size() > neededCount) {
 
 				logger.debug("More than required count was loaded, get random ratingQuestions of that list");
-				List<Integer> randomIds = getRandomQuestionIds(neededCount, loadedIds);
-				newQuestionIds.addAll(randomIds);
+				List<RatingQuestion> randomQuestions = getRandomQuestionIds(neededCount, loadedQuestions);
+				usedQuestions.addAll(randomQuestions);
 				break;
 			}
 						
 			//If not enough questions are available
-			if(loadedIds.size() < neededCount) {
+			if(loadedQuestions.size() < neededCount) {
 				
 				logger.debug("Lesser than required count was loaded, get new lowest number voted");
-				newQuestionIds.addAll(loadedIds);
-				lowestCount = getLowestCountRatingQuestionIsVoted(gender, lowestCount);		
+				usedQuestions.addAll(loadedQuestions);
+				lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender, lowestVotedCount);		
 			}
 		}
 		logger.debug("End of adding ratingQuestions to result set");
 		
-		return newQuestionIds;
+		return usedQuestions;
 	}
 
 	private int getLowestCountRatingQuestionIsVoted(Gender gender) throws RatingQuestionsNotExistentException {
@@ -91,43 +87,41 @@ public class RatingQuestionService {
 	
 	private int getLowestCountRatingQuestionIsVoted(Gender gender, int chosenCount) throws RatingQuestionsNotExistentException {
 
-		//TODO is it really int?
-		// Get the count of the least voted question so the least voted or least+1 voted questions can be loaded  
-		int voteCount = ratingQuestionRepository.findFirstCountVotedByCountVotedGreaterThanAndGenderOrderByCountVotedAsc(chosenCount, gender.toString());
+		// Get the count of the least voted question so the least voted or least+1 voted questions can be loaded
+		RatingQuestion lowestVotedCountQuestion = ratingQuestionRepository.findFirstByCountVotedGreaterThanAndGenderOrderByCountVotedAsc(chosenCount, gender);
 		
-		if(voteCount == 0) {
-			//TODO message needed?
-			logger.debug("Whoopsie Doopsie");
-			throw new RatingQuestionsNotExistentException("Whoopsie Doopsie");
+		if(lowestVotedCountQuestion == null) {
+			logger.error("No rating questions found with more votes than: " + chosenCount);
+			throw new RatingQuestionsNotExistentException("No rating questios found with more votes than: " + chosenCount);
 		}
-			
-		return voteCount;
+					
+		return lowestVotedCountQuestion.getCountVoted();
 	}
 	
 	/**
 	 * Method chooses randomly a given number of IDs out of the given list of more IDs
 	 * @param neededCount how many IDs do you need?
-	 * @param questionIds List of IDs from which should be chosen
+	 * @param givenQuestions List of IDs from which should be chosen
 	 * @return List of chosen random IDs
 	 */
-	private List<Integer> getRandomQuestionIds(int neededCount, List<Integer> questionIds) {
+	private List<RatingQuestion> getRandomQuestionIds(int neededCount, List<RatingQuestion> givenQuestions) {
 
 		logger.debug("Shuffle question ids in list");
-		Collections.shuffle(questionIds);
+		Collections.shuffle(givenQuestions);
 
-		List<Integer> newQuestionIds = new ArrayList<Integer>();
-		Iterator<Integer> questionIdsIterator = questionIds.iterator();
+		List<RatingQuestion> usedQuestions = new ArrayList<>();
+		Iterator<RatingQuestion> givenQuestionIterator = givenQuestions.iterator();
 
 		while(neededCount > 0) {
 			
-			int randomQuestion = questionIdsIterator.next();
-			newQuestionIds.add(randomQuestion);
+			RatingQuestion randomQuestion = givenQuestionIterator.next();
+			usedQuestions.add(randomQuestion);
 			neededCount--;
 			
 			logger.debug("Added question id from shuffled list: " + randomQuestion);
 		}
 		
-		return newQuestionIds;
+		return usedQuestions;
 	}
 
 	//TODO does this work? :D
@@ -148,43 +142,49 @@ public class RatingQuestionService {
 		}	
 	}
 	
-	public List<RatingQuestion> create(List<?> ratingObjectListOne) {
+	public void saveAll(List<RatingQuestion> ratingQuestionList) {
+		ratingQuestionRepository.saveAll(ratingQuestionList);
+	}
+	
+	public List<RatingQuestion> create(List<RatingObject> roList) {
 		
-		List<RatingQuestion> ratingQuestions = new ArrayList<RatingQuestion>();
+		List<RatingQuestion> rqList = new ArrayList<RatingQuestion>();
 		
-		for (Iterator<?> ratingObjectsOneIterator = ratingObjectListOne.iterator(); ratingObjectsOneIterator.hasNext();) {
+		for (Iterator<?> roOneIterator = roList.iterator(); roOneIterator.hasNext();) {
 			
-			RatingObject ratingObjectOne = (RatingObject) ratingObjectsOneIterator.next();
+			RatingObject roOne = (RatingObject) roOneIterator.next();
 			
-			for (Iterator<?> ratingObjectsTwoIterator = ratingObjectListOne.iterator(); ratingObjectsTwoIterator.hasNext();) {
+			for (Iterator<?> roTwoIterator = roList.iterator(); roTwoIterator.hasNext();) {
 				
-				RatingObject ratingObjectTwo = (RatingObject) ratingObjectsTwoIterator.next();
+				RatingObject roTwo = (RatingObject) roTwoIterator.next();
 
-				if(ratingObjectOne.equals(ratingObjectTwo)) break;
+				if(roOne.equals(roTwo)) break;
 				
-				RatingQuestion ratingQuestionM = new RatingQuestion();
-				ratingQuestionM.setVotesOne(0);
-				ratingQuestionM.setVotesTwo(0);
-				ratingQuestionM.setCountVoted(0);
-				ratingQuestionM.setGender(Gender.MALE);
-				ratingQuestionM.setObjectOne(ratingObjectOne);
-				ratingQuestionM.setObjectTwo(ratingObjectTwo);
+				RatingQuestion rqMale = new RatingQuestion();
+				rqMale.setVotesOne(0);
+				rqMale.setVotesTwo(0);
+				rqMale.setCountVoted(0);
+				rqMale.setGender(Gender.MALE);
+				rqMale.setObjectOne(roOne);
+				rqMale.setObjectTwo(roTwo);
 				
-				ratingQuestions.add(ratingQuestionM);
+				rqList.add(rqMale);
+				logger.debug("Created rating question: " + rqMale.getGender() + ": " + rqMale.getObjectOne().toString() + " - " + rqMale.getObjectTwo().toString());
 				
-				RatingQuestion ratingQuestionW = new RatingQuestion();
-				ratingQuestionW.setVotesOne(0);
-				ratingQuestionW.setVotesTwo(0);
-				ratingQuestionW.setCountVoted(0);
-				ratingQuestionW.setGender(Gender.FEMALE);
-				ratingQuestionW.setObjectOne(ratingObjectOne);
-				ratingQuestionW.setObjectTwo(ratingObjectTwo);
+				RatingQuestion rqFemale = new RatingQuestion();
+				rqFemale.setVotesOne(0);
+				rqFemale.setVotesTwo(0);
+				rqFemale.setCountVoted(0);
+				rqFemale.setGender(Gender.FEMALE);
+				rqFemale.setObjectOne(roOne);
+				rqFemale.setObjectTwo(roTwo);
 
-				ratingQuestions.add(ratingQuestionW);
+				rqList.add(rqFemale);
+				logger.debug("Created rating question: " + rqFemale.getGender() + ": " + rqMale.getObjectOne().toString() + " - " + rqMale.getObjectTwo().toString());
 
 			}
 		}
-		return ratingQuestions;
+		return rqList;
 	}
 	
 	public int maxQuestionCountForNumberOfRatingObjects(int existingRatingItems) {

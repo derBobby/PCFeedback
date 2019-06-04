@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.SessionAttribute;
@@ -21,6 +21,7 @@ import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 
 @Controller
@@ -29,16 +30,23 @@ public class FeedbackController {
 	private static final Logger logger = LoggerFactory.getLogger(FeedbackController.class);
 	
 	@Autowired
-	private ModelFillerService bfs;
+	private ModelFillerService mfs;
 	
 	@Autowired
 	private RatingQuestionService ratingQuestionService;
 	
-	@GetMapping(path = ApplicationPath.URL_FEEDBACK)
-	public String feedback(HttpSession session, Model model) {
+	@RequestMapping(path = ApplicationPath.URL_FEEDBACK)
+	public String feedback(Model model, HttpSession session) {
 		
 		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
 		Gender gender = participant.getGender();
+
+		if(Gender.FEMALE.equals(gender)) {
+			System.out.println("WEIBLICH :-)");
+		}
+		if(Gender.MALE.equals(gender)) {
+			System.out.println("MÄNNLICH :-)");
+		}
 		
 		List<RatingQuestion> ratingQuestions = new ArrayList<>();
 		
@@ -51,7 +59,7 @@ public class FeedbackController {
 			e.printStackTrace();
 		} 
 		
-		bfs.fillFeedback(model, ratingQuestions);
+		mfs.fillFeedback(model, ratingQuestions);
 		
 		return ApplicationPath.RES_FEEDBACK;
 	}
@@ -66,8 +74,8 @@ public class FeedbackController {
 		
 		ratingQuestionService.saveFeedback(ratingQuestionList);
 		
-		bfs.fillGlobal(model);
-		bfs.fillEndFeedback(model);
+		mfs.fillGlobal(model);
+		mfs.fillEndFeedback(model);
 		
 		return ApplicationPath.RES_FEEDBACK_END;
 	}

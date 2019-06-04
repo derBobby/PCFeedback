@@ -3,7 +3,6 @@ package eu.planlos.pcfeedback.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,6 +23,12 @@ import javax.persistence.UniqueConstraint;
 public class RatingQuestion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Required for JPA and reflection stuff.
+	 */
+	public RatingQuestion() {
+	}
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="idRatingQuestion", unique=true, nullable=false)
@@ -44,11 +49,11 @@ public class RatingQuestion implements Serializable {
 	/*
 	 * Connection
 	 */	
-	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER)//, cascade=CascadeType.ALL)
 	@JoinColumn(name="objectOne", nullable=false)
 	private RatingObject objectOne;
 	
-	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER)//, cascade=CascadeType.ALL)
 	@JoinColumn(name="objectTwo", nullable=false)
 	private RatingObject objectTwo;
 

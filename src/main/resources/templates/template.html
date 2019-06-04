@@ -30,7 +30,7 @@
 		<!-- Navigation -->		
 		<nav th:fragment="nav" class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
 		
-			<a class="navbar-brand" href="/" th:text="TEENNIGHT"></a>
+			<a class="navbar-brand" th:href="@{${URL_HOME}}" th:text="TEENNIGHT"></a>
 	
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -119,6 +119,15 @@
 		<footer th:fragment="footer">
 			<div class="container text-center text-muted">
 				<p>derBobby © 2019</p>
+				<p><a th:href="@{${URL_IMPRESSUM}}">Impressum</a> | <a th:href="@{${URL_DATENSCHUTZ}}">Datenschutz</a></p>
+			</div>
+			<div th:if="${isDevProfile}" class="container text-center text-muted">
+				<p th:text="'SESSION: ' + ${#session.getId()}"></p>
+				<p th:text="'NAME: ' + ${#authentication.name}"></p>
+				<p th:text="'PRINCIPAL: ' + ${#authentication.principal}"></p>
+				<p th:text="'CREDENTIALS: ' + ${#authentication.credentials}"></p>			
+				<p th:text="'AUTHORITIES: ' + ${#authentication.Authorities}"></p>
+				<p th:text="'DETAILS: ' + ${#authentication.details}"></p>
 			</div>
 		</footer> 
 		

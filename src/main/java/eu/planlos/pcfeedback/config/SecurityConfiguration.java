@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.ApplicationRole;
+import eu.planlos.pcfeedback.service.LoginAccessDeniedHandler;
 import eu.planlos.pcfeedback.service.LoginAuthenticationSuccessHandler;
 import eu.planlos.pcfeedback.service.UserDetailsServiceImpl;
 
@@ -24,8 +25,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private LoginAuthenticationSuccessHandler successHandler;
 	
-	//@Autowired
-	//private LoginAccessDeniedHandler deniedHandler;
+	@Autowired
+	private LoginAccessDeniedHandler deniedHandler;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -58,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						ApplicationPath.URL_FEEDBACK_START,
 						ApplicationPath.URL_LOGIN_FORM,
 						ApplicationPath.URL_LOGIN,
-						ApplicationPath.URL_ERROR_DEFAULT
+						ApplicationPath.URL_ERROR
 					).permitAll()
 				
 				
@@ -67,7 +68,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				 */
 				.antMatchers(
 						ApplicationPath.URL_FEEDBACK
-					).hasAnyRole(
+					).hasAnyAuthority(
 							ApplicationRole.ROLE_PARTICIPANT
 						)
 						
@@ -124,9 +125,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.and().exceptionHandling()
 			
 				// Use either own handler or
-				//.accessDeniedHandler(deniedHandler);
+				.accessDeniedHandler(deniedHandler);
 				// ... use this default handler
-				.accessDeniedPage(ApplicationPath.URL_ERROR_403)
+				// .accessDeniedPage(ApplicationPath.URL_ERROR)
 				;
 	}
 	

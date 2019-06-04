@@ -9,13 +9,8 @@
 	            <div class="card-block p-0">
 					<!-- Page Content -->
 					<div class="col-lg-12 text-center mb-5">
-						<h1 class="mt-5">TEENNIGHT FEEDBACK</h1>
-						<p class="lead">Willkommen im Tool zum Sammeln von Feedback für die TEENNIGHT.</p>
-						<p class="lead">Diese Webseite wird von privat bereitgestellt und dient lediglich der Entwicklung des Tools.</p>
-						<div>
-							<a th:href="@{${URL_FEEDBACK_START}}" class="btn btn-default">
-								<span class=""></span> Los gehts!
-							</a>
+						<div th:each="ratingQuestion : ${ratingQuestions}" th:object="${ratingQuestion}">
+							<p th:inline="text">A: [[*{objectOne.getName()}]] ~~~ B: [[*{objectTwo.getName()}]]</p>
 						</div>
 					</div>
 	            </div>

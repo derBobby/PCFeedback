@@ -12,6 +12,13 @@ public class ApplicationPath {
 
 	public static final String RES_HOME 						= "home";
 	
+	// ERROR
+	public static final String URL_ERROR						= "/error";
+	
+	public static final String RES_ERROR_403 					= "error_403";
+	public static final String RES_ERROR						= "error";
+	
+	
 	
 	/*
 	 * PARTICIPATION
@@ -25,8 +32,9 @@ public class ApplicationPath {
 	public static final String RES_FEEDBACK_END 				= "feedbackend";
 	
 	
+	
 	/*
-	 * LOGIN
+	 * ANONYMOUS
 	 */
 	public static final String URL_LOGIN_FORM					= "/loginform";
 	public static final String URL_LOGIN						= "/login";
@@ -34,7 +42,8 @@ public class ApplicationPath {
 
 	public static final String RES_LOGIN_FORM					= "loginform";
 	
-	
+
+
 	/*
 	 * ADMINISTRATION
 	 */
@@ -42,14 +51,4 @@ public class ApplicationPath {
 	public static final String URL_ADMIN_CONFIG					= "/admin/config"; //TODO
 	public static final String URL_ADMIN_RATINGOBJECTS			= "/admin/ratingobjects"; //TODO
 	public static final String URL_ADMIN_EXPORT					= "/admin/export"; //TODO
-
-
-	/*
-	 * ERROR
-	 */
-	public static final String URL_ERROR_403 					= "/403";
-	public static final String URL_ERROR_DEFAULT 				= "/error";
-
-	public static final String RES_ERROR_403 					= "error_403";
-	public static final String RES_ERROR_UNKNOWN				= "error_unknown";
 }
