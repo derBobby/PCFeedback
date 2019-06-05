@@ -1,5 +1,7 @@
 package eu.planlos.pcfeedback.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +18,7 @@ public class HomeController {
 	
 	@RequestMapping(ApplicationPath.URL_HOME)
 	public String home(Model model) {
-
-		mfs.fillAnonymous(model);
-		mfs.fillStartFeedback(model);
+	
 		mfs.fillGlobal(model);
 		
 		return ApplicationPath.RES_HOME;

@@ -51,7 +51,8 @@ public class FeedbackStartController {
 		Participant participant = new Participant("A", "B", "ab@example.com", "123", Gender.FEMALE);
 		model.addAttribute(participant);
 
-		return filledSite(model);
+		mfs.fillGlobal(model);
+		return ApplicationPath.RES_FEEDBACK_START;
 	}
 
 	@PostMapping(path = ApplicationPath.URL_FEEDBACK_START)
@@ -66,7 +67,8 @@ public class FeedbackStartController {
 				model.addAttribute("genderError", "darf nicht unausgewählt sein");
 			}
 			
-			return filledSite(model);
+			mfs.fillGlobal(model);
+			return ApplicationPath.RES_FEEDBACK_START;
 		}
 		logger.debug("Input from form is valid");
 
@@ -76,7 +78,9 @@ public class FeedbackStartController {
 		} catch (ParticipantAlreadyExistsException e) {
 			//TODO Show message on site that user can't be created
 			logger.debug("Participant already exists, returning to form");
-			return filledSite(model);
+
+			mfs.fillGlobal(model);
+			return ApplicationPath.RES_FEEDBACK_START;
 		}
 		logger.debug("Participant does not exist yet");
 
@@ -97,12 +101,5 @@ public class FeedbackStartController {
 		session.setAttribute(SessionAttribute.PARTICIPANT, participant);
 		
 		return "redirect:" + ApplicationPath.URL_FEEDBACK;
-	}
-
-	private String filledSite(Model model) {
-		
-		mfs.fillStartFeedback(model);
-		mfs.fillGlobal(model);
-		return ApplicationPath.RES_FEEDBACK_START;
 	}
 }

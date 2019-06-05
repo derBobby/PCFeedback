@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
+import eu.planlos.pcfeedback.model.FeedbackContainer;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 
 @Service
@@ -25,10 +26,26 @@ public class ModelFillerService implements EnvironmentAware {
 	public void fillGlobal(Model model) {
 
 		logger.debug("Preparing model for global area");
-		
 		model.addAttribute("URL_HOME", ApplicationPath.URL_HOME);
 		model.addAttribute("URL_IMPRESSUM", ApplicationPath.URL_IMPRESSUM);
 		model.addAttribute("URL_DATENSCHUTZ", ApplicationPath.URL_DATENSCHUTZ);
+
+		logger.debug("Preparing model for feedback start area");
+		model.addAttribute("URL_FEEDBACK_START", ApplicationPath.URL_FEEDBACK_START);
+		
+		logger.debug("Preparing model for anonymous area");
+		model.addAttribute("URL_LOGIN_FORM", ApplicationPath.URL_LOGIN_FORM);
+		model.addAttribute("URL_LOGIN", ApplicationPath.URL_LOGIN);
+
+		logger.debug("Preparing model for administration area");
+		model.addAttribute("URL_LOGOUT", ApplicationPath.URL_LOGOUT);
+		
+
+		logger.debug("Preparing model for feedback area");
+		model.addAttribute("URL_RESTART", ApplicationPath.URL_RESTART);
+
+		logger.debug("Preparing model for feedback end area");
+		// TODO Auto-generated method stub
 		
 		/*
 		 * URLs for DEV profile
@@ -48,27 +65,13 @@ public class ModelFillerService implements EnvironmentAware {
 		}
 	}
 
-	public void fillStartFeedback(Model model) {
-		logger.debug("Preparing model for feedback start area");
-		model.addAttribute("URL_FEEDBACK_START", ApplicationPath.URL_FEEDBACK_START);
-	}
-
-	public void fillAnonymous(Model model) {
-		logger.debug("Preparing model for anonymous area");
-		model.addAttribute("URL_LOGIN_FORM", ApplicationPath.URL_LOGIN_FORM);
-		model.addAttribute("URL_LOGIN", ApplicationPath.URL_LOGIN);
-		model.addAttribute("URL_LOGOUT", ApplicationPath.URL_LOGOUT);
+	public void fillExport(Model model, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
+		model.addAttribute("rqListMale", rqListMale);
+		model.addAttribute("rqListFemale", rqListFemale);
 	}
 	
-	public void fillFeedback(Model model, List<RatingQuestion> ratingQuestions) {
-		logger.debug("Preparing model for feedback area");
-		model.addAttribute("ratingQuestions", ratingQuestions);
-		model.addAttribute("URL_RESTART", ApplicationPath.URL_RESTART);
-	}
-
-	public void fillEndFeedback(Model model) {
-		logger.debug("Preparing model for feedback end area");
-		// TODO Auto-generated method stub
+	public void fillFeedback(Model model, FeedbackContainer feedbackContainer) {
+		model.addAttribute("feedbackContainer", feedbackContainer);
 	}
 
 	public void fillError(Model model, int statusCode, String errorTitle, String errorMessage, Exception errorException, String errorTrace, boolean printTrace) {

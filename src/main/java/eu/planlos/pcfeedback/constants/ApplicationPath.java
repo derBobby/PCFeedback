@@ -7,8 +7,8 @@ public class ApplicationPath {
 	 * GLOBAL
 	 */
 	public static final String URL_HOME 						= "/";
-	public static final String URL_IMPRESSUM 					= "redirect: https://teennight.de/Impressum";
-	public static final String URL_DATENSCHUTZ 					= "redirect: https://teennight.de/Datenschutz";
+	public static final String URL_IMPRESSUM 					= "https://teennight.de/Impressum";
+	public static final String URL_DATENSCHUTZ 					= "https://teennight.de/Datenschutz";
 
 	public static final String RES_HOME 						= "home";
 	
@@ -50,5 +50,7 @@ public class ApplicationPath {
 	public static final String URL_ADMIN						= "/admin"; //TODO
 	public static final String URL_ADMIN_CONFIG					= "/admin/config"; //TODO
 	public static final String URL_ADMIN_RATINGOBJECTS			= "/admin/ratingobjects"; //TODO
-	public static final String URL_ADMIN_EXPORT					= "/admin/export"; //TODO
+	public static final String URL_ADMIN_EXPORTFEEDBACK					= "/admin/exportfeedback"; //TODO
+	
+	public static final String RES_ADMIN_EXPORT					= "admin/exportfeedback";
 }

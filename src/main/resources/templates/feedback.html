@@ -5,18 +5,42 @@
 		<nav th:replace="template :: nav"></nav>
 	    <main class="container pt-5">
    	        <div class="card mb-3">
-	            <div class="card-header"></div>
-	            <div class="card-block p-0">
-					<!-- Page Content -->
+	            <div class="card-header">&nbsp;</div>
+	            <div class="card-block p-3">
 					<div class="col-lg-12 text-center mb-5">
-						<div th:each="ratingQuestion : ${ratingQuestions}" th:object="${ratingQuestion}">
-							<p th:inline="text">A: [[*{objectOne.getName()}]] ~~~ B: [[*{objectTwo.getName()}]]</p>
-						</div>
+					
+		       			<form th:action="@{${URL_FEEDBACK_END}}" th:object="${feedbackContainer}" method="post">
+						
+							<div th:each="ratingQuestion, itemStat : *{ratingQuestionList}">
+
+								<div class="form-group">
+								
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+									
+										<label th:inline="text" class="btn btn-primary">
+											<input th:field="*{ratingQuestionList[__${itemStat.index}__].objectOne}" th:value="1" type="radio" name="options" id="option1" autocomplete="off" checked> [[*{ratingQuestionList[__${itemStat.index}__].objectOne.getName()}]]
+										</label>
+										
+										<label th:inline="text" class="btn btn-primary">
+											<input th:field="*{ratingQuestionList[__${itemStat.index}__].objectTwo}" th:value="2" type="radio" name="options" id="option2" autocomplete="off" checked> [[*{ratingQuestionList[__${itemStat.index}__].objectTwo.getName()}]]
+										</label>
+										
+									</div>					
+								
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<div>
+									<button type="submit" id="submit" class="btn btn-success">Feedback abgeben</button>
+								</div>
+							</div>
+						
+						</form>
+										
 					</div>
 	            </div>
-	            <div class="card-footer">
-	            	&nbsp;
-	            </div>			
+	            <div class="card-footer">&nbsp;</div>			
 			</div>	
 		</main>
 	    <footer th:replace="template :: footer"></footer>		
