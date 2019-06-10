@@ -78,7 +78,8 @@ public class FeedbackStartController {
 		} catch (ParticipantAlreadyExistsException e) {
 			//TODO Show message on site that user can't be created
 			logger.debug("Participant already exists, returning to form");
-
+			
+			model.addAttribute("PARTICIPANT_EXISTS", true);
 			mfs.fillGlobal(model);
 			return ApplicationPath.RES_FEEDBACK_START;
 		}

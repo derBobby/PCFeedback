@@ -69,12 +69,7 @@ public class SampleDataCreaterApplication implements ApplicationRunner {
 		 */
 		List<RatingQuestion> dbRqList = null;
 		
-		try {
-			dbRqList = rqs.loadForGender(Gender.MALE);
-		} catch (RatingQuestionsNotExistentException e) {
-			logger.error("Error loading rating questions");
-			throw e;
-		}
+		dbRqList = rqs.loadByGender(Gender.MALE);
 		
 		if(dbRqList != null) {
 			for(RatingQuestion rq : dbRqList) {

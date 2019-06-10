@@ -25,10 +25,19 @@ public interface RatingQuestionRepository extends CrudRepository<RatingQuestion,
 	
 	@Modifying
 	@Query("UPDATE RatingQuestion R SET "
-			+ "R.votesOne = R.votesOne + ?2, "
-			+ "R.votesTwo = R.votesTwo + ?3, "
+			+ "R.votesOne = R.votesOne + 1, "
 			+ "R.countVoted = R.countVoted + 1 "
 			+ "WHERE R.idRatingQuestion = ?1 "
 		)
-	public void addVotes(long idRatingQuestion, int votesOne, int votesTwo);
+	public void addVoteForRatingObjectTwo(long idRatingQuestion);
+	
+	@Modifying
+	@Query("UPDATE RatingQuestion R SET "
+			+ "R.votesTwo = R.votesTwo + 1, "
+			+ "R.countVoted = R.countVoted + 1 "
+			+ "WHERE R.idRatingQuestion = ?1 "
+		)
+	public void addVoteForRatingObjectOne(long idRatingQuestion);
+	
+	public List<RatingQuestion> findByGender(Gender gender);
 }

@@ -49,6 +49,11 @@
 								<input th:field="*{email}" class="form-control" />
 								<span th:errors="*{email}" class="text-warning"></span>
 							</div>
+													
+							<div th:if="${PARTICIPANT_EXISTS}" class="alert alert-danger">
+							  Name, Mailadresse oder Handynummer wird bereits verwendet.
+							</div>
+							
 							<div class="form-group">
 								<div>
 									<button type="submit" id="submit" class="btn btn-primary">Zum Feedback</button>

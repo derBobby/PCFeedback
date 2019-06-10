@@ -33,10 +33,10 @@ public class ShowFeedbackController {
 	public String showFeedback(Model model) throws RatingQuestionsNotExistentException {
 
 		logger.debug("Loading rating questions for male participants");
-		List<RatingQuestion> rqListMale = rqs.loadForGender(Gender.MALE);
+		List<RatingQuestion> rqListMale = rqs.loadByGender(Gender.MALE);
 		
 		logger.debug("Loading rating questions for female participants");
-		List<RatingQuestion> rqListFemale = rqs.loadForGender(Gender.FEMALE);
+		List<RatingQuestion> rqListFemale = rqs.loadByGender(Gender.FEMALE);
 
 		for(RatingQuestion rq : rqListMale) {
 			System.out.println(rq.getGender() + ": " + rq.getObjectOne().toString() + " - " + rq.getObjectTwo().toString());

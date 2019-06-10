@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.constants.ApplicationConfig;
+import eu.planlos.pcfeedback.controller.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.RatingObject;
@@ -27,12 +28,28 @@ public class RatingQuestionService {
 	@Autowired
 	private RatingQuestionRepository ratingQuestionRepository;
 	
-	public List<RatingQuestion> loadForGender(Gender gender) throws RatingQuestionsNotExistentException {
+	/**
+	 * Returns rating questions for the feedback process for fiven gender
+	 * @param gender
+	 * @return List<RatingQuestion>
+	 * @throws RatingQuestionsNotExistentException
+	 */
+	public List<RatingQuestion> loadForFeedbackByGender(Gender gender) throws RatingQuestionsNotExistentException {
 		
 		logger.debug("Get the ratingQuestions with lowest voted count");
 		List<RatingQuestion> ratingQuestions = chooseLowestVotedCount(gender);
 				
 		return ratingQuestions;			
+	}
+	
+	/**
+	 * Returns all rating questions for given gender
+	 * @param gender
+	 * @return List<RatingQuestion>
+	 */
+	public List<RatingQuestion> loadByGender(Gender gender) {
+		List<RatingQuestion> ratingQuestions = ratingQuestionRepository.findByGender(gender);
+		return ratingQuestions;	
 	}
 	
 	private List<RatingQuestion> chooseLowestVotedCount(Gender gender) throws RatingQuestionsNotExistentException {
@@ -126,19 +143,29 @@ public class RatingQuestionService {
 
 	//TODO does this work? :D
 	@Transactional
-	public void saveFeedback(List<RatingQuestion> ratingQuestionList) {
+	public void saveFeedback(List<RatingQuestion> ratingQuestionList) throws InvalidFeedbackException {
 
 		logger.debug("Save feedback to database");
 		
-		for(RatingQuestion ratingQuestion : ratingQuestionList) {
+		for(RatingQuestion rQ : ratingQuestionList) {
 
-			long idRatingQuestion = ratingQuestion.getIdRatingQuestion();
-			int votesOne = ratingQuestion.getVotesOne();
-			int votesTwo = ratingQuestion.getVotesTwo();
+			long idRatingQuestion = rQ.getIdRatingQuestion();			
+			RatingObject rOne = rQ.getObjectOne();
+			RatingObject rTwo = rQ.getObjectTwo();
 			
-			logger.debug("Save ratingQuestion id=" + idRatingQuestion + " with votesOne=" + votesOne + " votesTwo=" + votesTwo);
+			if(rOne != null) {
+				logger.debug("Rating question " + rQ.getIdRatingQuestion() + " got vote for " + rOne.toString());
+				ratingQuestionRepository.addVoteForRatingObjectOne(idRatingQuestion);
+				continue;
+			}
 			
-			ratingQuestionRepository.addVotes(idRatingQuestion, votesOne, votesTwo);
+			if(rTwo != null) {
+				logger.debug("Rating question " + rQ.getIdRatingQuestion() + " got vote for " + rTwo.toString());
+				ratingQuestionRepository.addVoteForRatingObjectTwo(idRatingQuestion);
+				continue;
+			}
+			
+			throw new InvalidFeedbackException();
 		}	
 	}
 	
