@@ -55,24 +55,24 @@
 						
 						<h1 class="mt-5" th:inline="text">Female rating Question result</h1>
 						
-<!-- 						<table class="table table-bordered table-hover table-striped m-0 text-left "> -->
-<!-- 							<tr> -->
-<!-- 								<th>ID Frage</th> -->
-<!-- 								<th>Summe Stimmen</th> -->
-<!-- 								<th>Objekt 1</th> -->
-<!-- 								<th>Stimmen 1</th> -->
-<!-- 								<th>Stimmen 2</th> -->
-<!-- 								<th>Objekt 2</th> -->
-<!-- 							</tr> -->
-<!-- 							<tr th:each="ratingQuestion : ${rqListFemale}" th:object="${ratingQuestion}"> -->
-<!-- 								<td th:text="*{idRatingQuestion}"></td> -->
-<!-- 								<td th:text="*{countVoted}"></td> -->
-<!-- 								<td th:text="*{objectOne.getName()}"></td> -->
-<!-- 								<td th:text="*{votesOne}"></td> -->
-<!-- 								<td th:text="*{votesTwo}"></td> -->
-<!-- 								<td th:text="*{objectTwo.getName()}"></td> -->
-<!-- 							</tr> -->
-<!-- 						</table> -->
+						<table class="table table-bordered table-hover table-striped m-0 text-left ">
+							<tr>
+								<th>ID Frage</th>
+								<th>Summe Stimmen</th>
+								<th>Objekt 1</th>
+								<th>Stimmen 1</th>
+								<th>Stimmen 2</th>
+								<th>Objekt 2</th>
+							</tr>
+							<tr th:each="ratingQuestion : ${rqListFemale}" th:object="${ratingQuestion}">
+								<td th:text="*{idRatingQuestion}"></td>
+								<td th:text="*{countVoted}"></td>
+								<td style="font-weight: bold;" th:text="*{objectOne.getName()}"></td>
+								<td th:text="*{votesOne}"></td>
+								<td th:text="*{votesTwo}"></td>
+								<td style="font-weight: bold;" th:text="*{objectTwo.getName()}"></td>
+							</tr>
+						</table>
 	
 					</div>
 	            </div>

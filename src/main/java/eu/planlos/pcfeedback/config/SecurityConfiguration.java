@@ -50,6 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(
 						"/webjars/**",
 						"/css/**",
+						"/img/**",
 						ApplicationPath.URL_AREA_PUBLIC + "**"
 					).permitAll()				
 
