@@ -13,7 +13,7 @@ import org.springframework.ui.Model;
 
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
-import eu.planlos.pcfeedback.model.FeedbackContainer;
+import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 
 @Service
@@ -65,13 +65,10 @@ public class ModelFillerService implements EnvironmentAware {
 		}
 	}
 
-	public void fillExport(Model model, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
+	public void fillExport(Model model, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
+		model.addAttribute("participantList", participantList);
 		model.addAttribute("rqListMale", rqListMale);
 		model.addAttribute("rqListFemale", rqListFemale);
-	}
-	
-	public void fillFeedback(Model model, FeedbackContainer feedbackContainer) {
-		model.addAttribute("feedbackContainer", feedbackContainer);
 	}
 
 	public void fillError(Model model, int statusCode, String errorTitle, String errorMessage, Exception errorException, String errorTrace, boolean printTrace) {

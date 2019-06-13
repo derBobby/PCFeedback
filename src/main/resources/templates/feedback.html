@@ -9,25 +9,23 @@
 	            <div class="card-block p-3">
 					<div class="col-lg-12 text-center mb-5">
 					
-		       			<form th:action="@{${URL_FEEDBACK_END}}" th:object="${feedbackContainer}" method="post">
-						
-							<div th:each="ratingQuestion, itemStat : *{ratingQuestionList}">
+		       			<form th:action="@{${URL_FEEDBACK_END}}" method="post">
+							<p th:if="${ratingQuestionList != null}">YOLO</p>
 
-								<div class="form-group">
+							<div class="form-group" th:each="ratingQuestion : ${ratingQuestionList}">
+							
+								<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								
-									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label th:inline="text" class="btn btn-default">
+										<input th:name="${'feedbackMap['+ratingQuestion.idRatingQuestion+']'}" th:value="1" type="radio" autocomplete="off"> [[${ratingQuestion.objectOne.getName()}]]
+									</label>
 									
-										<label th:inline="text" class="btn btn-primary">
-											<input th:field="*{ratingQuestionList[__${itemStat.index}__].objectOne}" th:value="1" type="radio" name="options" id="option1" autocomplete="off" checked> [[*{ratingQuestionList[__${itemStat.index}__].objectOne.getName()}]]
-										</label>
-										
-										<label th:inline="text" class="btn btn-primary">
-											<input th:field="*{ratingQuestionList[__${itemStat.index}__].objectTwo}" th:value="2" type="radio" name="options" id="option2" autocomplete="off" checked> [[*{ratingQuestionList[__${itemStat.index}__].objectTwo.getName()}]]
-										</label>
-										
-									</div>					
+									<label th:inline="text" class="btn btn-primary">
+										<input th:name="${'feedbackMap['+ratingQuestion.idRatingQuestion+']'}" th:value="2" type="radio" autocomplete="off"> [[${ratingQuestion.objectTwo.getName()}]]
+									</label>
+									
+								</div>					
 								
-								</div>
 							</div>
 							
 							<div class="form-group">

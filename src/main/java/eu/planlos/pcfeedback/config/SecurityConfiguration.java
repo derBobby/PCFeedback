@@ -78,9 +78,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				 */
 				.antMatchers(
 						ApplicationPath.URL_ADMIN + "/**"
-					).hasAnyAuthority(
-							ApplicationRole.ROLE_ADMIN
-						)
+					).permitAll()
+// TODO just for debugging
+//					).hasAnyAuthority(
+//							ApplicationRole.ROLE_ADMIN
+//						)
 				
 				
 				/*

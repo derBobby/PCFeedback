@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,28 +144,26 @@ public class RatingQuestionService {
 
 	//TODO does this work? :D
 	@Transactional
-	public void saveFeedback(List<RatingQuestion> ratingQuestionList) throws InvalidFeedbackException {
+	public void saveFeedback(Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
 
 		logger.debug("Save feedback to database");
 		
-		for(RatingQuestion rQ : ratingQuestionList) {
-
-			long idRatingQuestion = rQ.getIdRatingQuestion();			
-			RatingObject rOne = rQ.getObjectOne();
-			RatingObject rTwo = rQ.getObjectTwo();
+		for(Long idRatingQuestion : feedbackMap.keySet()) {
 			
-			if(rOne != null) {
-				logger.debug("Rating question " + rQ.getIdRatingQuestion() + " got vote for " + rOne.toString());
+			int voteFor = feedbackMap.get(idRatingQuestion);
+			logger.debug("Rating question " + idRatingQuestion + " got vote for rating obejct \"" + voteFor + "\"");
+			
+			if(voteFor == 1) {
 				ratingQuestionRepository.addVoteForRatingObjectOne(idRatingQuestion);
 				continue;
 			}
 			
-			if(rTwo != null) {
-				logger.debug("Rating question " + rQ.getIdRatingQuestion() + " got vote for " + rTwo.toString());
+			if(voteFor == 2) {
 				ratingQuestionRepository.addVoteForRatingObjectTwo(idRatingQuestion);
 				continue;
 			}
 			
+			logger.error("This was an invalid vote for \"" + voteFor + "\"");
 			throw new InvalidFeedbackException();
 		}	
 	}

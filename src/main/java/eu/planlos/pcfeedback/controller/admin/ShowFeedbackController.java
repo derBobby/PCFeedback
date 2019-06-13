@@ -13,17 +13,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
+import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.service.ModelFillerService;
+import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 
 @Controller
 public class ShowFeedbackController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ShowFeedbackController.class);
+
+	@Autowired
+	private ParticipantService pService;
 	
 	@Autowired
-	private RatingQuestionService rqs;
+	private RatingQuestionService rqService;
 	
 	@Autowired
 	private ModelFillerService mfs;
@@ -32,21 +37,17 @@ public class ShowFeedbackController {
 	@RequestMapping(path = ApplicationPath.URL_ADMIN_EXPORTFEEDBACK, method = RequestMethod.GET)
 	public String showFeedback(Model model) throws RatingQuestionsNotExistentException {
 
+		logger.debug("Loading Participants");
+		List<Participant> participantList = pService.getAllParticipants();
+		
 		logger.debug("Loading rating questions for male participants");
-		List<RatingQuestion> rqListMale = rqs.loadByGender(Gender.MALE);
+		List<RatingQuestion> rqListMale = rqService.loadByGender(Gender.MALE);
 		
 		logger.debug("Loading rating questions for female participants");
-		List<RatingQuestion> rqListFemale = rqs.loadByGender(Gender.FEMALE);
-
-		for(RatingQuestion rq : rqListMale) {
-			System.out.println(rq.getGender() + ": " + rq.getObjectOne().toString() + " - " + rq.getObjectTwo().toString());
-		}
-		for(RatingQuestion rq : rqListFemale) {
-			System.out.println(rq.getGender() + ": " + rq.getObjectOne().toString() + " - " + rq.getObjectTwo().toString());
-		}
+		List<RatingQuestion> rqListFemale = rqService.loadByGender(Gender.FEMALE);
 		
 		mfs.fillGlobal(model);
-		mfs.fillExport(model, rqListMale, rqListFemale);
+		mfs.fillExport(model, participantList, rqListMale, rqListFemale);
 		
 		return ApplicationPath.RES_ADMIN_EXPORT;
 	}

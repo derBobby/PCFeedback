@@ -1,24 +1,17 @@
 package eu.planlos.pcfeedback.model;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FeedbackContainer {
+	
+	private Map<Long, Integer> feedbackMap = new HashMap<>();
 
-	private List<RatingQuestion> ratingQuestionList = null;
+	public Map<Long, Integer> getFeedbackMap() {
+		return feedbackMap;
+	}
 
-	public FeedbackContainer() {
+	public void setFeedbackMap(Map<Long, Integer> feedbackMap) {
+		this.feedbackMap = feedbackMap;
 	}
-	
-	public FeedbackContainer(List<RatingQuestion> ratingQuestionList) {
-		this.ratingQuestionList = ratingQuestionList;
-	}
-	
-	public void setRatingQuestionList(List<RatingQuestion> ratingQuestionList) {
-		this.ratingQuestionList = ratingQuestionList;
-	}
-	
-	public List<RatingQuestion> getRatingQuestionList() {
-		return ratingQuestionList;
-	}
-	
 }

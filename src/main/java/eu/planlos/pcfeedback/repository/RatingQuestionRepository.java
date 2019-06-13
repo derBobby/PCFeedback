@@ -29,7 +29,7 @@ public interface RatingQuestionRepository extends CrudRepository<RatingQuestion,
 			+ "R.countVoted = R.countVoted + 1 "
 			+ "WHERE R.idRatingQuestion = ?1 "
 		)
-	public void addVoteForRatingObjectTwo(long idRatingQuestion);
+	public int addVoteForRatingObjectTwo(long idRatingQuestion);
 	
 	@Modifying
 	@Query("UPDATE RatingQuestion R SET "
@@ -37,7 +37,7 @@ public interface RatingQuestionRepository extends CrudRepository<RatingQuestion,
 			+ "R.countVoted = R.countVoted + 1 "
 			+ "WHERE R.idRatingQuestion = ?1 "
 		)
-	public void addVoteForRatingObjectOne(long idRatingQuestion);
+	public int addVoteForRatingObjectOne(long idRatingQuestion);
 	
 	public List<RatingQuestion> findByGender(Gender gender);
 }

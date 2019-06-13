@@ -12,10 +12,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistsException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
+import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.RatingObjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 
@@ -30,16 +33,19 @@ public class SampleDataCreaterApplication implements ApplicationRunner {
 
 	@Autowired
 	private RatingObjectService ros;
+	
+	@Autowired
+	private ParticipantService ps;
 
 	@Override
-	public void run(ApplicationArguments args) throws RatingQuestionsNotExistentException {
+	public void run(ApplicationArguments args) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistsException {
 
 		initDB();
 	}
 
 	//TODO does this work? :D
 	@Transactional
-	private void initDB() throws RatingQuestionsNotExistentException {
+	private void initDB() throws RatingQuestionsNotExistentException, ParticipantAlreadyExistsException {
 
 		/*
 		 * CREATE
@@ -61,8 +67,15 @@ public class SampleDataCreaterApplication implements ApplicationRunner {
 		List<RatingQuestion> rqList = new ArrayList<>();
 		rqList.addAll(rqs.create(roList));
 
+		for(RatingQuestion rq : rqList) {
+			rq.setVotesOne(1);
+		}
+		
 		logger.debug("Saving rating question sample data");
 		rqs.saveAll(rqList);
+		
+		Participant participant = new Participant("Sample", "Sample", "Sample@example.com", "000000000", Gender.FEMALE);
+		ps.save(participant);
 		
 		/*
 		 * READ
@@ -73,7 +86,7 @@ public class SampleDataCreaterApplication implements ApplicationRunner {
 		
 		if(dbRqList != null) {
 			for(RatingQuestion rq : dbRqList) {
-				System.out.println(rq.getGender() + ": " + rq.getObjectOne().toString() + " - " + rq.getObjectTwo().toString());
+				System.out.println(rq + "(" + rq.getVotesOne() + "|"+ rq.getVotesTwo() + ")");
 			}
 		}
 	}
