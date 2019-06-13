@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.controller;
+package eu.planlos.pcfeedback.exceptions;
 
 public class InvalidFeedbackException extends Exception {
 

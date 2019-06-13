@@ -76,18 +76,5 @@ public class SampleDataCreaterApplication implements ApplicationRunner {
 		
 		Participant participant = new Participant("Sample", "Sample", "Sample@example.com", "000000000", Gender.FEMALE);
 		ps.save(participant);
-		
-		/*
-		 * READ
-		 */
-		List<RatingQuestion> dbRqList = null;
-		
-		dbRqList = rqs.loadByGender(Gender.MALE);
-		
-		if(dbRqList != null) {
-			for(RatingQuestion rq : dbRqList) {
-				System.out.println(rq + "(" + rq.getVotesOne() + "|"+ rq.getVotesTwo() + ")");
-			}
-		}
 	}
 }

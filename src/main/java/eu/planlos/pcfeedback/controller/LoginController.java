@@ -1,9 +1,5 @@
 package eu.planlos.pcfeedback.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +13,13 @@ import eu.planlos.pcfeedback.model.LoginFormContainer;
 public class LoginController {
 			
 	@GetMapping(path = ApplicationPath.URL_LOGIN_FORM)
-	public String loginpage(Model model, Authentication auth, HttpServletRequest request, @RequestParam(defaultValue = "false") boolean error) {
+	public String loginpage(Model model, @RequestParam(defaultValue = "false") boolean error) {
 		
-		prepareContent(model, auth, error);
+		prepareContent(model, error);
 		return ApplicationPath.RES_LOGIN_FORM;
 	}
 	
-	private void prepareContent(Model model, Authentication auth, boolean error) {
+	private void prepareContent(Model model, boolean error) {
 
 		if(error) {
 			model.addAttribute("error", "Login fehlgeschlagen!");

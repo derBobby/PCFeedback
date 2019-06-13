@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import eu.planlos.pcfeedback.constants.ApplicationConfig;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.SessionAttribute;
+import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistsException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.FeedbackContainer;
@@ -66,62 +66,33 @@ public class FeedbackController {
 	}
 	
 	@RequestMapping(path = ApplicationPath.URL_FEEDBACK, method = RequestMethod.POST)
-	public String feedbackSubmit(@ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) {
+	public String feedbackSubmit(@ModelAttribute FeedbackContainer fbc, HttpSession session) {
 		
 		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
 		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
 		
 		try {
 			//Throws exception because it is already catched from the other save operations
-			checkIfRatingQuestionsAreValid(feedbackMap);
 			ratingQuestionService.saveFeedback(feedbackMap);
 			participantService.save(participant);
 			
 		} catch (ParticipantAlreadyExistsException e) {
 			
 			logger.error("Participant has been created by another user while this one did the feedback");
-			// TODO Auto-generated catch block
+			// TODO Load site???
+			//mfs.fillGlobal(model);
 			e.printStackTrace();
 			
 		} catch (InvalidFeedbackException e) {
 			
 			logger.error("Something with the given feedback went wrong");
-			// TODO Auto-generated catch block
+			// TODO Load site???
+			//mfs.fillGlobal(model);
 			e.printStackTrace();
 		}
-		
-		mfs.fillGlobal(model);
-		
-		return ApplicationPath.RES_FEEDBACK_END;
-	}
 
-	private void checkIfRatingQuestionsAreValid(Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
+		session.invalidate();
 		
-		if(feedbackMap.size() != ApplicationConfig.NEEDED_QUESTION_COUNT) {
-			logger.error("Feedback HashMap does not contain needed amount of answered questions");
-			throw new InvalidFeedbackException();
-		}
-		
-		for(Long idRatingQuestion : feedbackMap.keySet()) {
-			
-			if(feedbackMap.get(idRatingQuestion) == null) {
-				logger.error("Feedback HashMap is invalid");
-				throw new InvalidFeedbackException();
-			}
-		}
-		logger.debug("Feedback is valid");
-// TODO clean up
-//		for(RatingQuestion rQ : rqList) {
-//			if( (rQ.getObjectOne() == null && rQ.getObjectTwo() == null)
-//				|| (rQ.getObjectOne() != null && rQ.getObjectTwo() != null) ) {
-//				
-//				logger.error("Feedback is invalid, none or more than one rating object has a vote");
-//				throw new InvalidFeedbackException();
-//			}
-//			
-//			logger.debug("Rating question is valid, exactly one rating object has a vote");
-//		}
-//		
-//		logger.debug("Feedback is valid");
+		return "redirect:" + ApplicationPath.URL_FEEDBACK_END;
 	}
 }

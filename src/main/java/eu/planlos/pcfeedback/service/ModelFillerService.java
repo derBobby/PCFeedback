@@ -39,13 +39,8 @@ public class ModelFillerService implements EnvironmentAware {
 
 		logger.debug("Preparing model for administration area");
 		model.addAttribute("URL_LOGOUT", ApplicationPath.URL_LOGOUT);
+
 		
-
-		logger.debug("Preparing model for feedback area");
-		model.addAttribute("URL_RESTART", ApplicationPath.URL_RESTART);
-
-		logger.debug("Preparing model for feedback end area");
-		// TODO Auto-generated method stub
 		
 		/*
 		 * URLs for DEV profile
@@ -56,7 +51,7 @@ public class ModelFillerService implements EnvironmentAware {
 		if (isDevProfile) {
 			logger.debug("Preparing model for DEV profile.");
 			model.addAttribute("isDevProfile", true);
-			
+//TODO
 //			logger.debug("Preparing menu model for DEV profile.");
 //			model.addAttribute("URL_FA_TEST", URL_FA_TEST);
 //			model.addAttribute("URL_403_TEST", URL_403_TEST);

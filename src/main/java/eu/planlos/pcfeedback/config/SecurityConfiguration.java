@@ -43,53 +43,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
 				
-			.and().authorizeRequests()
-				
-			
+			.and().authorizeRequests()			
 				/*
 				 * PUBLIC
 				 */
 				.antMatchers(
 						"/webjars/**",
-						"/css/**"
-					).permitAll()
-				
-				.antMatchers(
-						ApplicationPath.URL_HOME,
-						ApplicationPath.URL_FEEDBACK_START,
-						ApplicationPath.URL_LOGIN_FORM,
-						ApplicationPath.URL_LOGIN,
-						ApplicationPath.URL_ERROR
-					).permitAll()
-				
-				
-				/*
-				 * PARTICIPANT
-				 */
-				.antMatchers(
-						ApplicationPath.URL_FEEDBACK
-					).hasAnyAuthority(
-							ApplicationRole.ROLE_PARTICIPANT
-						)
-						
+						"/css/**",
+						ApplicationPath.URL_AREA_PUBLIC + "**"
+					).permitAll()				
 
 				/*
 				 * ADMIN
 				 */
 				.antMatchers(
-						ApplicationPath.URL_ADMIN + "/**"
-					).permitAll()
-// TODO just for debugging
-//					).hasAnyAuthority(
-//							ApplicationRole.ROLE_ADMIN
-//						)
-				
+						ApplicationPath.URL_AREA_ADMIN + "**"
+					).hasAnyAuthority(
+						ApplicationRole.ROLE_ADMIN
+					)
 				
 				/*
 				 * DENY REMAINING
 				 */
-				.antMatchers("/**")
-					.denyAll()
+//				.antMatchers("/**")
+//					.denyAll()
 					
 			
 			/*

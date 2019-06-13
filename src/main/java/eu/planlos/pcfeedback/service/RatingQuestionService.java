@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.constants.ApplicationConfig;
-import eu.planlos.pcfeedback.controller.InvalidFeedbackException;
+import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.RatingObject;
@@ -148,6 +148,9 @@ public class RatingQuestionService {
 
 		logger.debug("Save feedback to database");
 		
+		// Makes sure voteFor will be 1 or 2 
+		checkIfRatingQuestionsAreValid(feedbackMap);
+		
 		for(Long idRatingQuestion : feedbackMap.keySet()) {
 			
 			int voteFor = feedbackMap.get(idRatingQuestion);
@@ -157,15 +160,31 @@ public class RatingQuestionService {
 				ratingQuestionRepository.addVoteForRatingObjectOne(idRatingQuestion);
 				continue;
 			}
-			
-			if(voteFor == 2) {
-				ratingQuestionRepository.addVoteForRatingObjectTwo(idRatingQuestion);
-				continue;
-			}
-			
-			logger.error("This was an invalid vote for \"" + voteFor + "\"");
-			throw new InvalidFeedbackException();
+			ratingQuestionRepository.addVoteForRatingObjectTwo(idRatingQuestion);
 		}	
+	}
+
+	private void checkIfRatingQuestionsAreValid(Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
+		
+		if(feedbackMap.size() != ApplicationConfig.NEEDED_QUESTION_COUNT) {
+			logger.error("Feedback HashMap is invalid: not matching needed amount of questions");
+			throw new InvalidFeedbackException();
+		}
+		
+		for(Long idRatingQuestion : feedbackMap.keySet()) {
+			
+			Integer voteFor = feedbackMap.get(idRatingQuestion);
+
+			if(voteFor == null) {
+				logger.error("Feedback HashMap is invalid: vote is null");
+				throw new InvalidFeedbackException();
+			}
+			if(voteFor != 1 && voteFor != 2) {
+				logger.error("Feedback HashMap is invalid: vote is not equal 1 or 2");
+				throw new InvalidFeedbackException();
+			}
+		}
+		logger.debug("Feedback is valid");
 	}
 	
 	public void saveAll(List<RatingQuestion> ratingQuestionList) {
