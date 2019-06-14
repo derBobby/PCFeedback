@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import eu.planlos.pcfeedback.constants.ApplicationProfile;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistsException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
@@ -23,10 +24,10 @@ import eu.planlos.pcfeedback.service.RatingObjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 
 @Component
-@Profile(value = "DEV")
-public class SampleDataCreaterApplication implements ApplicationRunner {
+@Profile(value = ApplicationProfile.REV_PROFILE)
+public class SampleREVDataCreaterApplication implements ApplicationRunner {
 
-	private static final Logger logger = LoggerFactory.getLogger(SampleDataCreaterApplication.class);
+	private static final Logger logger = LoggerFactory.getLogger(SampleREVDataCreaterApplication.class);
 
 	@Autowired
 	private RatingQuestionService rqs;
@@ -50,10 +51,10 @@ public class SampleDataCreaterApplication implements ApplicationRunner {
 		/*
 		 * CREATE
 		 */
-		RatingObject ro1 = new RatingObject("1");
-		RatingObject ro2 = new RatingObject("2");
-		RatingObject ro3 = new RatingObject("3");
-		RatingObject ro4 = new RatingObject("4");
+		RatingObject ro1 = new RatingObject("Pizza");
+		RatingObject ro2 = new RatingObject("Kaffee");
+		RatingObject ro3 = new RatingObject("Auf's Maul");
+		RatingObject ro4 = new RatingObject("Weltfrieden");
 
 		List<RatingObject> roList = new ArrayList<>();
 		roList.add(ro1);
@@ -68,13 +69,16 @@ public class SampleDataCreaterApplication implements ApplicationRunner {
 		rqList.addAll(rqs.create(roList));
 
 		for(RatingQuestion rq : rqList) {
-			rq.setVotesOne(1);
+			rq.setVotesOne(2);
 		}
 		
 		logger.debug("Saving rating question sample data");
 		rqs.saveAll(rqList);
+
+		Participant participantM = new Participant("Ein", "Typ", "typ@example.com", "000000000", Gender.MALE);
+		ps.save(participantM);
 		
-		Participant participant = new Participant("Sample", "Sample", "Sample@example.com", "000000000", Gender.FEMALE);
-		ps.save(participant);
+		Participant participantW = new Participant("Eine", "Typin", "typin@example.com", "1111111111", Gender.FEMALE);
+		ps.save(participantW);
 	}
 }
