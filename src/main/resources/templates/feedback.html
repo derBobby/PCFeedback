@@ -8,19 +8,18 @@
 	            <div class="card-header">&nbsp;</div>
 	            <div class="card-block p-3">
 					<div class="col-lg-12 text-center mb-5">
-					
+							
 		       			<form th:action="@{${URL_FEEDBACK_END}}" method="post">
-							<p th:if="${ratingQuestionList != null}">YOLO</p>
 
 							<div class="form-group" th:each="ratingQuestion : ${ratingQuestionList}">
 							
 								<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								
-									<label th:inline="text" class="btn btn-default">
+									<label th:inline="text" class="btn btn-light">
 										<input th:name="${'feedbackMap['+ratingQuestion.idRatingQuestion+']'}" th:value="1" type="radio" autocomplete="off"> [[${ratingQuestion.objectOne.getName()}]]
 									</label>
 									
-									<label th:inline="text" class="btn btn-primary">
+									<label th:inline="text" class="btn btn-light">
 										<input th:name="${'feedbackMap['+ratingQuestion.idRatingQuestion+']'}" th:value="2" type="radio" autocomplete="off"> [[${ratingQuestion.objectTwo.getName()}]]
 									</label>
 									

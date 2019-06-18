@@ -51,16 +51,36 @@ public class SampleREVDataCreaterApplication implements ApplicationRunner {
 		/*
 		 * CREATE
 		 */
-		RatingObject ro1 = new RatingObject("Pizza");
-		RatingObject ro2 = new RatingObject("Kaffee");
-		RatingObject ro3 = new RatingObject("Auf's Maul");
-		RatingObject ro4 = new RatingObject("Weltfrieden");
+		RatingObject ro01 = new RatingObject("gute Zeit mit Freunden haben");
+		RatingObject ro02 = new RatingObject("guter Referent im Opening");
+		RatingObject ro03 = new RatingObject("gutes Programm im Opening");
+		RatingObject ro04 = new RatingObject("gute \"Zeitraum\" Leute, die für mich beten oder mir zuhören");
+		RatingObject ro05 = new RatingObject("gute kreative Aktionen die Nacht über");
+		RatingObject ro06 = new RatingObject("gute actionreiche Aktionen die Nacht über");
+		RatingObject ro07 = new RatingObject("neue Aktionen die Nacht über");
+		RatingObject ro08 = new RatingObject("coole Stationsmitarbeiter");
+		RatingObject ro09 = new RatingObject("gute Band");
+		RatingObject ro10 = new RatingObject("gute Seminare");
+		RatingObject ro11 = new RatingObject("gute chillige Aktionen die Nacht über");
+		RatingObject ro12 = new RatingObject("gutes Essen / guter Megabrunch");
+		RatingObject ro13 = new RatingObject("neue Leute kennenlernen");
+		RatingObject ro14 = new RatingObject("gute Zeit mit meinen Teenkreis Mitarbeitern haben");
 
 		List<RatingObject> roList = new ArrayList<>();
-		roList.add(ro1);
-		roList.add(ro2);
-		roList.add(ro3);
-		roList.add(ro4);
+		roList.add(ro01);
+		roList.add(ro02);
+		roList.add(ro03);
+		roList.add(ro04);
+		roList.add(ro05);
+		roList.add(ro06);
+		roList.add(ro07);
+		roList.add(ro08);
+		roList.add(ro09);
+		roList.add(ro10);
+		roList.add(ro11);
+		roList.add(ro12);
+		roList.add(ro13);
+		roList.add(ro14);
 		
 		logger.debug("Saving rating object sample data");
 		ros.saveAll(roList);
