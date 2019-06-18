@@ -46,6 +46,12 @@ public class FeedbackController {
 	public String feedback(Model model, HttpSession session) {
 		
 		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
+		
+		if(participant == null) {
+			logger.debug("User tried to access feedback without entering participation info");
+			return "redirect:" + ApplicationPath.URL_FEEDBACK_START;
+		}
+		
 		Gender gender = participant.getGender();
 		
 		List<RatingQuestion> ratingQuestionList = new ArrayList<>();
@@ -90,8 +96,6 @@ public class FeedbackController {
 			//mfs.fillGlobal(model);
 			e.printStackTrace();
 		}
-
-		session.invalidate();
 		
 		return "redirect:" + ApplicationPath.URL_FEEDBACK_END;
 	}
