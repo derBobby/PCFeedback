@@ -49,80 +49,33 @@
 				<!-- alignment to the right -->
 				<div class="navbar-nav ml-auto">
 	
-				<!-- START admin -->
-					<div class="nav-item dropdown">
-					
-						<div sec:authorize="isAuthenticated()" th:remove="tag">
-						
-							<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" data-target="#accountDropdown" aria-controls="accountDropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="fas fa-user-circle fa-fw"></i>
-								<span>Account</span>
-							</a>
-							<div id="accountDropdown" class="dropdown-menu navbar-right" aria-labelledby="accountDropdown">
-								<a class="dropdown-item disabled" href="#"><i class="fas fa-list-ul"></i> Aktivitäten</a>
-								<div class="dropdown-divider"></div>
-								<h6 class="dropdown-header">Account</h6>
-								<a class="dropdown-item disabled" href="#"><i class="fas fa-user-circle fa-fw"></i> Einstellungen</a>
-								
-							</div>
-						</div>
-						
-						<div sec:authorize="hasAnyRole('ROLE_ADMIN')" th:remove="tag">		
-								
-							<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" data-target="#adminDropdown" aria-controls="adminDropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="fas fa-user-tie"></i>
-								<span>Administration</span>
-							</a>
-							<div id="adminDropdown" class="dropdown-menu" aria-labelledby="adminDropdown">
-								<h6 class="dropdown-header">Administration</h6>
-								<a class="dropdown-item" th:href="@{${URL_TEAMLISTFULL}}"><i class="fas fa-users"></i> Alle Gruppen</a>
-								<a class="dropdown-item" th:href="@{${URL_PARTICIPANTLISTFULL}}"><i class="fas fa-child"></i> Alle Teilnehmer</a>
-								<a class="dropdown-item" th:href="@{${URL_MEETINGLISTFULL}}"><i class="far fa-calendar-alt"></i> Alle Termine</a>
-								<a class="dropdown-item" th:href="@{${URL_USERLIST}}"><i class="fas fa-user"></i> Benutzer</a>
-								<div class="dropdown-divider"></div>
-								<h6 class="dropdown-header">Übersichten</h6>
-								<a class="dropdown-item" th:href="@{${URL_PERMISSIONSOVERVIEW}}"><i class="far fa-eye"></i> Übersicht Berechtigungen</a>
-								<a class="dropdown-item" th:href="@{${URL_PARTICIPATIONOVERVIEW}}"><i class="far fa-eye"></i> Übersicht Teilnahmen</a>
-								<div th:if="${isDevProfile}" th:remove="tag" class="container text-center text-muted">
-									<h6 class="dropdown-header">Debugging</h6>
-									<a class="dropdown-item" th:href="@{${URL_FA_TEST}}"><i class="fas fa-vial"></i> Font Awesome Test</a>
-									<a class="dropdown-item" th:href="@{${URL_BS_TEST}}"><i class="fas fa-vial"></i> Bootstrap Test</a>
-									<a class="dropdown-item" th:href="@{${URL_403_TEST}}"><i class="fas fa-vial"></i> Always 403 Test</a>
-									<a class="dropdown-item" th:href="@{${URL_500_TEST}}"><i class="fas fa-vial"></i> Always 500 Test</a>
-								</div>
-							</div>
-						</div>
-						
-					</div>
-				<!-- END admin -->
-
-				
-
-				
-				<!-- START public-->
+				<!-- START MENU-->
 					<div class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"  data-target="#infoDropdown" aria-controls="infoDropdown" aria-haspopup="true" aria-expanded="false">
 							<i class="fas fa-info-circle"></i>
-							<span>Info</span>
 						</a>
+						
 						<div id="infoDropdown" class="dropdown-menu" aria-labelledby="infoDropdown">
+						
 							<a class="dropdown-item" th:href="@{${URL_IMPRESSUM}}"><i class="fas fa-globe"></i> Impressum</a>
 							<a class="dropdown-item" th:href="@{${URL_DATENSCHUTZ}}"><i class="fas fa-mask"></i> Datenschutz</a>
+							
 							<div class="dropdown-divider"></div>
+							
 							<div sec:authorize="isAnonymous()" th:remove="tag">
 								<a th:href="@{${URL_LOGIN_FORM}}" class="dropdown-item"><i class="fas fa-sign-in-alt"></i> Login</a>
+							</div>
+							
+							<div sec:authorize="hasAnyRole('ROLE_ADMIN')" th:remove="tag">
+								<a th:href="@{${URL_ADMIN_EXPORTFEEDBACK}}" class="dropdown-item"><i class="fas fa-users"></i> Ergebnisse</a>
 							</div>
 							<div sec:authorize="hasAnyRole('ROLE_ADMIN')" th:remove="tag">
 								<a th:href="@{${URL_LOGOUT}}" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
 							</div>
-							<div sec:authorize="hasAnyRole('ROLE_PARTICIPANT')" th:remove="tag">
-								<a th:href="@{${URL_LOGOUT}}" class="dropdown-item"><i class="fas fa-times"></i> Abbrechen</a>
-							</div>
+							
 						</div>
 					</div>
-				<!-- END public-->
-								
-
+				<!-- END MENU-->
 
 				</div>
 			</div>
