@@ -11,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.ApplicationRole;
 import eu.planlos.pcfeedback.service.LoginAccessDeniedHandler;
-import eu.planlos.pcfeedback.service.LoginAuthenticationSuccessHandler;
 import eu.planlos.pcfeedback.service.UserDetailsServiceImpl;
 
 //Schalter für SimpleAuthentication
@@ -22,8 +21,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsServiceImpl userDetailService;
 
-	@Autowired
-	private LoginAuthenticationSuccessHandler successHandler;
+//	@Autowired
+//	private LoginAuthenticationSuccessHandler successHandler;
 	
 	@Autowired
 	private LoginAccessDeniedHandler deniedHandler;
@@ -81,11 +80,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// Names URL on which Spring should listen itself
 				.loginProcessingUrl(ApplicationPath.URL_LOGIN)
 				
-				// Controller
-				.successHandler(successHandler)
+				// NOT USED - Controller for successfull login
+				//.successHandler(successHandler)
 				
-				// NOT USED - would redirect to given page, but is handled by 
-				//.defaultSuccessUrl(defaultSuccessUrl, alwaysUse)
+				// Redirects to given page 
+				.defaultSuccessUrl(ApplicationPath.URL_ADMIN_EXPORTFEEDBACK, false)
 				
 				// Which site to load after login error
 				.failureUrl(ApplicationPath.URL_LOGIN_FORM)

@@ -37,8 +37,11 @@ public class SamplePRODDataCreaterApplication implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistsException {
 
 		if(rqs.loadByGender(Gender.MALE).size() == 0) {
+			logger.debug("Initializing database");
 			initDB();
+			return;
 		}
+		logger.debug("No db init necessary. Already rating questions existing");
 	}
 
 	//TODO does this work? :D
