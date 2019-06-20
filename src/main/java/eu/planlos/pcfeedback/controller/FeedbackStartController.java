@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.SessionAttribute;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistsException;
-import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
@@ -38,7 +37,7 @@ public class FeedbackStartController {
 	@RequestMapping(path = ApplicationPath.URL_FEEDBACK_START)
 	public String feedbackStart(Model model) {
 		//TODO dependent on the profile create participant. Factory?
-		Participant participant = new Participant("" + System.currentTimeMillis(), "" + System.currentTimeMillis(), System.currentTimeMillis() +"@example.com", "" + System.currentTimeMillis(), Gender.MALE);
+		Participant participant = participantService.createParticipantForForm();
 		model.addAttribute(participant);
 
 		mfs.fillGlobal(model);
@@ -54,7 +53,7 @@ public class FeedbackStartController {
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
 			if(genderFieldError != null) {
 				logger.debug("Gender is missing");
-				model.addAttribute("genderError", "darf nicht unausgewählt sein");
+				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
 			
 			mfs.fillGlobal(model);
