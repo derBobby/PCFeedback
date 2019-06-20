@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.SessionAttribute;
-import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistsException;
+import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
@@ -36,14 +36,15 @@ public class FeedbackStartController {
 
 	@RequestMapping(path = ApplicationPath.URL_FEEDBACK_START)
 	public String feedbackStart(Model model) {
-		//TODO dependent on the profile create participant. Factory?
-		Participant participant = participantService.createParticipantForForm();
-		model.addAttribute(participant);
 
+		Participant participant = participantService.createParticipantForForm();
+		
+		model.addAttribute(participant);
 		mfs.fillGlobal(model);
+		
 		return ApplicationPath.RES_FEEDBACK_START;
 	}
-
+	
 	@PostMapping(path = ApplicationPath.URL_FEEDBACK_START)
 	public String feedbackStartSubmit(HttpSession session, @Valid Participant participant, BindingResult bindingResult, Model model) throws ServletException, IOException {
 
@@ -52,6 +53,7 @@ public class FeedbackStartController {
 			
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
 			if(genderFieldError != null) {
+				//TODO how to handle properly?
 				logger.debug("Gender is missing");
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
@@ -59,23 +61,28 @@ public class FeedbackStartController {
 			mfs.fillGlobal(model);
 			return ApplicationPath.RES_FEEDBACK_START;
 		}
+		
 		logger.debug("Input from form is valid");
 
 		try {
-			participantService.exists(participant);
 			
-		} catch (ParticipantAlreadyExistsException e) {
-			//TODO Show message on site that user can't be created
+			logger.debug("Trying to save participant: " + participant.toString());
+			participantService.save(participant);
+			
+			logger.debug("Adding participant to session");
+			session.setAttribute(SessionAttribute.PARTICIPANT, participant);
+			
+			logger.debug("Proceeding to feedback site");
+			return "redirect:" + ApplicationPath.URL_FEEDBACK;
+			
+		} catch (ParticipantAlreadyExistingException e) {
+			
 			logger.debug("Participant already exists, returning to form");
 			
 			model.addAttribute("PARTICIPANT_EXISTS", true);
 			mfs.fillGlobal(model);
+			
 			return ApplicationPath.RES_FEEDBACK_START;
 		}
-		
-		logger.debug("Adding new participant to session");
-		session.setAttribute(SessionAttribute.PARTICIPANT, participant);
-		
-		return "redirect:" + ApplicationPath.URL_FEEDBACK;
 	}
 }

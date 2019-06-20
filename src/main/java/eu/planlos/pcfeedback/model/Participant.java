@@ -26,7 +26,7 @@ import eu.planlos.pcfeedback.constants.ApplicationConfig;
 			@UniqueConstraint(columnNames = {"email"}),
 			@UniqueConstraint(columnNames = {"mobile"}),
 })
-public class Participant implements Serializable{
+public class Participant implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -56,15 +56,22 @@ public class Participant implements Serializable{
 	
 	@Column(nullable=false)
 	private LocalDateTime participationDate;
+	
+	@Column
+	private boolean feedbackCompleted;
 
-	public Participant() {}
+	public Participant() {
+		setFeedbackCompleted(false);
+		setParticipationDate();
+	}
 
-	public Participant(String prename, String name, String email, String mobile, Gender gender) {
+	public Participant(String prename, String name, String email, String mobile, Gender gender, boolean feedbackCompleted) {
 		setPrename(prename);
 		setName(name);
 		setEmail(email);
 		setMobile(mobile);
 		setGender(gender);
+		setFeedbackCompleted(feedbackCompleted);
 		setParticipationDate();
 	}
 	
@@ -130,6 +137,14 @@ public class Participant implements Serializable{
 		this.participationDate = LocalDateTime.now(timeZone);
 	}
 	
+	public boolean isFeedbackCompleted() {
+		return feedbackCompleted;
+	}
+
+	public void setFeedbackCompleted(boolean feedbackCompleted) {
+		this.feedbackCompleted = feedbackCompleted;
+	}
+
 	/*
 	 * Functions
 	 */	

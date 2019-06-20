@@ -36,6 +36,7 @@ public class ModelFillerService implements EnvironmentAware {
 		
 		logger.debug("Preparing model for feedback start area");
 		model.addAttribute("URL_FEEDBACK_START", ApplicationPath.URL_FEEDBACK_START);
+		model.addAttribute("URL_FEEDBACK_SUBMIT", ApplicationPath.URL_FEEDBACK_SUBMIT);
 		
 		logger.debug("Preparing model for anonymous area");
 		model.addAttribute("URL_LOGIN_FORM", ApplicationPath.URL_LOGIN_FORM);
