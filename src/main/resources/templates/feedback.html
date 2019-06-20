@@ -5,58 +5,28 @@
 		<nav th:replace="template :: nav"></nav>
 	    <main class="container pt-3">
    	        <div class="card mb-3">
-	            <div class="card-header">&nbsp;</div>
+	            <div class="card-header text-center"><h3 class="mb-0">Wähle!</h3></div>
 	            <div class="card-block p-3">
 					<div class="col-lg-12 text-center">
 		       			<form th:action="@{${URL_FEEDBACK_END}}" method="post">
-
-
-
-
-					<div data-toggle="buttons">
-
-
-						<div class="col-lg-12">
-							<div class="col-lg-2">
-								<p>yolo</p>
-							</div>
-							<div class="col-lg-10">
-								<div class="row">
-									<div class="col-lg-6">
-									
-										<label class="btn btn-lg btn-light btn-block" style="white-space: normal;">
-											<span class="btn-label">
-												<i class="fas fa-pencil-alt"></i>
-											</span>
-											<input type="radio" name="q_answer" value="1">1 One 1One 1 One 1 One 1 One 1 One 1 One 1 One 1 One 1 One 1 One 1One 1 One 1 One 1 1 One 1 One 1 One 1 One 1 One 1 One 1 One 1One 1	
+							<p class="lead">Was ist dir während der Teennight <u>wichtiger</u>?</p>
+							<div data-toggle="buttons">
+		
+							<!-- START Questions -->
+								<div th:each="ratingQuestion : ${ratingQuestionList}">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										<label th:inline="text" class="btn btn-light">
+											<input th:name="${'feedbackMap['+ratingQuestion.idRatingQuestion+']'}" th:value="1" type="radio" autocomplete="off"> [[${ratingQuestion.objectOne.getName()}]]
 										</label>
-														
-														
-									</div>
-									<div class="col-lg-6">
-									
-										<label class="btn btn-lg btn-light btn-block" style="white-space: normal;">
-											<span class="btn-label">
-												<i class="fas fa-pencil-alt"></i>
-											</span>
-											<input type="radio" name="q_answer" value="1">1 One 1One 1 One 1 One 1 One 1 One 1 One 1 One 1 One 1 One 1 One 1One 1 One 1 One 1 1 One 1 One 1 One 1 One 1 One 1 One 1 One 1One 1	
+										<label th:inline="text" class="btn btn-light">
+											<input th:name="${'feedbackMap['+ratingQuestion.idRatingQuestion+']'}" th:value="2" type="radio" autocomplete="off"> [[${ratingQuestion.objectTwo.getName()}]]
 										</label>
-										
 									</div>
 								</div>
+							<!-- END Questions -->
+								
 							</div>
-						</div>
-						
-						
-						
-						
-					</div>
-
-
-
-
-
-							<div class="form-group">
+							<div class="form-group mb-0">
 								<div>
 									<button type="submit" id="submit" class="btn btn-success">
 										Absenden!<br /><i class="fas fa-paper-plane"></i>
