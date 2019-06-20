@@ -1,10 +1,10 @@
 package eu.planlos.pcfeedback.exceptions;
 
-public class ParticipantAlreadyExistsException extends Exception {
+public class ParticipantAlreadyExistingException extends Exception {
 
 	private static final long serialVersionUID = -1440919294196532059L;
 	
-	public ParticipantAlreadyExistsException(String message) {
+	public ParticipantAlreadyExistingException(String message) {
 		super(message);
 	}
 }

@@ -11,7 +11,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
-import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistsException;
+import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
+import eu.planlos.pcfeedback.exceptions.ParticipantHasAlreadyCompletedFeedbackException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.repository.ParticipantRepository;
@@ -26,7 +27,7 @@ public class ParticipantService implements EnvironmentAware {
 
 	private Environment environment;
 	
-	public void save(Participant participant) throws ParticipantAlreadyExistsException {
+	public void save(Participant participant) throws ParticipantAlreadyExistingException {
 
 		// Throws exception if participant is already existing
 		exists(participant);
@@ -37,21 +38,21 @@ public class ParticipantService implements EnvironmentAware {
 		participantRepository.save(participant);
 	}
 
-	public boolean exists(Participant participant) throws ParticipantAlreadyExistsException {
+	public boolean exists(Participant participant) throws ParticipantAlreadyExistingException {
 		
 		if (participantRepository.existsByPrenameAndName(participant.getPrename(), participant.getName())) {
 			logger.debug("Participant exists by prename and name");
-			throw new ParticipantAlreadyExistsException("Vor- / Nachname bereits vergeben!");
+			throw new ParticipantAlreadyExistingException("Vor- / Nachname bereits vergeben!");
 		}
 
 		if (participantRepository.existsByEmail(participant.getEmail())) {
 			logger.debug("Participant exists by email");
-			throw new ParticipantAlreadyExistsException("E-Mail bereits vergeben!");
+			throw new ParticipantAlreadyExistingException("E-Mail bereits vergeben!");
 		}
 
 		if (participantRepository.existsByMobile(participant.getMobile())) {
 			logger.debug("Participant exists by mobile");
-			throw new ParticipantAlreadyExistsException("Handynummer bereits vergeben!");
+			throw new ParticipantAlreadyExistingException("Handynummer bereits vergeben!");
 		}
 		
 		return false;
@@ -61,6 +62,7 @@ public class ParticipantService implements EnvironmentAware {
 		return (List<Participant>) participantRepository.findAll();
 	}
 	
+	//TODO Creating sample objects in production code? Better use different Services for profiles?
 	/**
 	 * Method creates participant dependent on the active profiles.
 	 * For DEV sample data is created, for non-DEV an empty participant is created
@@ -72,7 +74,7 @@ public class ParticipantService implements EnvironmentAware {
 		if(profiles.contains(ApplicationProfile.DEV_PROFILE)) {
 			
 			String text = ((Long) System.currentTimeMillis()).toString();
-			Participant participant = new Participant(text, text, text +"@example.com", text, Gender.MALE);
+			Participant participant = new Participant(text, text, text +"@example.com", text, Gender.MALE, false);
 			return participant;
 		}
 		
@@ -82,5 +84,17 @@ public class ParticipantService implements EnvironmentAware {
 	@Override
 	public void setEnvironment(Environment environment) {
 		this.environment = environment;		
+	}
+
+	public void completeFeedback(Participant participant) throws ParticipantHasAlreadyCompletedFeedbackException {
+
+		boolean hasFeedbackCompleter = participantRepository.existsByIdParticipantAndFeedbackCompleted(participant.getIdParticipant(), true);
+		
+		if(hasFeedbackCompleter) {
+			throw new ParticipantHasAlreadyCompletedFeedbackException();
+		}
+		
+		participant.setFeedbackCompleted(true);
+		participantRepository.save(participant);
 	}
 }

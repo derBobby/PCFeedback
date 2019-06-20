@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.SessionAttribute;
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
-import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistsException;
+import eu.planlos.pcfeedback.exceptions.ParticipantHasAlreadyCompletedFeedbackException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.FeedbackContainer;
 import eu.planlos.pcfeedback.model.Gender;
@@ -48,7 +48,7 @@ public class FeedbackController {
 		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
 		
 		if(participant == null) {
-			logger.debug("User tried to access feedback without entering participation info");
+			logger.debug("User tried to access feedback without entering participant details");
 			return "redirect:" + ApplicationPath.URL_FEEDBACK_START;
 		}
 		
@@ -58,10 +58,10 @@ public class FeedbackController {
 		
 		try {
 			logger.debug("Participant has gender: " + gender.toString());
-			ratingQuestionList.addAll(ratingQuestionService.loadForFeedbackByGender(gender));
+			ratingQuestionService.addRatingQuestionsForGenderToList(ratingQuestionList, gender);
 			
 		} catch (RatingQuestionsNotExistentException e) {
-			//TODO
+			//TODO Can this happen?
 			e.printStackTrace();
 		} 
 				
@@ -71,8 +71,8 @@ public class FeedbackController {
 		return ApplicationPath.RES_FEEDBACK;
 	}
 	
-	@RequestMapping(path = ApplicationPath.URL_FEEDBACK, method = RequestMethod.POST)
-	public String feedbackSubmit(@ModelAttribute FeedbackContainer fbc, HttpSession session) {
+	@RequestMapping(path = ApplicationPath.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
+	public String feedbackSubmit(@ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) {
 		
 		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
 		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
@@ -80,20 +80,30 @@ public class FeedbackController {
 		try {
 			//Throws exception because it is already catched from the other save operations
 			ratingQuestionService.saveFeedback(feedbackMap);
-			participantService.save(participant);
-			
-		} catch (ParticipantAlreadyExistsException e) {
-			
-			logger.error("Participant has been created by another user while this one did the feedback");
-			// TODO Load site???
-			//mfs.fillGlobal(model);
-			e.printStackTrace();
+			participantService.completeFeedback(participant);
 			
 		} catch (InvalidFeedbackException e) {
 			
 			logger.error("Something with the given feedback went wrong");
-			// TODO Load site???
-			//mfs.fillGlobal(model);
+			
+			List<RatingQuestion> ratingQuestionList = new ArrayList<>();
+			try {
+				
+				ratingQuestionList.addAll(ratingQuestionService.reloadForInvalidFeedback(participant.getGender(), feedbackMap));
+				
+			} catch (RatingQuestionsNotExistentException f) {
+				//TODO Can this happen?
+				f.printStackTrace();
+			}
+			
+			model.addAttribute("feedbackError", e.getMessage());
+			model.addAttribute("ratingQuestionList", ratingQuestionList);
+			model.addAttribute("chosenList", feedbackMap);
+			mfs.fillGlobal(model);
+			
+			return ApplicationPath.RES_FEEDBACK;
+		} catch (ParticipantHasAlreadyCompletedFeedbackException e) {
+			// TODO One guy tries twice to submit?
 			e.printStackTrace();
 		}
 		

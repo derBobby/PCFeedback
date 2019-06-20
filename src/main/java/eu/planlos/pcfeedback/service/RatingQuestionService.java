@@ -30,20 +30,6 @@ public class RatingQuestionService {
 	private RatingQuestionRepository ratingQuestionRepository;
 	
 	/**
-	 * Returns rating questions for the feedback process for fiven gender
-	 * @param gender
-	 * @return List<RatingQuestion>
-	 * @throws RatingQuestionsNotExistentException
-	 */
-	public List<RatingQuestion> loadForFeedbackByGender(Gender gender) throws RatingQuestionsNotExistentException {
-		
-		logger.debug("Get the ratingQuestions with lowest voted count");
-		List<RatingQuestion> ratingQuestions = chooseLowestVotedCount(gender);
-				
-		return ratingQuestions;			
-	}
-	
-	/**
 	 * Returns all rating questions for given gender
 	 * @param gender
 	 * @return List<RatingQuestion>
@@ -53,27 +39,37 @@ public class RatingQuestionService {
 		return ratingQuestions;	
 	}
 	
-	private List<RatingQuestion> chooseLowestVotedCount(Gender gender) throws RatingQuestionsNotExistentException {
-		
-		logger.debug("Needed ratingQuestion count is: " + ApplicationConfig.NEEDED_QUESTION_COUNT);
-		Integer neededCount = ApplicationConfig.NEEDED_QUESTION_COUNT;
+	/**
+	 * Returns rating questions for the feedback process for fiven gender
+	 * @param gender
+	 * @return List<RatingQuestion>
+	 * @throws RatingQuestionsNotExistentException
+	 */
+	public void addRatingQuestionsForGenderToList(List<RatingQuestion> givenQuestions, Gender gender) throws RatingQuestionsNotExistentException {
+
+		int neededCount = ApplicationConfig.NEEDED_QUESTION_COUNT;
+		logger.debug("Needed ratingQuestion count is: " + neededCount);
 		
 		logger.debug("Get the lowest number a ratingQuestion is voted for gender: " + gender.toString());
 		int lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender);
 		
 		logger.debug("Start adding ratingQuestions to result set");
-		List<RatingQuestion> usedQuestions = new ArrayList<>();
-		while(usedQuestions.size() < neededCount) {
+		System.out.println(givenQuestions.size() + "/" + neededCount);
+		while(givenQuestions.size() <= neededCount) {
 			
 			// Load IDs with minimum count of answers
 			logger.debug("Load all questions for lowest number voted: " + lowestVotedCount);
 			List<RatingQuestion> loadedQuestions = ratingQuestionRepository.findByGenderAndCountVoted(gender, lowestVotedCount);
+			loadedQuestions.removeAll(givenQuestions);
 			
+			logger.debug("Shuffle rating questions in list");
+			Collections.shuffle(loadedQuestions);
+
 			// If exact amount is found
 			if(loadedQuestions.size() == neededCount) {
 
 				logger.debug("Required count was loaded, add to result set and stop");
-				usedQuestions.addAll(loadedQuestions);
+				givenQuestions.addAll(loadedQuestions);
 				break;
 			}
 			
@@ -81,8 +77,8 @@ public class RatingQuestionService {
 			if(loadedQuestions.size() > neededCount) {
 
 				logger.debug("More than required count was loaded, get random ratingQuestions of that list");
-				List<RatingQuestion> randomQuestions = getRandomQuestionIds(neededCount, loadedQuestions);
-				usedQuestions.addAll(randomQuestions);
+				List<RatingQuestion> shortenedList = loadedQuestions.subList(0, neededCount-givenQuestions.size());
+				givenQuestions.addAll(shortenedList);
 				break;
 			}
 						
@@ -90,13 +86,11 @@ public class RatingQuestionService {
 			if(loadedQuestions.size() < neededCount) {
 				
 				logger.debug("Lesser than required count was loaded, get new lowest number voted");
-				usedQuestions.addAll(loadedQuestions);
+				givenQuestions.addAll(loadedQuestions);
 				lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender, lowestVotedCount);		
 			}
 		}
 		logger.debug("End of adding ratingQuestions to result set");
-		
-		return usedQuestions;
 	}
 
 	private int getLowestCountRatingQuestionIsVoted(Gender gender) throws RatingQuestionsNotExistentException {
@@ -110,47 +104,21 @@ public class RatingQuestionService {
 		
 		if(lowestVotedCountQuestion == null) {
 			logger.error("No rating questions found with more votes than: " + chosenCount);
-			throw new RatingQuestionsNotExistentException("No rating questios found with more votes than: " + chosenCount);
+			throw new RatingQuestionsNotExistentException("No rating questions found with more votes than: " + chosenCount);
 		}
 					
 		return lowestVotedCountQuestion.getCountVoted();
 	}
 	
-	/**
-	 * Method chooses randomly a given number of IDs out of the given list of more IDs
-	 * @param neededCount how many IDs do you need?
-	 * @param givenQuestions List of IDs from which should be chosen
-	 * @return List of chosen random IDs
-	 */
-	private List<RatingQuestion> getRandomQuestionIds(int neededCount, List<RatingQuestion> givenQuestions) {
-
-		logger.debug("Shuffle question ids in list");
-		Collections.shuffle(givenQuestions);
-
-		List<RatingQuestion> usedQuestions = new ArrayList<>();
-		Iterator<RatingQuestion> givenQuestionIterator = givenQuestions.iterator();
-
-		while(neededCount > 0) {
-			
-			RatingQuestion randomQuestion = givenQuestionIterator.next();
-			usedQuestions.add(randomQuestion);
-			neededCount--;
-			
-			logger.debug("Added question id from shuffled list: " + randomQuestion);
-		}
-		
-		return usedQuestions;
-	}
-
 	//TODO does this work? :D
 	@Transactional
 	public void saveFeedback(Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
 
-		logger.debug("Save feedback to database");
-		
 		// Makes sure voteFor will be 1 or 2 
+		logger.debug("Check if feedback is valid");
 		checkIfRatingQuestionsAreValid(feedbackMap);
 		
+		logger.debug("Save feedback to database");
 		for(Long idRatingQuestion : feedbackMap.keySet()) {
 			
 			int voteFor = feedbackMap.get(idRatingQuestion);
@@ -168,7 +136,7 @@ public class RatingQuestionService {
 		
 		if(feedbackMap.size() != ApplicationConfig.NEEDED_QUESTION_COUNT) {
 			logger.error("Feedback HashMap is invalid: not matching needed amount of questions");
-			throw new InvalidFeedbackException();
+			throw new InvalidFeedbackException("Es wurde nicht für jedes Paar eine Wahl getroffen!");
 		}
 		
 		for(Long idRatingQuestion : feedbackMap.keySet()) {
@@ -177,11 +145,11 @@ public class RatingQuestionService {
 
 			if(voteFor == null) {
 				logger.error("Feedback HashMap is invalid: vote is null");
-				throw new InvalidFeedbackException();
+				throw new InvalidFeedbackException("Ein technischer Fehler ist aufgetreten.");
 			}
 			if(voteFor != 1 && voteFor != 2) {
 				logger.error("Feedback HashMap is invalid: vote is not equal 1 or 2");
-				throw new InvalidFeedbackException();
+				throw new InvalidFeedbackException("Ein technischer Fehler ist aufgetreten.");
 			}
 		}
 		logger.debug("Feedback is valid");
@@ -232,6 +200,7 @@ public class RatingQuestionService {
 		return rqList;
 	}
 	
+	//TODO unused yet
 	public int maxQuestionCountForNumberOfRatingObjects(int existingRatingItems) {
 		
 		int possibleQuestionCount = 0;
@@ -240,5 +209,21 @@ public class RatingQuestionService {
 		}
 		
 		return possibleQuestionCount;
+	}
+
+	public List<RatingQuestion> reloadForInvalidFeedback(Gender gender, Map<Long, Integer> feedbackMap) throws RatingQuestionsNotExistentException {
+
+		List<RatingQuestion> reloadedList = (List<RatingQuestion>) ratingQuestionRepository.findAllById(feedbackMap.keySet());
+		
+		List<RatingQuestion> rqList = new ArrayList<>();
+		rqList.addAll(reloadedList);
+System.out.println("###RELOADED " + reloadedList.size());
+System.out.println("###FINAL    " + rqList.size());
+		
+		addRatingQuestionsForGenderToList(rqList, gender);
+System.out.println("###RELOADED " + reloadedList.size());
+System.out.println("###FINAL    " + rqList.size());
+		
+		return rqList;
 	}
 }

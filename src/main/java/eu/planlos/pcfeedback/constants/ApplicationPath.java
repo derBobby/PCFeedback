@@ -24,6 +24,8 @@ public class ApplicationPath {
 	 */
 	public static final String URL_HOME 						= URL_AREA_PUBLIC;
 	public static final String URL_FEEDBACK_START 				= URL_AREA_PUBLIC + "feedbackstart";
+	public static final String URL_FEEDBACK_RESTART 			= URL_AREA_PUBLIC + "feedbackrestart";
+	public static final String URL_FEEDBACK_SUBMIT 				= URL_AREA_PUBLIC + "feedbacksubmit";
 	public static final String URL_FEEDBACK		 				= URL_AREA_PUBLIC + "feedback";
 	public static final String URL_FEEDBACK_END		 			= URL_AREA_PUBLIC + "feedbackend";
 	public static final String RES_HOME 						= "home";

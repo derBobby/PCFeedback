@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
-import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistsException;
+import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.RatingObject;
@@ -34,7 +34,7 @@ public class SamplePRODDataCreaterApplication implements ApplicationRunner {
 	private RatingObjectService ros;
 	
 	@Override
-	public void run(ApplicationArguments args) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistsException {
+	public void run(ApplicationArguments args) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
 
 		if(rqs.loadByGender(Gender.MALE).size() == 0) {
 			logger.debug("Initializing database");
@@ -46,7 +46,7 @@ public class SamplePRODDataCreaterApplication implements ApplicationRunner {
 
 	//TODO does this work? :D
 	@Transactional
-	private void initDB() throws RatingQuestionsNotExistentException, ParticipantAlreadyExistsException {
+	private void initDB() throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
 
 		/*
 		 * CREATE
