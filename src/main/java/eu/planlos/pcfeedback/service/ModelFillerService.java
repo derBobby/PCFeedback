@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import eu.planlos.pcfeedback.constants.ApplicationConfig;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
 import eu.planlos.pcfeedback.model.Participant;
@@ -30,6 +31,9 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("URL_IMPRESSUM", ApplicationPath.URL_IMPRESSUM);
 		model.addAttribute("URL_DATENSCHUTZ", ApplicationPath.URL_DATENSCHUTZ);
 
+		logger.debug("Preparing model for home area");
+		model.addAttribute("NEEDED_QUESTION_COUNT", ApplicationConfig.NEEDED_QUESTION_COUNT);
+		
 		logger.debug("Preparing model for feedback start area");
 		model.addAttribute("URL_FEEDBACK_START", ApplicationPath.URL_FEEDBACK_START);
 		
