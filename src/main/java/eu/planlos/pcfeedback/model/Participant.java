@@ -57,7 +57,7 @@ public class Participant implements Serializable {
 	@Column(nullable=false)
 	private LocalDateTime participationDate;
 	
-	@Column
+	@Column(nullable=false)
 	private boolean feedbackCompleted;
 
 	public Participant() {
