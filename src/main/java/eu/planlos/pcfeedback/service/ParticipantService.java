@@ -80,6 +80,18 @@ public class ParticipantService implements EnvironmentAware {
 		
 		return new Participant();
 	}
+	
+	/**
+	 * Method creates participant dependent on the active profiles.
+	 * For DEV sample data is created, for non-DEV an empty participant is created
+	 * @return Participant dependent on active profile
+	 */
+	public Participant createParticipantForDB(Gender gender) {
+		
+		String text = ((Long) System.currentTimeMillis()).toString();
+		Participant participant = new Participant(text, text, text +"@example.com", text, gender, false);
+		return participant;
+	}
 
 	@Override
 	public void setEnvironment(Environment environment) {

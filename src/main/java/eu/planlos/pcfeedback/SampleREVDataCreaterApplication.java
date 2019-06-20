@@ -95,12 +95,10 @@ public class SampleREVDataCreaterApplication implements ApplicationRunner {
 		logger.debug("Saving rating question sample data");
 		rqs.saveAll(rqList);
 
-		Participant participantM = ps.createParticipantForForm();
-		participantM.setGender(Gender.MALE);
+		Participant participantM = ps.createParticipantForDB(Gender.MALE);
 		ps.save(participantM);
 		
-		Participant participantW = ps.createParticipantForForm();
-		participantW.setGender(Gender.FEMALE);
+		Participant participantW = ps.createParticipantForDB(Gender.FEMALE);
 		ps.save(participantW);
 	}
 }

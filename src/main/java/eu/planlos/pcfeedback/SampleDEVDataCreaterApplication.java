@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
+import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
@@ -88,13 +89,16 @@ public class SampleDEVDataCreaterApplication implements ApplicationRunner {
 		rqList.addAll(rqs.create(roList));
 
 		for(RatingQuestion rq : rqList) {
-			rq.setVotesOne(1);
+			rq.setVotesOne(2);
 		}
 		
 		logger.debug("Saving rating question sample data");
 		rqs.saveAll(rqList);
+
+		Participant participantM = ps.createParticipantForDB(Gender.MALE);
+		ps.save(participantM);
 		
-		Participant participant = ps.createParticipantForForm();
-		ps.save(participant);
+		Participant participantW = ps.createParticipantForDB(Gender.FEMALE);
+		ps.save(participantW);
 	}
 }
