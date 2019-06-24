@@ -1,5 +1,6 @@
 package eu.planlos.pcfeedback.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,11 +8,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.model.LoginFormContainer;
+import eu.planlos.pcfeedback.service.ModelFillerService;
 
 //TODO What is necessary?
 @Controller
 public class LoginController {
-			
+	
+	@Autowired
+	private ModelFillerService mfs;
+	
 	@GetMapping(path = ApplicationPath.URL_LOGIN_FORM)
 	public String loginpage(Model model, @RequestParam(defaultValue = "false") boolean error) {
 		
@@ -25,6 +30,7 @@ public class LoginController {
 			model.addAttribute("error", "Login fehlgeschlagen!");
 		}
 		
+		mfs.fillGlobal(model);
 		model.addAttribute("loginFormContainer", new LoginFormContainer());
 		model.addAttribute("formAction", ApplicationPath.URL_LOGIN);
 		
