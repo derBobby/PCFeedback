@@ -11,21 +11,29 @@
 						<p class="lead">Nach der Teennight werden deine Daten gelöscht!</p>
 						
 						<form th:action="@{${URL_FEEDBACK_START}}" th:object="${participant}" method="post" onsubmit="setGender()">
-					
+							
 							<div class="form-group">
-								<label th:for="prename">Mein Vorname</label>
-								<input th:field="*{prename}" class="form-control" />
+								<input th:field="*{prename}" class="form-control" placeholder="Vorname" />
 								<span th:errors="*{prename}" class="text-warning"></span>
 							</div>
 			
 							<div class="form-group">
-								<label th:for="name">Mein Nachname</label>
-								<input th:field="*{name}" class="form-control" />
+								<input th:field="*{name}" class="form-control" placeholder="Nachname" />
 								<span th:errors="*{name}" class="text-warning"></span>
 							</div>
 			
+							<div class="form-group">
+								<input th:field="*{mobile}" class="form-control" placeholder="Mobilnummmer" />
+								<span th:errors="*{mobile}" class="text-warning"></span>
+							</div>
+			
+							<div class="form-group">
+								<input th:field="*{email}" class="form-control" placeholder="Email" />
+								<span th:errors="*{email}" class="text-warning"></span>
+							</div>
+							
 							<div class="form-group" onchange="setGender()">
-								<label th:for="gender">Ich bin:</label>
+								<label th:for="gender">Ich bin: </label>
 								<input id="genderToggle" name="genderToggle" type="checkbox"
 									th:checked="*{gender !=null and gender.ordinal()==1}"
 									data-toggle="toggle"
@@ -33,24 +41,10 @@
 									data-off="<i class='fas fa-mars'></i> M"
 									data-onstyle="danger"
 									data-offstyle="info" />
-									
 								<input id="gender" name="gender" type="hidden" />
-								
 								<span th:if="${genderError != null}" th:text="${genderError}" class="text-warning">Wooopsie TODO</span>
 							</div>
-			
-							<div class="form-group">
-								<label th:for="mobile">Meine Handynummmer</label>
-								<input th:field="*{mobile}" class="form-control" />
-								<span th:errors="*{mobile}" class="text-warning"></span>
-							</div>
-			
-							<div class="form-group">
-								<label th:for="email">Meine Emailadresse</label>
-								<input th:field="*{email}" class="form-control" />
-								<span th:errors="*{email}" class="text-warning"></span>
-							</div>
-													
+											
 							<div th:if="${PARTICIPANT_EXISTS}" class="alert alert-danger">
 							  Name, Mailadresse oder Handynummer wird bereits verwendet.
 							</div>
