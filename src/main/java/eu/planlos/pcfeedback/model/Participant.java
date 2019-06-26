@@ -149,7 +149,7 @@ public class Participant implements Serializable {
 	 * Functions
 	 */	
 	public String toString() {
-		return firstname + " " + name + "(" + gender + ")";
+		return firstname + " " + name + " (" + gender + ")";
 	}
 	
     @Override

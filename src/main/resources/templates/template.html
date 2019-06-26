@@ -35,7 +35,7 @@
 	<body id="page-top">
 	
 		<!-- Navigation -->		
-		<nav th:fragment="nav" class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
+		<nav th:fragment="nav" class="navbar navbar-expand-sm sticky-top navbar-dark bg-dark">
 		
 			<a class="navbar-brand" th:href="@{${URL_HOME}}">Teennight Feedback App</a>
 	
@@ -48,45 +48,24 @@
 			
 				<!-- alignment to the right -->
 				<div class="navbar-nav ml-auto">
-	
-				<!-- START MENU-->
-					<div class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"  data-target="#infoDropdown" aria-controls="infoDropdown" aria-haspopup="true" aria-expanded="false">
-							<i class="fas fa-info-circle"></i>
-						</a>
-						
-						<div id="infoDropdown" class="dropdown-menu" aria-labelledby="infoDropdown">
-						
-							<a class="dropdown-item" th:href="@{${URL_IMPRESSUM}}"><i class="fas fa-globe"></i> Impressum</a>
-							<a class="dropdown-item" th:href="@{${URL_DATENSCHUTZ}}"><i class="fas fa-mask"></i> Datenschutz</a>
-							
-							<div class="dropdown-divider"></div>
-							
-							<div sec:authorize="isAnonymous()" th:remove="tag">
-								<a th:href="@{${URL_LOGIN_FORM}}" class="dropdown-item"><i class="fas fa-sign-in-alt"></i> Login</a>
-							</div>
-							
-							<div sec:authorize="hasAnyRole('ROLE_ADMIN')" th:remove="tag">
-								<a th:href="@{${URL_ADMIN_SHOWFEEDBACK}}" class="dropdown-item"><i class="fas fa-users"></i> Ergebnisse</a>
-							</div>
-							<div sec:authorize="hasAnyRole('ROLE_ADMIN')" th:remove="tag">
-								<a th:href="@{${URL_LOGOUT}}" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
-							</div>
-							
-						</div>
-					</div>
-				<!-- END MENU-->
 
-				</div>
+				<ul sec:authorize="hasAnyRole('ROLE_ADMIN')" class="navbar-nav mr-auto mt-2 mt-lg-0">
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{${URL_ADMIN_SHOWFEEDBACK}}"><i class="fas fa-users"></i> Ergebnisse</a>
+					</li>
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{${URL_LOGOUT}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+					</li>
+				</ul>
 			</div>
-	
 		</nav>						 				
 
 		<footer th:fragment="footer">
 			<div class="container text-center text-muted">
 				<p>derBobby © 2019</p>
-				<p><a th:href="@{${URL_IMPRESSUM}}">Impressum</a> | <a th:href="@{${URL_DATENSCHUTZ}}">Datenschutz</a></p>
+				<p><a target="_blank" th:href="@{${URL_IMPRESSUM}}">Impressum</a> | <a target="_blank" th:href="@{${URL_DATENSCHUTZ}}">Datenschutz</a><div sec:authorize="isAnonymous()" th:remove="tag"> | <a th:href="@{${URL_LOGIN_FORM}}">Login</a></div></p>
 			</div>
+			
 			<div th:if="${isDevProfile}" class="container text-center text-muted">
 				<p th:text="'SESSION: ' + ${#session.getId()}"></p>
 				<p th:text="'NAME: ' + ${#authentication.name}"></p>

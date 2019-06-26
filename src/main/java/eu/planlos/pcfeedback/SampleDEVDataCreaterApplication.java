@@ -39,14 +39,14 @@ public class SampleDEVDataCreaterApplication implements ApplicationRunner {
 	private ParticipantService ps;
 
 	@Override
-	public void run(ApplicationArguments args) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
+	public void run(ApplicationArguments args) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, InterruptedException {
 
 		initDB();
 	}
 
 	//TODO does this work? :D
 	@Transactional
-	private void initDB() throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
+	private void initDB() throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, InterruptedException {
 
 		/*
 		 * CREATE
@@ -101,11 +101,13 @@ public class SampleDEVDataCreaterApplication implements ApplicationRunner {
 		while(maleCount-- != 0) {
 			Participant participantM = ps.createParticipantForDB(Gender.MALE);
 			ps.save(participantM);
+			Thread.sleep(1);
 		}
 		
 		while(femaleCount-- != 0) {
 			Participant participantW = ps.createParticipantForDB(Gender.FEMALE);
 			ps.save(participantW);
+			Thread.sleep(1);
 		}
 		
 	}
