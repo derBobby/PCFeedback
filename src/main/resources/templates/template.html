@@ -39,17 +39,17 @@
 		
 			<a class="navbar-brand" th:href="@{${URL_HOME}}">Teennight Feedback App</a>
 	
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
+			<button sec:authorize="hasAnyRole('ROLE_ADMIN')" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			
 			<!-- collapsible part -->
-			<div class="collapse navbar-collapse" id="anwNavbar">
+			<div sec:authorize="hasAnyRole('ROLE_ADMIN')" class="collapse navbar-collapse" id="anwNavbar">
 			
 				<!-- alignment to the right -->
 				<div class="navbar-nav ml-auto">
 
-				<ul sec:authorize="hasAnyRole('ROLE_ADMIN')" class="navbar-nav mr-auto mt-2 mt-lg-0">
+				<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 					<li class="nav-item active">
 						<a class="nav-link" th:href="@{${URL_ADMIN_SHOWFEEDBACK}}"><i class="fas fa-users"></i> Ergebnisse</a>
 					</li>
