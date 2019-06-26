@@ -5,7 +5,7 @@ package eu.planlos.pcfeedback.service;
 // 
 //	private static final Logger logger = LoggerFactory.getLogger(LoginAuthenticationSuccessHandler.class);	
 //
-//	//TODO necessary?
+//	// is this necessary?
 //	public static final String REDIRECT_URL_SESSION_ATTRIBUTE_NAME = "REDIRECT_URL";
 //	
 //	@Override

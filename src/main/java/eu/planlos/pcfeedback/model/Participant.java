@@ -22,7 +22,7 @@ import eu.planlos.pcfeedback.constants.ApplicationConfig;
 @Table(
 		uniqueConstraints={
 			@UniqueConstraint(columnNames = {"idParticipant"}),
-			@UniqueConstraint(columnNames = {"prename", "name"}),
+			@UniqueConstraint(columnNames = {"firstname", "name"}),
 			@UniqueConstraint(columnNames = {"email"}),
 			@UniqueConstraint(columnNames = {"mobile"}),
 })
@@ -36,7 +36,7 @@ public class Participant implements Serializable {
 
 	@Column(nullable=false)
 	@NotBlank
-	private String prename;
+	private String firstname;
 	
 	@Column(nullable=false)
 	@NotBlank
@@ -65,8 +65,8 @@ public class Participant implements Serializable {
 		setParticipationDate();
 	}
 
-	public Participant(String prename, String name, String email, String mobile, Gender gender, boolean feedbackCompleted) {
-		setPrename(prename);
+	public Participant(String firstname, String name, String email, String mobile, Gender gender, boolean feedbackCompleted) {
+		setFirstname(firstname);
 		setName(name);
 		setEmail(email);
 		setMobile(mobile);
@@ -83,12 +83,12 @@ public class Participant implements Serializable {
 		this.idParticipant = idParticipant;
 	}
 	
-	public String getPrename() {
-		return prename;
+	public String getFirstname() {
+		return firstname;
 	}
 
-	public void setPrename(String prename) {
-		this.prename = prename;
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
 	}
 
 	public String getName() {
@@ -149,7 +149,7 @@ public class Participant implements Serializable {
 	 * Functions
 	 */	
 	public String toString() {
-		return prename + " " + name + "(" + gender + ")";
+		return firstname + " " + name + "(" + gender + ")";
 	}
 	
     @Override

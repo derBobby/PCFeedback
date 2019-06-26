@@ -42,17 +42,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
 				
-			.and().authorizeRequests()			
-				/*
-				 * PUBLIC
-				 */
-				.antMatchers(
-						"/webjars/**",
-						"/css/**",
-						"/img/**",
-						ApplicationPath.URL_AREA_PUBLIC + "**"
-					).permitAll()				
-
+			.and().authorizeRequests()
+				
 				/*
 				 * ADMIN
 				 */
@@ -63,10 +54,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 					)
 				
 				/*
-				 * DENY REMAINING
+				 * PUBLIC
 				 */
-//				.antMatchers("/**")
-//					.denyAll()
+				.antMatchers(
+						"/webjars/**",
+						"/css/**",
+						"/img/**",
+						ApplicationPath.URL_AREA_PUBLIC + "**"
+					).permitAll()
 					
 			
 			/*
@@ -84,7 +79,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				//.successHandler(successHandler)
 				
 				// Redirects to given page 
-				.defaultSuccessUrl(ApplicationPath.URL_ADMIN_EXPORTFEEDBACK, false)
+				.defaultSuccessUrl(ApplicationPath.URL_ADMIN_SHOWFEEDBACK, false)
 				
 				// Which site to load after login error
 				.failureUrl(ApplicationPath.URL_LOGIN_FORM)

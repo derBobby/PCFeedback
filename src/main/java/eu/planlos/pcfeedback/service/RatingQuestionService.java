@@ -20,7 +20,6 @@ import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 
-//TODO Logging
 @Service
 public class RatingQuestionService {
 
@@ -54,7 +53,6 @@ public class RatingQuestionService {
 		int lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender);
 		
 		logger.debug("Start adding ratingQuestions to result set");
-		System.out.println(givenQuestions.size() + "/" + neededCount);
 		while(givenQuestions.size() <= neededCount) {
 			
 			// Load IDs with minimum count of answers
@@ -213,16 +211,14 @@ public class RatingQuestionService {
 
 	public List<RatingQuestion> reloadForInvalidFeedback(Gender gender, Map<Long, Integer> feedbackMap) throws RatingQuestionsNotExistentException {
 
+		logger.debug("Reloaded rating questions");
 		List<RatingQuestion> reloadedList = (List<RatingQuestion>) ratingQuestionRepository.findAllById(feedbackMap.keySet());
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
 		rqList.addAll(reloadedList);
-System.out.println("###RELOADED " + reloadedList.size());
-System.out.println("###FINAL    " + rqList.size());
 		
+		logger.debug("Loading additional rating questions");
 		addRatingQuestionsForGenderToList(rqList, gender);
-System.out.println("###RELOADED " + reloadedList.size());
-System.out.println("###FINAL    " + rqList.size());
 		
 		return rqList;
 	}

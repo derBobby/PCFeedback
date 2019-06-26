@@ -33,11 +33,13 @@ public class ShowFeedbackController {
 	@Autowired
 	private ModelFillerService mfs;
 	
-	//TODO AUTH
-	@RequestMapping(path = ApplicationPath.URL_ADMIN_EXPORTFEEDBACK, method = RequestMethod.GET)
+	@RequestMapping(path = ApplicationPath.URL_ADMIN_SHOWFEEDBACK, method = RequestMethod.GET)
 	public String showFeedback(Model model) throws RatingQuestionsNotExistentException {
 
-		logger.debug("Loading Participants");
+		logger.debug("Loading random participants");
+		List<Participant> randomParticipantList = pService.getThreeRandomParticipants();
+		
+		logger.debug("Loading participants");
 		List<Participant> participantList = pService.getAllParticipants();
 		
 		logger.debug("Loading rating questions for male participants");
@@ -47,8 +49,8 @@ public class ShowFeedbackController {
 		List<RatingQuestion> rqListFemale = rqService.loadByGender(Gender.FEMALE);
 		
 		mfs.fillGlobal(model);
-		mfs.fillExport(model, participantList, rqListMale, rqListFemale);
+		mfs.fillExport(model, randomParticipantList, participantList, rqListMale, rqListFemale);
 		
-		return ApplicationPath.RES_ADMIN_EXPORT;
+		return ApplicationPath.URL_ADMIN_SHOWFEEDBACK;
 	}
 }

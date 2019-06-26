@@ -43,7 +43,7 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("URL_LOGIN", ApplicationPath.URL_LOGIN);
 
 		logger.debug("Preparing model for administration area");
-		model.addAttribute("URL_ADMIN_EXPORTFEEDBACK", ApplicationPath.URL_ADMIN_EXPORTFEEDBACK);
+		model.addAttribute("URL_ADMIN_SHOWFEEDBACK", ApplicationPath.URL_ADMIN_SHOWFEEDBACK);
 		model.addAttribute("URL_LOGOUT", ApplicationPath.URL_LOGOUT);
 
 		
@@ -60,7 +60,8 @@ public class ModelFillerService implements EnvironmentAware {
 		}
 	}
 
-	public void fillExport(Model model, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
+	public void fillExport(Model model, List<Participant> randomParticipantList, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
+		model.addAttribute("randomParticipantList", randomParticipantList);
 		model.addAttribute("participantList", participantList);
 		model.addAttribute("rqListMale", rqListMale);
 		model.addAttribute("rqListFemale", rqListFemale);

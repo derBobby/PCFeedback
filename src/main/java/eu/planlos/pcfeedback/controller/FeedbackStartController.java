@@ -53,8 +53,7 @@ public class FeedbackStartController {
 			
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
 			if(genderFieldError != null) {
-				//TODO how to handle properly?
-				logger.debug("Gender is missing");
+				logger.error("Gender is missing");
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
 			
@@ -77,7 +76,7 @@ public class FeedbackStartController {
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			
-			logger.debug("Participant already exists, returning to form");
+			logger.error("Participant already exists, returning to form");
 			
 			model.addAttribute("PARTICIPANT_EXISTS", true);
 			mfs.fillGlobal(model);

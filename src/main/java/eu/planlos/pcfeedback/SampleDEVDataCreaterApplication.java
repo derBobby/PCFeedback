@@ -95,10 +95,18 @@ public class SampleDEVDataCreaterApplication implements ApplicationRunner {
 		logger.debug("Saving rating question sample data");
 		rqs.saveAll(rqList);
 
-		Participant participantM = ps.createParticipantForDB(Gender.MALE);
-		ps.save(participantM);
+		int femaleCount = 1;
+		int maleCount = 3;
+
+		while(maleCount-- != 0) {
+			Participant participantM = ps.createParticipantForDB(Gender.MALE);
+			ps.save(participantM);
+		}
 		
-		Participant participantW = ps.createParticipantForDB(Gender.FEMALE);
-		ps.save(participantW);
+		while(femaleCount-- != 0) {
+			Participant participantW = ps.createParticipantForDB(Gender.FEMALE);
+			ps.save(participantW);
+		}
+		
 	}
 }

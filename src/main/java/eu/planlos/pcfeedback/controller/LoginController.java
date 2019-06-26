@@ -10,7 +10,6 @@ import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.model.LoginFormContainer;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 
-//TODO What is necessary?
 @Controller
 public class LoginController {
 	

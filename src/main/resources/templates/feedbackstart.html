@@ -13,8 +13,8 @@
 						<form th:action="@{${URL_FEEDBACK_START}}" th:object="${participant}" method="post" onsubmit="setGender()">
 							
 							<div class="form-group">
-								<input th:field="*{prename}" class="form-control" placeholder="Vorname" />
-								<span th:errors="*{prename}" class="text-warning"></span>
+								<input th:field="*{firstname}" class="form-control" placeholder="Vorname" />
+								<span th:errors="*{firstname}" class="text-warning"></span>
 							</div>
 			
 							<div class="form-group">

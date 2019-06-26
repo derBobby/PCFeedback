@@ -14,7 +14,7 @@ import eu.planlos.pcfeedback.constants.ApplicationConfig;
 
 public class ParticipantUnitTest {
 
-	private static final String PRENAME = "Peter";
+	private static final String FIRSTNAME = "Peter";
 	private static final String NAME = "Parker";
 	private static final String EMAIL = "spiderman@marvel.com";
 	private static final String MOBILE = "0123456789";
@@ -30,21 +30,21 @@ public class ParticipantUnitTest {
 	@Test
 	public final void femaleParticipant_returnsFemaleGender() {
 
-		Participant participant = new Participant(PRENAME, NAME, EMAIL, MOBILE, Gender.FEMALE, false);
+		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.FEMALE, false);
 		assertEquals(participant.getGender(), Gender.FEMALE);
 	}
 
 	@Test
 	public final void maleParticipant_returnsMaleGender() {
 
-		Participant participant = new Participant(PRENAME, NAME, EMAIL, MOBILE, Gender.MALE, false);
+		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, false);
 		assertEquals(participant.getGender(), Gender.MALE);
 	}
 	
 	@Test
-	public final void participantToString_containsPrenameNameAndGender() {
-		Participant participant = new Participant(PRENAME, NAME, EMAIL, MOBILE, Gender.MALE, false);
-		assertTrue(participant.toString().contains(PRENAME));
+	public final void participantToString_containsFirstnameNameAndGender() {
+		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, false);
+		assertTrue(participant.toString().contains(FIRSTNAME));
 		assertTrue(participant.toString().contains(NAME));
 		assertTrue(participant.toString().contains(Gender.MALE.toString()));
 	}
@@ -58,7 +58,7 @@ public class ParticipantUnitTest {
 			LocalDateTime dt1 = LocalDateTime.now(timeZone);
 			Thread.sleep(1);
 
-			Participant participant = new Participant(PRENAME, NAME, EMAIL, MOBILE, Gender.MALE, false);
+			Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, false);
 			LocalDateTime participationDate = participant.getParticipationDate();
 						
 			Thread.sleep(1);
@@ -75,7 +75,7 @@ public class ParticipantUnitTest {
 	@Test
 	public final void participantCreated_formatsCorrect() {
 		
-		Participant participant = new Participant(PRENAME, NAME, EMAIL, MOBILE, Gender.MALE, false);
+		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, false);
 		String formattedParticipationDate = participant.getformattedParticipationDateString();
 
 		assertTrue(formattedParticipationDate.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"));

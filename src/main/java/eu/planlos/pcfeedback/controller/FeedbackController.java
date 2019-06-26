@@ -78,12 +78,15 @@ public class FeedbackController {
 		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
 		
 		try {
-			//Throws exception because it is already catched from the other save operations
+
 			ratingQuestionService.saveFeedback(feedbackMap);
 			participantService.completeFeedback(participant);
 			
-		} catch (InvalidFeedbackException e) {
+		} catch (ParticipantHasAlreadyCompletedFeedbackException e) {
+			logger.error("This should not happen, because session is destroyed on submitting feedback");
+			logger.error(participant.toString());
 			
+		} catch (InvalidFeedbackException e) {
 			logger.error("Something with the given feedback went wrong");
 			
 			List<RatingQuestion> ratingQuestionList = new ArrayList<>();
@@ -102,9 +105,6 @@ public class FeedbackController {
 			mfs.fillGlobal(model);
 			
 			return ApplicationPath.RES_FEEDBACK;
-		} catch (ParticipantHasAlreadyCompletedFeedbackException e) {
-			// TODO One guy tries twice to submit?
-			e.printStackTrace();
 		}
 		
 		return "redirect:" + ApplicationPath.URL_FEEDBACK_END;

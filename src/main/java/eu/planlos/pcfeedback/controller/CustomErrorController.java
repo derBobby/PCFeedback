@@ -44,7 +44,6 @@ public class CustomErrorController implements ErrorController {
         Exception errorException = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
         String requestedSite = request.getRequestURI();
 
-        //TODO what is inside body?
         // Get error stack trace map object
         Map<String, Object> body = errorAttributes.getErrorAttributes(webRequest, true);
         // Extract stack trace string

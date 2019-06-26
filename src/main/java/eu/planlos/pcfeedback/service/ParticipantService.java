@@ -1,8 +1,10 @@
 package eu.planlos.pcfeedback.service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,23 +37,35 @@ public class ParticipantService implements EnvironmentAware {
 		participant.setParticipationDate();
 		
 		logger.debug("Saving participant: " + participant.toString());
-		participantRepository.save(participant);
+		try {
+			
+			participantRepository.save(participant);
+			
+		} catch(Exception e) {
+			
+			if(e.getCause() instanceof ConstraintViolationException) {
+				logger.error("Participant exists meanwhile, wow, what are the chances!?");
+				// Using this method because it already throws an exception depending on the problem
+				exists(participant);
+			}
+			throw e;	
+		}
 	}
 
 	public boolean exists(Participant participant) throws ParticipantAlreadyExistingException {
 		
-		if (participantRepository.existsByPrenameAndName(participant.getPrename(), participant.getName())) {
-			logger.debug("Participant exists by prename and name");
+		if (participantRepository.existsByFirstnameAndName(participant.getFirstname(), participant.getName())) {
+			logger.error("Participant exists by firstname and name");
 			throw new ParticipantAlreadyExistingException("Vor- / Nachname bereits vergeben!");
 		}
 
 		if (participantRepository.existsByEmail(participant.getEmail())) {
-			logger.debug("Participant exists by email");
+			logger.error("Participant exists by email");
 			throw new ParticipantAlreadyExistingException("E-Mail bereits vergeben!");
 		}
 
 		if (participantRepository.existsByMobile(participant.getMobile())) {
-			logger.debug("Participant exists by mobile");
+			logger.error("Participant exists by mobile");
 			throw new ParticipantAlreadyExistingException("Handynummer bereits vergeben!");
 		}
 		
@@ -100,13 +114,26 @@ public class ParticipantService implements EnvironmentAware {
 
 	public void completeFeedback(Participant participant) throws ParticipantHasAlreadyCompletedFeedbackException {
 
-		boolean hasFeedbackCompleter = participantRepository.existsByIdParticipantAndFeedbackCompleted(participant.getIdParticipant(), true);
+		boolean hasFeedbackAlreadyCompleted = participantRepository.existsByIdParticipantAndFeedbackCompleted(participant.getIdParticipant(), true);
 		
-		if(hasFeedbackCompleter) {
+		if(hasFeedbackAlreadyCompleted) {
 			throw new ParticipantHasAlreadyCompletedFeedbackException();
 		}
 		
 		participant.setFeedbackCompleted(true);
 		participantRepository.save(participant);
+	}
+
+	public List<Participant> getThreeRandomParticipants() {
+		List<Participant> allParticipants = getAllParticipants();
+		
+		Collections.shuffle(allParticipants);
+		
+		int pCount = allParticipants.size();
+		int keepCount = pCount < 3 ? pCount : 3;
+		
+		allParticipants.subList(keepCount, allParticipants.size()).clear();
+		
+		return allParticipants;
 	}
 }
