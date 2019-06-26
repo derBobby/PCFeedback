@@ -51,6 +51,6 @@ public class ShowFeedbackController {
 		mfs.fillGlobal(model);
 		mfs.fillExport(model, randomParticipantList, participantList, rqListMale, rqListFemale);
 		
-		return ApplicationPath.URL_ADMIN_SHOWFEEDBACK;
+		return ApplicationPath.RES_ADMIN_SHOWFEEDBACK;
 	}
 }
