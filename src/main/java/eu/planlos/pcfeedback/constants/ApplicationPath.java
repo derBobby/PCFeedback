@@ -20,6 +20,13 @@ public class ApplicationPath {
 	
 	
 	/*
+	 * ACTUATOR AREA
+	 */
+	public static final String URL_AREA_ACTUATOR 				= URL_DELIMETER + "actuator";
+	
+	
+	
+	/*
 	 * PUBLIC
 	 */
 	public static final String URL_HOME 						= URL_AREA_PUBLIC;
