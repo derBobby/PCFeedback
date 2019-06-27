@@ -8,6 +8,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,12 @@ public class ParticipantService implements EnvironmentAware {
 
 	private static final Logger logger = LoggerFactory.getLogger(ParticipantService.class);
 
+	@Value("${eu.planlos.pcfeedback.winner-count}")
+	private int winnerCount;
+	
+	@Value("${eu.planlos.pcfeedback.need-mail}")
+	private boolean needMail;
+	
 	@Autowired
 	private ParticipantRepository participantRepository;
 
@@ -58,7 +65,7 @@ public class ParticipantService implements EnvironmentAware {
 			throw new ParticipantAlreadyExistingException("Vor- / Nachname bereits vergeben!");
 		}
 
-		if (participantRepository.existsByEmail(participant.getEmail())) {
+		if (needMail && participantRepository.existsByEmail(participant.getEmail())) {
 			logger.error("Participant exists by email");
 			throw new ParticipantAlreadyExistingException("E-Mail bereits vergeben!");
 		}
@@ -111,14 +118,14 @@ public class ParticipantService implements EnvironmentAware {
 		this.environment = environment;		
 	}
 
-	public List<Participant> getThreeRandomWinnerParticipants() {
+	public List<Participant> getRandomWinnerParticipants() {
 
 		List<Participant> allParticipants = getAllParticipants();
 		
 		Collections.shuffle(allParticipants);
 		
 		int pCount = allParticipants.size();
-		int keepCount = pCount < 3 ? pCount : 3;
+		int keepCount = pCount < winnerCount ? pCount : winnerCount;
 		
 		allParticipants.subList(keepCount, allParticipants.size()).clear();
 		

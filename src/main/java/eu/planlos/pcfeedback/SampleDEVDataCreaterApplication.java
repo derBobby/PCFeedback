@@ -89,7 +89,7 @@ public class SampleDEVDataCreaterApplication implements ApplicationRunner {
 		rqList.addAll(rqs.create(roList));
 
 		for(RatingQuestion rq : rqList) {
-			rq.setVotesOne(2);
+			rq.setVotesOne(0);
 		}
 		
 		logger.debug("Saving rating question sample data");

@@ -16,8 +16,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import eu.planlos.pcfeedback.constants.ApplicationConfig;
-
 @Entity
 @Table(
 		uniqueConstraints={
@@ -55,6 +53,8 @@ public class Participant implements Serializable {
 	
 	@Column(nullable=false)
 	private LocalDateTime participationDate;
+	
+	private static final String TIME_ZONE = "Europe/Berlin";
 	
 	public Participant() {
 		setParticipationDate();
@@ -127,7 +127,7 @@ public class Participant implements Serializable {
 	}
 
 	public void setParticipationDate() {
-		ZoneId timeZone = ZoneId.of(ApplicationConfig.TIME_ZONE);
+		ZoneId timeZone = ZoneId.of(TIME_ZONE);
 		this.participationDate = LocalDateTime.now(timeZone);
 	}
 	

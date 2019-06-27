@@ -37,7 +37,7 @@ public class ShowFeedbackController {
 	public String showFeedback(Model model) throws RatingQuestionsNotExistentException {
 
 		logger.debug("Loading random participants");
-		List<Participant> randomParticipantList = pService.getThreeRandomWinnerParticipants();
+		List<Participant> randomParticipantList = pService.getRandomWinnerParticipants();
 		
 		logger.debug("Loading participants");
 		List<Participant> participantList = pService.getAllParticipants();

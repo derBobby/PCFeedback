@@ -72,19 +72,28 @@ public class FeedbackController {
 	}
 	
 	@RequestMapping(path = ApplicationPath.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
-	public String feedbackSubmit(@ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) {
+	public String feedbackSubmit(@ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) throws NoParticipantException {
 		
 		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
 		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
 		
 		try {
 
+			if(participant == null) {
+				throw new NoParticipantException();
+			}
+				
 			ratingQuestionService.saveFeedback(feedbackMap);
 			participantService.save(participant);
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			logger.error("This should not happen, because session is destroyed on submitting feedback");
 			logger.error(participant.toString());
+			
+		} catch (NoParticipantException e) {
+			logger.error("No participant in session available");
+			//TODO call FeedbackStartController and pass error
+			throw e;
 			
 		} catch (InvalidFeedbackException e) {
 			logger.error("Something with the given feedback went wrong");

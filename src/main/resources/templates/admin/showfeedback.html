@@ -11,7 +11,7 @@
 				</div>
        		</div>
        		<div class="row justify-content-center">
-        		<div th:if="${#lists.isEmpty(randomParticipantList)}" class="column border-dark p-3 mb-3">
+        		<div class="column border-dark p-3 mb-3" th:if="${#lists.isEmpty(randomParticipantList)}">
 					<div class="card">
 						<div class="card-header">
 							<h4 class="text-center mb-0" th:inline="text">Keine Gewinner</h4>
@@ -28,89 +28,124 @@
           				</div>
 						<div class="card-body">
 							<p th:inline="text">[[*{firstname}]] [[*{name}]]</p>
-							<p th:inline="text">[[*{email}]]</p>
+							<p th:if="${needMail}" th:inline="text">[[*{email}]]</p>
 							<p th:inline="text">[[*{mobile}]]</p>
           				</div>
          			</div>
        			</div>
 			</div>
-				
-   	        <div class="card mt-3 mb-3">
-	            <div class="card-header"><h3 class="mb-0">Vollständige Listen</h3></div>
-	            <div class="card-body p-3">
-					<div class="col-lg-12 text-center">
-					
-						<h4 th:inline="text">Teilnehmer</h4>
+			
+			
+       		<div class="row">
+       			<div class="column">
+					<h3 class="p-3 mb-0 text-white">Vollständige Listen</h3>
+				</div>
+       		</div>
+			
+       		<div class="row justify-content-center">
+        		<div class="col-12 border-dark p-3 mb-3">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="text-center mb-0" th:inline="text">Teilnehmer</h4>
+          				</div>
+						<div class="card-body">
+
+							<div class="table-responsive">
+								<table class="table text-nowrap table-bordered table-hover table-striped m-0 text-left table-sm">
+									<tr>
+										<th class="text-center">ID<br/>Teilnehmer</th>
+										<th>Vorname</th>
+										<th>Nachname</th>
+										<th th:if="${needMail}">E-Mail</th>
+										<th>Mobil</th>
+										<th class="text-center">m/w</th>
+										<th class="text-center">Teilnahmezeitpunkt</th>
+									</tr>
+									<tr th:each="participant : ${participantList}" th:object="${participant}">
+										<td class="text-center" th:text="*{idParticipant}"></td>
+										<td th:text="*{firstname}"></td>
+										<td th:text="*{name}"></td>
+										<td th:if="${needMail}" th:text="*{email}"></td>
+										<td th:text="*{mobile}"></td>
+										<td class="text-center" th:text="*{gender}"></td>
+										<td class="text-center" th:text="*{getformattedParticipationDateString()}"></td>
+									</tr>
+								</table>
+							</div>
 						
-						<table class="table text-nowrap table-responsive table-bordered table-hover table-striped m-0 text-left ">
-							<tr class="text-center">
-								<th class="text-center">ID<br/>Teilnehmer</th>
-								<th>Vorname</th>
-								<th>Nachname</th>
-								<th>E-Mail</th>
-								<th>Mobil</th>
-								<th class="text-center">m/w</th>
-								<th>Teilnahmezeitpunkt</th>
-<!-- 								<th class="text-center">Feedback<br/>abgeschlossen</th> -->
-							</tr>
-							<tr th:each="participant : ${participantList}" th:object="${participant}">
-								<td class="text-center" th:text="*{idParticipant}"></td>
-								<td th:text="*{firstname}"></td>
-								<td th:text="*{name}"></td>
-								<td th:text="*{email}"></td>
-								<td th:text="*{mobile}"></td>
-								<td class="text-center" th:text="*{gender}"></td>
-								<td th:text="*{getformattedParticipationDateString()}"></td>
-<!-- 								<td class="text-center" th:text="*{isFeedbackSubmitted() ? 'JA' : 'NEIN' }"></td> -->
-							</tr>
-						</table>
+          				</div>
+         			</div>
+       			</div>
+			</div>
+			
+       		<div class="row justify-content-center">
+        		<div class="col-12 border-dark p-3 mb-3">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="text-center mb-0" th:inline="text">Antworten Jungs</h4>
+          				</div>
+						<div class="card-body">
+
+							<div class="table-responsive">
+								<table class="table text-nowrap table-responsive table-bordered table-hover table-striped m-0 text-left table-sm">
+									<tr>
+										<th class="text-center">ID<br/>Frage</th>
+										<th class="text-center">Summe<br/>Stimmen</th>
+										<th>Objekt 1</th>
+										<th class="text-center">Stimmen<br/>1</th>
+										<th class="text-center">Stimmen<br/>2</th>
+										<th>Objekt 2</th>
+									</tr>
+									<tr th:each="ratingQuestion : ${rqListMale}" th:object="${ratingQuestion}">
+										<td class="text-center" th:text="*{idRatingQuestion}"></td>
+										<td class="text-center" th:text="*{countVoted}"></td>
+										<td style="font-weight: bold;" th:text="*{objectOne.toString()}"></td>
+										<td class="text-center" th:text="*{votesOne}"></td>
+										<td class="text-center" th:text="*{votesTwo}"></td>
+										<td style="font-weight: bold;" th:text="*{objectTwo.toString()}"></td>
+									</tr>
+								</table>
+							</div>
 						
-						<h4 th:inline="text" class="pt-3">Antworten Jungs</h4>
+          				</div>
+         			</div>
+       			</div>
+			</div>
+			
+       		<div class="row justify-content-center">
+        		<div class="col-12 border-dark p-3 mb-3">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="text-center mb-0" th:inline="text">Antworten Mädels</h4>
+          				</div>
+						<div class="card-body">
+
+						<div class="table-responsive">
+							<table class="table text-nowrap table-responsive table-bordered table-hover table-striped m-0 text-left table-sm">
+								<tr>
+									<th class="text-center">ID<br/>Frage</th>
+									<th class="text-center">Summe<br/>Stimmen</th>
+									<th>Objekt 1</th>
+									<th class="text-center">Stimmen<br/>1</th>
+									<th class="text-center">Stimmen<br/>2</th>
+									<th>Objekt 2</th>
+								</tr>
+								<tr th:each="ratingQuestion : ${rqListFemale}" th:object="${ratingQuestion}">
+									<td class="text-center" th:text="*{idRatingQuestion}"></td>
+									<td class="text-center" th:text="*{countVoted}"></td>
+									<td style="font-weight: bold;" th:text="*{objectOne.getName()}"></td>
+									<td class="text-center" th:text="*{votesOne}"></td>
+									<td class="text-center" th:text="*{votesTwo}"></td>
+									<td style="font-weight: bold;" th:text="*{objectTwo.getName()}"></td>
+								</tr>
+							</table>
+						</div>
 						
-						<table class="table text-nowrap table-responsive table-bordered table-hover table-striped m-0 text-left ">
-							<tr>
-								<th class="text-center">ID<br/>Frage</th>
-								<th class="text-center">Summe<br/>Stimmen</th>
-								<th>Objekt 1</th>
-								<th class="text-center">Stimmen<br/>1</th>
-								<th class="text-center">Stimmen<br/>2</th>
-								<th>Objekt 2</th>
-							</tr>
-							<tr th:each="ratingQuestion : ${rqListMale}" th:object="${ratingQuestion}">
-								<td class="text-center" th:text="*{idRatingQuestion}"></td>
-								<td class="text-center" th:text="*{countVoted}"></td>
-								<td style="font-weight: bold;" th:text="*{objectOne.toString()}"></td>
-								<td class="text-center" th:text="*{votesOne}"></td>
-								<td class="text-center" th:text="*{votesTwo}"></td>
-								<td style="font-weight: bold;" th:text="*{objectTwo.toString()}"></td>
-							</tr>
-						</table>
-						
-						<h4 th:inline="text" class="pt-3">Antworten Mädels</h4>
-						
-						<table class="table text-nowrap table-responsive table-bordered table-hover table-striped m-0 text-left ">
-							<tr>
-								<th class="text-center">ID<br/>Frage</th>
-								<th class="text-center">Summe<br/>Stimmen</th>
-								<th>Objekt 1</th>
-								<th class="text-center">Stimmen<br/>1</th>
-								<th class="text-center">Stimmen<br/>2</th>
-								<th>Objekt 2</th>
-							</tr>
-							<tr th:each="ratingQuestion : ${rqListFemale}" th:object="${ratingQuestion}">
-								<td class="text-center" th:text="*{idRatingQuestion}"></td>
-								<td class="text-center" th:text="*{countVoted}"></td>
-								<td style="font-weight: bold;" th:text="*{objectOne.getName()}"></td>
-								<td class="text-center" th:text="*{votesOne}"></td>
-								<td class="text-center" th:text="*{votesTwo}"></td>
-								<td style="font-weight: bold;" th:text="*{objectTwo.getName()}"></td>
-							</tr>
-						</table>
-	
-					</div>
-	            </div>
-	            <div class="card-footer">&nbsp;</div>			
-			</div>	
+          				</div>
+         			</div>
+       			</div>
+			</div>			
+			
 		</main>
 	    <footer th:replace="template :: footer"></footer>		
 	</body>

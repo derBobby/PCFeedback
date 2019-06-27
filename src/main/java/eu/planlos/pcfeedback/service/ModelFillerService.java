@@ -6,12 +6,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import eu.planlos.pcfeedback.constants.ApplicationConfig;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
 import eu.planlos.pcfeedback.model.Participant;
@@ -21,18 +21,27 @@ import eu.planlos.pcfeedback.model.RatingQuestion;
 public class ModelFillerService implements EnvironmentAware {
 
 	private static final Logger logger = LoggerFactory.getLogger(ModelFillerService.class);
+	
+	@Value("${eu.planlos.pcfeedback.need-mail}")
+	private boolean needMail;
 
+	@Value("${eu.planlos.pcfeedback.question-count}")
+	public int neededQuestionCount;
+	
 	@Autowired
 	private Environment environment;
 	public void fillGlobal(Model model) {
 
+		logger.debug("Adding configs from application.properties");
+		model.addAttribute("needMail", needMail);
+		
 		logger.debug("Preparing model for global area");
 		model.addAttribute("URL_HOME", ApplicationPath.URL_HOME);
 		model.addAttribute("URL_IMPRESSUM", ApplicationPath.URL_IMPRESSUM);
 		model.addAttribute("URL_DATENSCHUTZ", ApplicationPath.URL_DATENSCHUTZ);
 
 		logger.debug("Preparing model for home area");
-		model.addAttribute("NEEDED_QUESTION_COUNT", ApplicationConfig.NEEDED_QUESTION_COUNT);
+		model.addAttribute("NEEDED_QUESTION_COUNT", neededQuestionCount);
 		
 		logger.debug("Preparing model for feedback start area");
 		model.addAttribute("URL_FEEDBACK_START", ApplicationPath.URL_FEEDBACK_START);

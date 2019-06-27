@@ -9,10 +9,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import eu.planlos.pcfeedback.constants.ApplicationConfig;
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
@@ -24,6 +24,9 @@ import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 public class RatingQuestionService {
 
 	private static final Logger logger = LoggerFactory.getLogger(RatingQuestionService.class);
+
+	@Value("${eu.planlos.pcfeedback.question-count}")
+	public int neededQuestionCount;
 	
 	@Autowired
 	private RatingQuestionRepository ratingQuestionRepository;
@@ -46,14 +49,13 @@ public class RatingQuestionService {
 	 */
 	public void addRatingQuestionsForGenderToList(List<RatingQuestion> givenQuestions, Gender gender) throws RatingQuestionsNotExistentException {
 
-		int neededCount = ApplicationConfig.NEEDED_QUESTION_COUNT;
-		logger.debug("Needed ratingQuestion count is: " + neededCount);
+		logger.debug("Needed ratingQuestion count is: " + neededQuestionCount);
 		
 		logger.debug("Get the lowest number a ratingQuestion is voted for gender: " + gender.toString());
 		int lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender);
 		
 		logger.debug("Start adding ratingQuestions to result set");
-		while(givenQuestions.size() <= neededCount) {
+		while(givenQuestions.size() <= neededQuestionCount) {
 			
 			// Load IDs with minimum count of answers
 			logger.debug("Load all questions for lowest number voted: " + lowestVotedCount);
@@ -64,7 +66,7 @@ public class RatingQuestionService {
 			Collections.shuffle(loadedQuestions);
 
 			// If exact amount is found
-			if(loadedQuestions.size() == neededCount) {
+			if(loadedQuestions.size() == neededQuestionCount) {
 
 				logger.debug("Required count was loaded, add to result set and stop");
 				givenQuestions.addAll(loadedQuestions);
@@ -72,16 +74,16 @@ public class RatingQuestionService {
 			}
 			
 			//If more questions are available chose random ones
-			if(loadedQuestions.size() > neededCount) {
+			if(loadedQuestions.size() > neededQuestionCount) {
 
 				logger.debug("More than required count was loaded, get random ratingQuestions of that list");
-				List<RatingQuestion> shortenedList = loadedQuestions.subList(0, neededCount-givenQuestions.size());
+				List<RatingQuestion> shortenedList = loadedQuestions.subList(0, neededQuestionCount-givenQuestions.size());
 				givenQuestions.addAll(shortenedList);
 				break;
 			}
 						
 			//If not enough questions are available
-			if(loadedQuestions.size() < neededCount) {
+			if(loadedQuestions.size() < neededQuestionCount) {
 				
 				logger.debug("Lesser than required count was loaded, get new lowest number voted");
 				givenQuestions.addAll(loadedQuestions);
@@ -132,7 +134,7 @@ public class RatingQuestionService {
 
 	private void checkIfRatingQuestionsAreValid(Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
 		
-		if(feedbackMap.size() != ApplicationConfig.NEEDED_QUESTION_COUNT) {
+		if(feedbackMap.size() != neededQuestionCount) {
 			logger.error("Feedback HashMap is invalid: not matching needed amount of questions");
 			throw new InvalidFeedbackException("Es wurde nicht für jedes Paar eine Wahl getroffen!");
 		}
