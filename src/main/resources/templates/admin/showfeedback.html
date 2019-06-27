@@ -11,6 +11,16 @@
 				</div>
        		</div>
        		<div class="row justify-content-center">
+        		<div th:if="${#lists.isEmpty(randomParticipantList)}" class="column border-dark p-3 mb-3">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="text-center mb-0" th:inline="text">Keine Gewinner</h4>
+          				</div>
+						<div class="card-body">
+							<p th:inline="text">Es hat noch keiner Feedback abgeschickt.</p>
+          				</div>
+         			</div>
+       			</div>
         		<div class="column border-dark p-3 mb-3" th:each="randomParticipant : ${randomParticipantList}" th:object="${randomParticipant}" >
 					<div class="card">
 						<div class="card-header">
@@ -41,7 +51,7 @@
 								<th>Mobil</th>
 								<th class="text-center">m/w</th>
 								<th>Teilnahmezeitpunkt</th>
-								<th class="text-center">Feedback<br/>abgeschlossen</th>
+<!-- 								<th class="text-center">Feedback<br/>abgeschlossen</th> -->
 							</tr>
 							<tr th:each="participant : ${participantList}" th:object="${participant}">
 								<td class="text-center" th:text="*{idParticipant}"></td>
@@ -51,7 +61,7 @@
 								<td th:text="*{mobile}"></td>
 								<td class="text-center" th:text="*{gender}"></td>
 								<td th:text="*{getformattedParticipationDateString()}"></td>
-								<td class="text-center" th:text="*{isFeedbackCompleted() ? 'JA' : 'NEIN' }"></td>
+<!-- 								<td class="text-center" th:text="*{isFeedbackSubmitted() ? 'JA' : 'NEIN' }"></td> -->
 							</tr>
 						</table>
 						

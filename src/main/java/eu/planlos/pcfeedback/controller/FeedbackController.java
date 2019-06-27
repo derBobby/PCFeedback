@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.SessionAttribute;
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
-import eu.planlos.pcfeedback.exceptions.ParticipantHasAlreadyCompletedFeedbackException;
+import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.FeedbackContainer;
 import eu.planlos.pcfeedback.model.Gender;
@@ -80,9 +80,9 @@ public class FeedbackController {
 		try {
 
 			ratingQuestionService.saveFeedback(feedbackMap);
-			participantService.completeFeedback(participant);
+			participantService.save(participant);
 			
-		} catch (ParticipantHasAlreadyCompletedFeedbackException e) {
+		} catch (ParticipantAlreadyExistingException e) {
 			logger.error("This should not happen, because session is destroyed on submitting feedback");
 			logger.error(participant.toString());
 			

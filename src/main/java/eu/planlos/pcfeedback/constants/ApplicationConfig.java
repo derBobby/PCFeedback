@@ -1,9 +1,15 @@
 package eu.planlos.pcfeedback.constants;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class ApplicationConfig {
 
-	//TODO how to set question count per participant?
-	public static final int NEEDED_QUESTION_COUNT = 15;
-
 	public static final String TIME_ZONE = "Europe/Berlin";
+
+	@Value("${eu.planlos.pcfeedback.question-count}")
+	public static int NEEDED_QUESTION_COUNT;
+	
+	@Value("${eu.planlos.pcfeedback.need-mail}")
+	public static boolean NEED_MAIL_ADDRESS; 		
+
 }

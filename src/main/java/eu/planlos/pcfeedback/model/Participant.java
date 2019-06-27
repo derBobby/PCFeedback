@@ -42,8 +42,7 @@ public class Participant implements Serializable {
 	@NotBlank
 	private String name;
 
-	@Column(nullable=false)
-	@NotBlank
+	@Column(nullable=true)
 	private String email;
 	
 	@Column(nullable=false)
@@ -57,21 +56,16 @@ public class Participant implements Serializable {
 	@Column(nullable=false)
 	private LocalDateTime participationDate;
 	
-	@Column(nullable=false)
-	private boolean feedbackCompleted;
-
 	public Participant() {
-		setFeedbackCompleted(false);
 		setParticipationDate();
 	}
 
-	public Participant(String firstname, String name, String email, String mobile, Gender gender, boolean feedbackCompleted) {
+	public Participant(String firstname, String name, String email, String mobile, Gender gender) {
 		setFirstname(firstname);
 		setName(name);
 		setEmail(email);
 		setMobile(mobile);
 		setGender(gender);
-		setFeedbackCompleted(feedbackCompleted);
 		setParticipationDate();
 	}
 	
@@ -137,14 +131,6 @@ public class Participant implements Serializable {
 		this.participationDate = LocalDateTime.now(timeZone);
 	}
 	
-	public boolean isFeedbackCompleted() {
-		return feedbackCompleted;
-	}
-
-	public void setFeedbackCompleted(boolean feedbackCompleted) {
-		this.feedbackCompleted = feedbackCompleted;
-	}
-
 	/*
 	 * Functions
 	 */	

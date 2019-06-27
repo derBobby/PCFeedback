@@ -65,8 +65,8 @@ public class FeedbackStartController {
 
 		try {
 			
-			logger.debug("Trying to save participant: " + participant.toString());
-			participantService.save(participant);
+			logger.debug("Checking if participant exists: " + participant.toString());
+			participantService.exists(participant);
 			
 			logger.debug("Adding participant to session");
 			session.setAttribute(SessionAttribute.PARTICIPANT, participant);
@@ -76,7 +76,7 @@ public class FeedbackStartController {
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			
-			logger.error("Participant already exists, returning to form");
+			logger.error("Participant exists already, returning to form");
 			
 			model.addAttribute("PARTICIPANT_EXISTS", true);
 			mfs.fillGlobal(model);

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
-import eu.planlos.pcfeedback.exceptions.ParticipantHasAlreadyCompletedFeedbackException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.repository.ParticipantRepository;
@@ -88,7 +87,7 @@ public class ParticipantService implements EnvironmentAware {
 		if(profiles.contains(ApplicationProfile.DEV_PROFILE)) {
 			
 			String text = ((Long) System.currentTimeMillis()).toString();
-			Participant participant = new Participant(text, text, text +"@example.com", text, Gender.MALE, false);
+			Participant participant = new Participant(text, text, text +"@example.com", text, Gender.MALE);
 			return participant;
 		}
 		
@@ -103,7 +102,7 @@ public class ParticipantService implements EnvironmentAware {
 	public Participant createParticipantForDB(Gender gender) {
 		
 		String text = ((Long) System.currentTimeMillis()).toString();
-		Participant participant = new Participant(text, text, text +"@example.com", text, gender, false);
+		Participant participant = new Participant(text, text, text +"@example.com", text, gender);
 		return participant;
 	}
 
@@ -112,19 +111,8 @@ public class ParticipantService implements EnvironmentAware {
 		this.environment = environment;		
 	}
 
-	public void completeFeedback(Participant participant) throws ParticipantHasAlreadyCompletedFeedbackException {
+	public List<Participant> getThreeRandomWinnerParticipants() {
 
-		boolean hasFeedbackAlreadyCompleted = participantRepository.existsByIdParticipantAndFeedbackCompleted(participant.getIdParticipant(), true);
-		
-		if(hasFeedbackAlreadyCompleted) {
-			throw new ParticipantHasAlreadyCompletedFeedbackException();
-		}
-		
-		participant.setFeedbackCompleted(true);
-		participantRepository.save(participant);
-	}
-
-	public List<Participant> getThreeRandomParticipants() {
 		List<Participant> allParticipants = getAllParticipants();
 		
 		Collections.shuffle(allParticipants);
