@@ -131,4 +131,8 @@ public class ParticipantService implements EnvironmentAware {
 		
 		return allParticipants;
 	}
+
+	public void resetDB() {
+		participantRepository.deleteAll();		
+	}
 }

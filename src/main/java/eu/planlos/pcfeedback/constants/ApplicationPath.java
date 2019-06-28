@@ -59,7 +59,7 @@ public class ApplicationPath {
 	/*
 	 * ADMINISTRATION
 	 */
-	public static final String URL_ADMIN_CONFIG					= URL_AREA_ADMIN + "config"; //TODO new controller
-	public static final String URL_ADMIN_SHOWFEEDBACK			= URL_AREA_ADMIN + "showfeedback"; //TODO new controller
+	public static final String URL_ADMIN_RESET					= URL_AREA_ADMIN + "resetdb";
+	public static final String URL_ADMIN_SHOWFEEDBACK			= URL_AREA_ADMIN + "showfeedback";
 	public static final String RES_ADMIN_SHOWFEEDBACK			= "admin/showfeedback";
 }

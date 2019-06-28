@@ -224,4 +224,14 @@ public class RatingQuestionService {
 		
 		return rqList;
 	}
+
+	public void resetDB() {
+		List<RatingQuestion> rqList = (List<RatingQuestion>) ratingQuestionRepository.findAll();
+		for(RatingQuestion rq : rqList) {
+			rq.setCountVoted(0);
+			rq.setVotesOne(0);
+			rq.setVotesTwo(0);
+		}
+		ratingQuestionRepository.saveAll(rqList);
+	}
 }
