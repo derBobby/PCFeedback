@@ -22,7 +22,7 @@
 								<span th:errors="*{name}" class="text-warning"></span>
 							</div>
 			
-							<div class="form-group">
+							<div th:if="${needMobile}" class="form-group">
 								<input th:field="*{mobile}" class="form-control" placeholder="Mobilnummmer" />
 								<span th:errors="*{mobile}" class="text-warning"></span>
 							</div>
@@ -45,11 +45,18 @@
 								<span th:if="${genderError != null}" th:text="${genderError}" class="text-warning">Wooopsie TODO</span>
 							</div>
 
-							<div th:if="${PARTICIPANT_EXISTS} and ${needMail}" class="alert alert-danger">
+							<!--  TODO simplify this -->
+							<div th:if="${PARTICIPANT_EXISTS} and ${needMail} and ${needMobile}" class="alert alert-danger">
 								Name, Mailadresse oder Handynummer wird bereits verwendet.
-							</div>		
-							<div th:if="${PARTICIPANT_EXISTS} and ${not needMail}" class="alert alert-danger">
+							</div>
+							<div th:if="${PARTICIPANT_EXISTS} and ${needMail} and ${not needMobile}" class="alert alert-danger">
+								Name oder Mailadresse wird bereits verwendet.
+							</div>
+							<div th:if="${PARTICIPANT_EXISTS} and ${not needMail} and ${needMobile}" class="alert alert-danger">
 								Name oder Handynummer wird bereits verwendet.
+							</div>
+							<div th:if="${PARTICIPANT_EXISTS} and ${not needMail} and ${not needMobile}" class="alert alert-danger">
+								Name wird bereits verwendet.
 							</div>
 							
 							<div class="form-group mb-0">

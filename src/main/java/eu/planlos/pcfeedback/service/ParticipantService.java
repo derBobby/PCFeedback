@@ -30,6 +30,9 @@ public class ParticipantService implements EnvironmentAware {
 	@Value("${eu.planlos.pcfeedback.need-mail}")
 	private boolean needMail;
 	
+	@Value("${eu.planlos.pcfeedback.need-mobile}")
+	private boolean needMobile;
+	
 	@Autowired
 	private ParticipantRepository participantRepository;
 
@@ -70,7 +73,7 @@ public class ParticipantService implements EnvironmentAware {
 			throw new ParticipantAlreadyExistingException("E-Mail bereits vergeben!");
 		}
 
-		if (participantRepository.existsByMobile(participant.getMobile())) {
+		if (needMobile && participantRepository.existsByMobile(participant.getMobile())) {
 			logger.error("Participant exists by mobile");
 			throw new ParticipantAlreadyExistingException("Handynummer bereits vergeben!");
 		}

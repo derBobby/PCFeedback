@@ -24,6 +24,9 @@ public class ModelFillerService implements EnvironmentAware {
 	
 	@Value("${eu.planlos.pcfeedback.need-mail}")
 	private boolean needMail;
+	
+	@Value("${eu.planlos.pcfeedback.need-mobile}")
+	private boolean needMobile;
 
 	@Value("${eu.planlos.pcfeedback.question-count}")
 	public int neededQuestionCount;
@@ -34,6 +37,7 @@ public class ModelFillerService implements EnvironmentAware {
 
 		logger.debug("Adding configs from application.properties");
 		model.addAttribute("needMail", needMail);
+		model.addAttribute("needMobile", needMobile);
 		
 		logger.debug("Preparing model for global area");
 		model.addAttribute("URL_HOME", ApplicationPath.URL_HOME);
