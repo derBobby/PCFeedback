@@ -29,7 +29,7 @@
 						<div class="card-body">
 							<p th:inline="text">[[*{firstname}]] [[*{name}]]</p>
 							<p th:if="${needMail}" th:inline="text">[[*{email}]]</p>
-							<p th:inline="text">[[*{mobile}]]</p>
+							<p th:if="${needMobile}" th:inline="text">[[*{mobile}]]</p>
           				</div>
          			</div>
        			</div>
@@ -57,7 +57,7 @@
 										<th>Vorname</th>
 										<th>Nachname</th>
 										<th th:if="${needMail}">E-Mail</th>
-										<th>Mobil</th>
+										<th th:if="${needMobile}">Mobil</th>
 										<th class="text-center">m/w</th>
 										<th class="text-center">Teilnahmezeitpunkt</th>
 									</tr>
@@ -66,7 +66,7 @@
 										<td th:text="*{firstname}"></td>
 										<td th:text="*{name}"></td>
 										<td th:if="${needMail}" th:text="*{email}"></td>
-										<td th:text="*{mobile}"></td>
+										<td th:if="${needMobile}"th:text="*{mobile}"></td>
 										<td class="text-center" th:text="*{gender}"></td>
 										<td class="text-center" th:text="*{getformattedParticipationDateString()}"></td>
 									</tr>

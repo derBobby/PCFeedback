@@ -43,8 +43,7 @@ public class Participant implements Serializable {
 	@Column(nullable=true)
 	private String email;
 	
-	@Column(nullable=false)
-	@NotBlank
+	@Column(nullable=true)
 	private String mobile;
 	
 	@Column(nullable=false)
