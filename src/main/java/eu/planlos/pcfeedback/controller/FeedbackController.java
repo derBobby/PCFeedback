@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -27,6 +28,7 @@ import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
+import eu.planlos.pcfeedback.service.UserAgentService;
 
 @Controller
 public class FeedbackController {
@@ -41,6 +43,9 @@ public class FeedbackController {
 	
 	@Autowired
 	private ParticipantService participantService;
+	
+	@Autowired
+	private UserAgentService userAgentService;
 	
 	@RequestMapping(path = ApplicationPath.URL_FEEDBACK)
 	public String feedback(Model model, HttpSession session) {
@@ -72,7 +77,7 @@ public class FeedbackController {
 	}
 	
 	@RequestMapping(path = ApplicationPath.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
-	public String feedbackSubmit(@ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) throws NoParticipantException {
+	public String feedbackSubmit(@RequestHeader("User-Agent") String userAgentText, @ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) throws NoParticipantException {
 		
 		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
 		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
@@ -85,6 +90,7 @@ public class FeedbackController {
 				
 			ratingQuestionService.saveFeedback(feedbackMap);
 			participantService.save(participant);
+			userAgentService.saveUserAgent(userAgentText);
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			logger.error("This should not happen, because session is destroyed on submitting feedback");

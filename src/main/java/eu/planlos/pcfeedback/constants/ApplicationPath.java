@@ -61,5 +61,7 @@ public class ApplicationPath {
 	 */
 	public static final String URL_ADMIN_RESET					= URL_AREA_ADMIN + "resetdb";
 	public static final String URL_ADMIN_SHOWFEEDBACK			= URL_AREA_ADMIN + "showfeedback";
+	public static final String URL_ADMIN_SHOWUSERAGENTS			= URL_AREA_ADMIN + "showuseragents";
 	public static final String RES_ADMIN_SHOWFEEDBACK			= "admin/showfeedback";
+	public static final String RES_ADMIN_SHOWUSERAGENTS			= "admin/showuseragents";
 }
