@@ -19,18 +19,26 @@
           				</div>
 						<div class="card-body">
 
-							<div class="table-responsive">
-								<table class="table text-nowrap table-bordered table-hover table-striped m-0 text-left table-sm">
-									<tr>
-										<th class="text-center">#</th>
-										<th>User-Agent</th>
+							<div th:remove="tag" th:if="${#lists.isEmpty(userAgentList)}">
+								<p class="text-center">Es gibt noch keine Teilnehmer.</p>
+							</div>
+							
+							<div th:remove="tag" th:if="${not #lists.isEmpty(userAgentList)}">
 
-									</tr>
-									<tr th:each="userAgent : ${userAgentList}" th:object="${userAgent}">
-										<td class="text-center" th:text="*{idUserAgent}"></td>
-										<td th:text="*{text}"></td>
-									</tr>
-								</table>
+								<div class="table-responsive">
+									<table class="table text-nowrap table-bordered table-hover table-striped m-0 text-left table-sm">
+										<tr>
+											<th class="text-center">#</th>
+											<th>User-Agent</th>
+	
+										</tr>
+										<tr th:each="userAgent : ${userAgentList}" th:object="${userAgent}">
+											<td class="text-center" th:text="*{idUserAgent}"></td>
+											<td th:text="*{text}"></td>
+										</tr>
+									</table>
+								</div>
+						
 							</div>
 						
           				</div>

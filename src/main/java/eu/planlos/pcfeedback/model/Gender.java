@@ -15,4 +15,12 @@ public enum Gender {
 	public String toString() {
 		return this.gender;
 	}
+	
+	public Gender getOppositeGender() {
+		
+		if(this.gender.equals(Gender.MALE)) {
+			return Gender.FEMALE;
+		}		
+		return Gender.MALE;
+	}
 }

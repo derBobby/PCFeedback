@@ -30,7 +30,7 @@ public class Participant implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
-	private long idParticipant;
+	private Long idParticipant;
 
 	@Column(nullable=false)
 	@NotBlank
@@ -68,11 +68,11 @@ public class Participant implements Serializable {
 		setParticipationDate();
 	}
 	
-	public long getIdParticipant() {
+	public Long getIdParticipant() {
 		return idParticipant;
 	}
 
-	public void setIdParticipant(long idParticipant) {
+	public void setIdParticipant(Long idParticipant) {
 		this.idParticipant = idParticipant;
 	}
 	

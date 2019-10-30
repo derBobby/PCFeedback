@@ -60,8 +60,13 @@ public class ApplicationPath {
 	 * ADMINISTRATION
 	 */
 	public static final String URL_ADMIN_RESET					= URL_AREA_ADMIN + "resetdb";
-	public static final String URL_ADMIN_SHOWFEEDBACK			= URL_AREA_ADMIN + "showfeedback";
+	public static final String URL_ADMIN_SHOWFEEDBACK			= URL_AREA_ADMIN + "showresults";
 	public static final String URL_ADMIN_SHOWUSERAGENTS			= URL_AREA_ADMIN + "showuseragents";
-	public static final String RES_ADMIN_SHOWFEEDBACK			= "admin/showfeedback";
+	public static final String URL_ADMIN_EDITPARTICIPANT		= URL_AREA_ADMIN + "editparticipant" + URL_DELIMETER;
+
+	public static final String RES_ADMIN_SHOWFEEDBACK			= "admin/showresults";
 	public static final String RES_ADMIN_SHOWUSERAGENTS			= "admin/showuseragents";
+	public static final String RES_ADMIN_EDITPARTICIPANT		= "admin/editparticipant";
+	public static final String RES_ADMIN_EDITPARTICIPANTDONE	= "admin/editparticipantdone";
+	
 }

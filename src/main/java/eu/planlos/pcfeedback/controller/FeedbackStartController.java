@@ -53,7 +53,7 @@ public class FeedbackStartController {
 			
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
 			if(genderFieldError != null) {
-				logger.error("Gender is missing");
+				logger.debug("Gender is missing");
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
 			

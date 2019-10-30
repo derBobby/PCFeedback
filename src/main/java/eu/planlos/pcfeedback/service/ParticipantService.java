@@ -3,6 +3,7 @@ package eu.planlos.pcfeedback.service;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
+import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.repository.ParticipantRepository;
@@ -37,6 +39,14 @@ public class ParticipantService implements EnvironmentAware {
 	private ParticipantRepository participantRepository;
 
 	private Environment environment;
+	
+	public void saveEdited(Participant participant) throws ParticipantNotFoundException {
+		
+		if(participant.getIdParticipant() == null) {
+			throw new ParticipantNotFoundException("Kann Teilnehmer nicht finden, da keine ID gesetzt ist.");
+		}
+		participantRepository.save(participant);
+	}
 	
 	public void save(Participant participant) throws ParticipantAlreadyExistingException {
 
@@ -81,6 +91,18 @@ public class ParticipantService implements EnvironmentAware {
 		return false;
 	}
 
+	public Participant findByIdParticipant(Long idParticipant) throws ParticipantNotFoundException {
+		
+		Optional<Participant> optParticipant = participantRepository.findById(idParticipant);
+		
+		if(!optParticipant.isPresent()) {
+			throw new ParticipantNotFoundException("Participant konnte anhand der id nicht gefunden werden.");
+		}
+		
+		return optParticipant.get();
+	}
+	
+	
 	public List<Participant> getAllParticipants() {
 		return (List<Participant>) participantRepository.findAll();
 	}
@@ -137,5 +159,22 @@ public class ParticipantService implements EnvironmentAware {
 
 	public void resetDB() {
 		participantRepository.deleteAll();		
+	}
+
+	public boolean isGenderChanged(Participant newParticipant) throws ParticipantNotFoundException {
+
+		if(newParticipant.getIdParticipant() == null) {
+			throw new ParticipantNotFoundException("Kann Teilnehmer nicht finden, da keine ID gesetzt ist.");
+		}
+		
+		Participant oldParticipant = participantRepository.findById(newParticipant.getIdParticipant()).get();
+		
+		Gender oldGender = oldParticipant.getGender();
+		Gender newGender = newParticipant.getGender();
+		
+		if(oldGender.equals(newGender)) {
+			return false;
+		}
+		return true;
 	}
 }

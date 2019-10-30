@@ -20,9 +20,9 @@ import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 
 @Controller
-public class ShowFeedbackController {
+public class ResultsController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ShowFeedbackController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ResultsController.class);
 
 	@Autowired
 	private ParticipantService pService;
@@ -34,7 +34,7 @@ public class ShowFeedbackController {
 	private ModelFillerService mfs;
 	
 	@RequestMapping(path = ApplicationPath.URL_ADMIN_SHOWFEEDBACK, method = RequestMethod.GET)
-	public String showFeedback(Model model) throws RatingQuestionsNotExistentException {
+	public String showResults(Model model) throws RatingQuestionsNotExistentException {
 
 		logger.debug("Loading random participants");
 		List<Participant> randomParticipantList = pService.getRandomWinnerParticipants();
@@ -49,7 +49,7 @@ public class ShowFeedbackController {
 		List<RatingQuestion> rqListFemale = rqService.loadByGender(Gender.FEMALE);
 		
 		mfs.fillGlobal(model);
-		mfs.fillExport(model, randomParticipantList, participantList, rqListMale, rqListFemale);
+		mfs.fillResults(model, randomParticipantList, participantList, rqListMale, rqListFemale);
 		
 		return ApplicationPath.RES_ADMIN_SHOWFEEDBACK;
 	}

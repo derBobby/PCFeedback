@@ -74,11 +74,13 @@ public class ModelFillerService implements EnvironmentAware {
 		}
 	}
 
-	public void fillExport(Model model, List<Participant> randomParticipantList, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
+	public void fillResults(Model model, List<Participant> randomParticipantList, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
 		model.addAttribute("randomParticipantList", randomParticipantList);
 		model.addAttribute("participantList", participantList);
 		model.addAttribute("rqListMale", rqListMale);
 		model.addAttribute("rqListFemale", rqListFemale);
+		
+		model.addAttribute("editParticipantURL", ApplicationPath.URL_ADMIN_EDITPARTICIPANT);
 	}
 
 	public void fillError(Model model, int statusCode, String errorTitle, String errorMessage, Exception errorException, String errorTrace, boolean printTrace) {

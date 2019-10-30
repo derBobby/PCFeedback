@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+		<main class="container pt-3">
+			<div class="card mb-3">
+				<div class="card-header text-center"><h3 class="mb-0">Kontakt</h3></div>
+				<div class="card-block p-3">
+					<div class="col-lg-12 text-center">
+						<p class="lead">Nach der Teennight werden deine Daten gelöscht!</p>
+						
+						<form th:action="@{${URL_ADMIN_EDITPARTICIPANT}}" th:object="${participant}" method="post" onsubmit="setGender()">
+							
+							<input type="hidden" th:field="*{idParticipant}" />
+							
+							<div class="form-group">
+								<input th:field="*{firstname}" class="form-control" placeholder="Vorname" />
+								<span th:errors="*{firstname}" class="text-warning"></span>
+							</div>
+			
+							<div class="form-group">
+								<input th:field="*{name}" class="form-control" placeholder="Nachname" />
+								<span th:errors="*{name}" class="text-warning"></span>
+							</div>
+			
+							<div th:if="${needMobile}" class="form-group">
+								<input th:field="*{mobile}" class="form-control" placeholder="Mobilnummmer" />
+								<span th:errors="*{mobile}" class="text-warning"></span>
+							</div>
+			
+							<div th:if="${needMail}" class="form-group">
+								<input type="email" th:field="*{email}" class="form-control" placeholder="Email" />
+								<span th:errors="*{email}" class="text-warning"></span>
+							</div>
+							
+							<div class="form-group" onchange="setGender()">
+								<label th:for="gender">Ich bin: </label>
+								<input id="genderToggle" name="genderToggle" type="checkbox"
+									th:checked="*{gender !=null and gender.ordinal()==1}"
+									data-toggle="toggle"
+									data-on="<i class='fas fa-venus'></i> W"
+									data-off="<i class='fas fa-mars'></i> M"
+									data-onstyle="danger"
+									data-offstyle="info" />
+								<input id="gender" name="gender" type="hidden" />
+								<span th:if="${genderError != null}" th:text="${genderError}" class="text-warning"></span>
+							</div>
+
+							<!--  TODO simplify this -->
+							<div th:if="${PARTICIPANT_EXISTS} and ${needMail} and ${needMobile}" class="alert alert-danger">
+								Name, Mailadresse oder Handynummer wird bereits verwendet.
+							</div>
+							<div th:if="${PARTICIPANT_EXISTS} and ${needMail} and ${not needMobile}" class="alert alert-danger">
+								Name oder Mailadresse wird bereits verwendet.
+							</div>
+							<div th:if="${PARTICIPANT_EXISTS} and ${not needMail} and ${needMobile}" class="alert alert-danger">
+								Name oder Handynummer wird bereits verwendet.
+							</div>
+							<div th:if="${PARTICIPANT_EXISTS} and ${not needMail} and ${not needMobile}" class="alert alert-danger">
+								Name wird bereits verwendet.
+							</div>
+							
+							<div class="form-group mb-0">
+								<div>
+									<button type="submit" id="submit" class="btn btn-primary">
+										Zum Feedback!<br /><i class="fas fa-step-forward"></i>
+									</button>
+								</div>
+							</div>
+							
+						</form>
+					</div>	
+				</div>
+				<div class="card-footer">&nbsp;</div>
+			</div>
+		</main>
+		<footer th:replace="template :: footer"></footer>
+	</body>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+	
+	function setGender() {
+		
+		var female = /*[[${T(eu.planlos.pcfeedback.model.Gender).FEMALE}]]*/ 'default';
+		var male = /*[[${T(eu.planlos.pcfeedback.model.Gender).MALE}]]*/ 'default';
+		
+		if (document.getElementById('genderToggle').checked) {
+            document.getElementById('gender').value = female;
+//             document.getElementById('gender2').checked = true;
+        } else {
+            document.getElementById('gender').value = male;
+//             document.getElementById('gender2').checked = false;
+        }
+	}
+/*]]>*/
+</script>
+
+</html>

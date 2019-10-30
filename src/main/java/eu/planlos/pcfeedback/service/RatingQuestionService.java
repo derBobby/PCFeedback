@@ -122,13 +122,41 @@ public class RatingQuestionService {
 		for(Long idRatingQuestion : feedbackMap.keySet()) {
 			
 			int voteFor = feedbackMap.get(idRatingQuestion);
-			logger.debug("Rating question " + idRatingQuestion + " got vote for rating obejct \"" + voteFor + "\"");
+			logger.debug("Rating question " + idRatingQuestion + " got vote for rating object \"" + voteFor + "\"");
+			
+			//TODO just for debugging removal of RQs
+			RatingQuestion rq = ratingQuestionRepository.findById(idRatingQuestion).get();
+			logger.debug(rq.getObjectOne().getName() + " " + rq.getObjectTwo().getName());
+			//TODO End
 			
 			if(voteFor == 1) {
 				ratingQuestionRepository.addVoteForRatingObjectOne(idRatingQuestion);
 				continue;
 			}
 			ratingQuestionRepository.addVoteForRatingObjectTwo(idRatingQuestion);
+		}	
+	}
+	
+	//TODO does this work? :D
+	@Transactional
+	public void removeFeedback(Map<Long, Integer> feedbackMap) {
+		
+		logger.debug("Remove feedback from database");
+		for(Long idRatingQuestion : feedbackMap.keySet()) {
+			
+			int voteFor = feedbackMap.get(idRatingQuestion);
+			logger.debug("Rating question " + idRatingQuestion + " gets vote for rating object \"" + voteFor + "\" removed");
+
+			//TODO just for debugging removal of RQs
+			RatingQuestion rq = ratingQuestionRepository.findById(idRatingQuestion).get();
+			logger.debug(rq.getObjectOne().getName() + " " + rq.getObjectTwo().getName());
+			//TODO End
+			
+			if(voteFor == 1) {
+				ratingQuestionRepository.removeVoteForRatingObjectOne(idRatingQuestion);
+				continue;
+			}
+			ratingQuestionRepository.removeVoteForRatingObjectTwo(idRatingQuestion);
 		}	
 	}
 

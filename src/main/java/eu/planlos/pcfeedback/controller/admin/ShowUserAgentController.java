@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.controller;
+package eu.planlos.pcfeedback.controller.admin;
 
 import java.util.List;
 

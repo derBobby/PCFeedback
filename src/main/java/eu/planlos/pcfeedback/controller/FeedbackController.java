@@ -27,6 +27,7 @@ import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
+import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 import eu.planlos.pcfeedback.service.UserAgentService;
 
@@ -46,6 +47,9 @@ public class FeedbackController {
 	
 	@Autowired
 	private UserAgentService userAgentService;
+	
+	@Autowired
+	private ParticipationResultService participationResultService;
 	
 	@RequestMapping(path = ApplicationPath.URL_FEEDBACK)
 	public String feedback(Model model, HttpSession session) {
@@ -87,9 +91,15 @@ public class FeedbackController {
 			if(participant == null) {
 				throw new NoParticipantException();
 			}
-				
+			
+			//Save feedback
 			ratingQuestionService.saveFeedback(feedbackMap);
 			participantService.save(participant);
+						
+			//Save the result for later plausibilisation to recreate results after data correction
+			participationResultService.saveParticipationResult(participant, feedbackMap);
+			
+			//Save user agent for later analysis
 			userAgentService.saveUserAgent(userAgentText);
 			
 		} catch (ParticipantAlreadyExistingException e) {
