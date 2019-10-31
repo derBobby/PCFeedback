@@ -25,6 +25,7 @@ import eu.planlos.pcfeedback.model.FeedbackContainer;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
@@ -75,8 +76,9 @@ public class FeedbackController {
 		} 
 				
 		model.addAttribute("ratingQuestionList", ratingQuestionList);
+
+		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
 		mfs.fillGlobal(model);
-		
 		return ApplicationPath.RES_FEEDBACK;
 	}
 	
@@ -127,8 +129,9 @@ public class FeedbackController {
 			model.addAttribute("feedbackError", e.getMessage());
 			model.addAttribute("ratingQuestionList", ratingQuestionList);
 			model.addAttribute("chosenList", feedbackMap);
-			mfs.fillGlobal(model);
 			
+			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
+			mfs.fillGlobal(model);
 			return ApplicationPath.RES_FEEDBACK;
 		}
 		

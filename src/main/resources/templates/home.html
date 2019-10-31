@@ -9,9 +9,9 @@
 	            <div class="card-block p-3">
 					<div class="col-lg-12 text-center">
 					
-						<p class="lead">Gib uns Feedback und hilf uns die Teennight noch besser zu machen. Unter den Teilnehmern verlosen wir zwei Freiplätze für die Teennight 2020!</p>
+						<p class="lead" th:text="${msgHome}"></p>
 						<p class="lead">Und so einfach geht's:</p>
-						<p class="lead" th:inline="text"><b>Wir zeigen dir [[${NEEDED_QUESTION_COUNT}]] Paare von Begriffen und du wählst für jedes Paar den, der dir <u>wichtiger</u> ist.</b></p>
+						<p class="lead" th:inline="text"><b>Wir zeigen dir [[${NEEDED_QUESTION_COUNT}]] Paare von Begriffen und du beantwortes für jedes die Frage auf der folgenden Seite!</p>
 						<div>
 							<a th:href="@{${URL_FEEDBACK_START}}" class="btn btn-primary" role="button">
 								Los gehts!<br /><i class="fas fa-play"></i>

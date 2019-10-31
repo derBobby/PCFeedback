@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.SessionAttribute;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 
 @Controller
@@ -34,8 +35,8 @@ public class FeedbackEndController {
 		
 		session.setAttribute(SessionAttribute.PARTICIPANT, null);
 		
+		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKEND);
 		mfs.fillGlobal(model);
-		
 		return ApplicationPath.RES_FEEDBACK_END;
 	}
 }
