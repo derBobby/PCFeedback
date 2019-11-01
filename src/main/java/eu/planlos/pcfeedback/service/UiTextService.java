@@ -23,9 +23,9 @@ public class UiTextService  {
 		utr.save(uiText);
 	}
 
-	public UiText getText(UiTextKey uiTextKey) {
+	public String getText(UiTextKey uiTextKey) {
 		UiText uit = utr.findById(uiTextKey).get();
-		return uit;//.getText();
+		return uit.getText();
 	}
 	
 	public void initializeUiText() {

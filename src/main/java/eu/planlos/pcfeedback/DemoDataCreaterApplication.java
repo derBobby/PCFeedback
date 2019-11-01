@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
-import eu.planlos.pcfeedback.service.SampleDataCreationService;
+import eu.planlos.pcfeedback.service.DataCreationService;
 
 @Component
-@Profile(value = ApplicationProfile.DEV_PROFILE)
-public class SampleDEVDataCreaterApplication implements ApplicationRunner {
+@Profile(value = {ApplicationProfile.DEV_PROFILE, ApplicationProfile.REV_PROFILE})
+public class DemoDataCreaterApplication implements ApplicationRunner {
 
-	private static final Logger logger = LoggerFactory.getLogger(SampleDEVDataCreaterApplication.class);
+	private static final Logger logger = LoggerFactory.getLogger(DemoDataCreaterApplication.class);
 	
 	@Autowired
-	private SampleDataCreationService sdcs;
+	private DataCreationService dcs;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -31,9 +31,8 @@ public class SampleDEVDataCreaterApplication implements ApplicationRunner {
 	//TODO does this work? :D
 	@Transactional
 	private void initDB() throws Exception {
-
-		sdcs.createCommon();
-		sdcs.createParticipants();		
+		dcs.createCommon();
+		dcs.createParticipants();		
 	}
 
 }

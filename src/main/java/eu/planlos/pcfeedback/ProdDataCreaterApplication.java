@@ -10,37 +10,33 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
-import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.service.RatingQuestionService;
-import eu.planlos.pcfeedback.service.SampleDataCreationService;
+import eu.planlos.pcfeedback.service.DataCreationService;
 
 @Component
 @Profile(value = ApplicationProfile.PROD_PROFILE)
-public class SamplePRODDataCreaterApplication implements ApplicationRunner {
+public class ProdDataCreaterApplication implements ApplicationRunner {
 
-	private static final Logger logger = LoggerFactory.getLogger(SamplePRODDataCreaterApplication.class);
-
-	@Autowired
-	private RatingQuestionService rqs;
+	private static final Logger logger = LoggerFactory.getLogger(ProdDataCreaterApplication.class);
 
 	@Autowired
-	private SampleDataCreationService sdcs;
+	private DataCreationService dcs;
 	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		if(rqs.loadByGender(Gender.MALE).size() == 0) {
-			logger.debug("Initializing database");
-			initDB();
-			logger.debug("Initializing database ... DONE");
+		
+		if(! dcs.isDataAlreadyCreated()) {
+			logger.debug("No db init necessary. Already rating questions existing");
 			return;
 		}
-		logger.debug("No db init necessary. Already rating questions existing");
+		
+		logger.debug("Initializing database");
+		initDB();
+		logger.debug("Initializing database ... DONE");
 	}
 
 	//TODO does this work? :D
 	@Transactional
 	private void initDB() throws Exception {
-
-		sdcs.createCommon();
+		dcs.createCommon();
 	}
 }
