@@ -12,14 +12,14 @@ import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.repository.UiTextRepository;
 
 @Service
-public class UiTextService  {
+public class UiTextService {
 		
 	@Autowired
 	private UiTextRepository utr;
 	
 	//TODO can this be broken?
-	public void setText(UiTextKey uiTextKey, String text) {
-		UiText uiText = new UiText(uiTextKey, text);
+	public void createText(UiTextKey uiTextKey, String description, String text) {
+		UiText uiText = new UiText(uiTextKey, description, text);
 		utr.save(uiText);
 	}
 
@@ -34,7 +34,7 @@ public class UiTextService  {
 
 		List<UiTextKey> fieldList = Arrays.asList(UiTextKey.values());
 		for(UiTextKey uiTextKey : fieldList) {
-			uiTextList.add(new UiText(uiTextKey, null));
+			uiTextList.add(new UiText(uiTextKey));
 		}
 		
 		utr.saveAll(uiTextList);
@@ -55,5 +55,9 @@ public class UiTextService  {
 		}
 		
 		return true;
+	}
+
+	public List<UiText> getAllUiText() {
+		return (List<UiText>) utr.findAll();
 	}
 }

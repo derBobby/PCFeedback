@@ -62,6 +62,7 @@ public class ModelFillerService implements EnvironmentAware {
 
 		logger.debug("Preparing model for administration area");
 		model.addAttribute("URL_ADMIN_SHOWFEEDBACK", ApplicationPath.URL_ADMIN_SHOWFEEDBACK);
+		model.addAttribute("URL_ADMIN_EDITUITEXT", ApplicationPath.URL_ADMIN_EDITUITEXT);
 		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPath.URL_ADMIN_SHOWUSERAGENTS);
 		model.addAttribute("URL_LOGOUT", ApplicationPath.URL_LOGOUT);
 

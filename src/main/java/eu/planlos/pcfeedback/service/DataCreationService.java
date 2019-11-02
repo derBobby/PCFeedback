@@ -91,20 +91,24 @@ public class DataCreationService {
 		
 		uts.initializeUiText();
 		
-		uts.setText(
+		uts.createText(
 				UiTextKey.MSG_HOME,
+				"Begrüßung",
 				"Gib uns Feedback und hilf uns die Teennight noch besser zu machen. Unter den Teilnehmern verlosen wir zwei Freiplätze für die Teennight 2020!"
 			);
-		uts.setText(
+		uts.createText(
 				UiTextKey.MSG_FEEDBACKSTART,
+				"Formular",
 				"Nach der Teennight werden deine Daten gelöscht!"
 			);
-		uts.setText(
+		uts.createText(
 				UiTextKey.MSG_FEEDBACKQUESTION,
+				"Fragestellung",
 				"Was ist dir während der Teennight <u>wichtiger</u>?"
 			);
-		uts.setText(
+		uts.createText(
 				UiTextKey.MSG_FEEDBACKEND,
+				"Ende",
 				"Die Teennight sagt danke! Dein Feedback hilft uns sehr. Du bist jetzt im Lostopf fürs Closing."
 			);
 		

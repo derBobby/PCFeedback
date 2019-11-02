@@ -16,9 +16,9 @@ import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.UserAgentService;
 
 @Controller
-public class ShowUserAgentController {
+public class UserAgentController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ShowUserAgentController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserAgentController.class);
 	
 	@Autowired
 	private ModelFillerService mfs;

@@ -21,9 +21,9 @@ import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 
 @Controller
-public class EditParticipantController {
+public class ParticipantController {
 
-	private static final Logger logger = LoggerFactory.getLogger(EditParticipantController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ParticipantController.class);
 	
 	@Autowired
 	private ModelFillerService mfs;

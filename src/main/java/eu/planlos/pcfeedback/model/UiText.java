@@ -17,21 +17,35 @@ public class UiText {
 	private UiTextKey uiTextKey;
 	
 	@Column(unique = false)
+	private String description;
+	
+	@Column(unique = false)
 	private String text;
 
 	public UiText() {
 	}
 	
-	public UiText(UiTextKey uiTextKey, String text) {
+	public UiText(UiTextKey uiTextKey, String description, String text) {
 		this.uiTextKey = uiTextKey;
+		this.description = description;
 		this.text = text;
+	}
+	
+	public UiText(UiTextKey uiTextKey) {
+		this.uiTextKey = uiTextKey;
+		this.description = null;
+		this.text = null;
+	}
+	
+	public UiTextKey getUiTextKey() {
+		return this.uiTextKey;
+	}
+
+	public String getDescription() {
+		return this.description;
 	}
 
 	public String getText() {
 		return this.text;
-	}
-	
-	public UiTextKey getTextKey() {
-		return this.uiTextKey;
 	}
 }
