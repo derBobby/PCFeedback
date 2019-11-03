@@ -102,7 +102,7 @@ public class FeedbackController {
 			participationResultService.saveParticipationResult(participant, feedbackMap);
 			
 			//Save user agent for later analysis
-			userAgentService.saveUserAgent(userAgentText);
+			userAgentService.saveUserAgent(userAgentText, participant.getGender());
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			logger.error("This should not happen, because session is destroyed on submitting feedback");

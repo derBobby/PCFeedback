@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class UserAgent {
@@ -18,6 +19,10 @@ public class UserAgent {
 	@Column(nullable=false)
 	@NotBlank
 	private String text;
+	
+	@Column(nullable=false)
+	@NotNull
+	private Gender gender;
 
 	public String getText() {
 		return text;
@@ -33,5 +38,13 @@ public class UserAgent {
 
 	public void setIdUserAgent(Long idUserAgent) {
 		this.idUserAgent = idUserAgent;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 }

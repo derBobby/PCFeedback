@@ -29,11 +29,13 @@
 									<table class="table text-nowrap table-bordered table-hover table-striped m-0 text-left table-sm">
 										<tr>
 											<th class="text-center">#</th>
+											<th class="text-center">Geschlecht</th>
 											<th>User-Agent</th>
 	
 										</tr>
 										<tr th:each="userAgent : ${userAgentList}" th:object="${userAgent}">
 											<td class="text-center" th:text="*{idUserAgent}"></td>
+											<td th:text="*{gender.toString()}"></td>
 											<td th:text="*{text}"></td>
 										</tr>
 									</table>
