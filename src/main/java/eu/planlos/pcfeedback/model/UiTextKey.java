@@ -1,11 +1,11 @@
 package eu.planlos.pcfeedback.model;
 
 public enum UiTextKey {
-	
-	MSG_HOME("msgHome"),
-	MSG_FEEDBACKSTART("msgFeedbackstart"),
-	MSG_FEEDBACKQUESTION("msgFeedbackquestion"),
-	MSG_FEEDBACKEND("msgFeedbackend");
+
+	MSG_HOME("MSG_HOME"),
+	MSG_FEEDBACKSTART("MSG_FEEDBACKSTART"),
+	MSG_FEEDBACKQUESTION("MSG_FEEDBACKQUESTION"),
+	MSG_FEEDBACKEND("MSG_FEEDBACKEND");
 	
 	private String uiTextField;
 	

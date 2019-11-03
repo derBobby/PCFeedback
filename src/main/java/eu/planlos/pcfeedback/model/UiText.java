@@ -7,11 +7,6 @@ import javax.persistence.Id;
 @Entity
 public class UiText {
 
-//	@Id
-//	@GeneratedValue(strategy=GenerationType.IDENTITY)
-//	@Column(unique=true, nullable=false)
-//	private Long idUiTextMapper;
-
 	@Id
 	@Column(unique=true, nullable=false)
 	private UiTextKey uiTextKey;
@@ -41,11 +36,23 @@ public class UiText {
 		return this.uiTextKey;
 	}
 
+	public void setUiTextKey(UiTextKey uiTextKey) {
+		this.uiTextKey = uiTextKey;
+	}
+
 	public String getDescription() {
 		return this.description;
 	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public String getText() {
 		return this.text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 }
