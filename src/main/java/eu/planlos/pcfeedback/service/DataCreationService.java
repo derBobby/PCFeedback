@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback;
+package eu.planlos.pcfeedback.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,51 +6,41 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.constants.ApplicationProfile;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
-import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
+import eu.planlos.pcfeedback.exceptions.UiTextException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
-import eu.planlos.pcfeedback.service.ParticipantService;
-import eu.planlos.pcfeedback.service.RatingObjectService;
-import eu.planlos.pcfeedback.service.RatingQuestionService;
+import eu.planlos.pcfeedback.model.UiTextKey;
 
-@Component
-@Profile(value = ApplicationProfile.DEV_PROFILE)
-public class SampleDEVDataCreaterApplication implements ApplicationRunner {
+@Service
+public class DataCreationService {
 
-	private static final Logger logger = LoggerFactory.getLogger(SampleDEVDataCreaterApplication.class);
+	private static final Logger logger = LoggerFactory.getLogger(DataCreationService.class);
+	
+	@Autowired
+	private RatingObjectService ros;
 
 	@Autowired
 	private RatingQuestionService rqs;
 
 	@Autowired
-	private RatingObjectService ros;
+	private UiTextService uts;
 	
 	@Autowired
 	private ParticipantService ps;
-
-	@Override
-	public void run(ApplicationArguments args) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, InterruptedException {
-
-		initDB();
+	
+	public void createCommon() throws UiTextException {
+		
+		createRatingQuestions();
+		createUiText();
 	}
 
-	//TODO does this work? :D
-	@Transactional
-	private void initDB() throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, InterruptedException {
-
-		/*
-		 * CREATE
-		 */
+	private void createRatingQuestions() {
+		
 		RatingObject ro01 = new RatingObject("gute Zeit mit Freunden haben");
 		RatingObject ro02 = new RatingObject("guter Referent im Opening");
 		RatingObject ro03 = new RatingObject("gutes Programm im Opening");
@@ -85,6 +75,7 @@ public class SampleDEVDataCreaterApplication implements ApplicationRunner {
 		logger.debug("Saving rating object sample data");
 		ros.saveAll(roList);
 
+		logger.debug("Create rating question sample data");
 		List<RatingQuestion> rqList = new ArrayList<>();
 		rqList.addAll(rqs.create(roList));
 
@@ -93,8 +84,41 @@ public class SampleDEVDataCreaterApplication implements ApplicationRunner {
 		}
 		
 		logger.debug("Saving rating question sample data");
-		rqs.saveAll(rqList);
+		rqs.saveAll(rqList);		
+	}
 
+	private void createUiText() throws UiTextException {
+		
+		uts.initializeUiText();
+		
+		uts.createText(
+				UiTextKey.MSG_HOME,
+				"Begrüßung",
+				"Gib uns Feedback und hilf uns die Teennight noch besser zu machen. Unter den Teilnehmern verlosen wir zwei Freiplätze für die Teennight 2020!"
+			);
+		uts.createText(
+				UiTextKey.MSG_FEEDBACKSTART,
+				"Formular",
+				"Nach der Teennight werden deine Daten gelöscht!"
+			);
+		uts.createText(
+				UiTextKey.MSG_FEEDBACKQUESTION,
+				"Fragestellung",
+				"Was ist dir während der Teennight <u>wichtiger</u>?"
+			);
+		uts.createText(
+				UiTextKey.MSG_FEEDBACKEND,
+				"Ende",
+				"Die Teennight sagt danke! Dein Feedback hilft uns sehr. Du bist jetzt im Lostopf fürs Closing."
+			);
+		
+		if(! uts.isFullyInitialized()) {
+			throw new UiTextException("Es wurden nicht für jedes UiTextField ein Element initialisiert oder der zugehörige Text fehlt.");
+		}
+	}
+
+	public void createParticipants() throws ParticipantAlreadyExistingException, InterruptedException {
+		
 		int femaleCount = 1;
 		int maleCount = 3;
 
@@ -110,5 +134,13 @@ public class SampleDEVDataCreaterApplication implements ApplicationRunner {
 			Thread.sleep(1);
 		}
 		
+	}
+
+	public boolean isDataAlreadyCreated() {
+		
+		if(rqs.loadByGender(Gender.MALE).size() == 0) {
+			return false;
+		}
+		return true;
 	}
 }

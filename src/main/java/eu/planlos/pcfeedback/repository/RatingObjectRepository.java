@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.service;
+package eu.planlos.pcfeedback.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

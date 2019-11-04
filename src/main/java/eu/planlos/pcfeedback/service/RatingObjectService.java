@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.model.RatingObject;
+import eu.planlos.pcfeedback.repository.RatingObjectRepository;
 
 @Service
 public class RatingObjectService {

@@ -16,6 +16,7 @@ import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.model.UiTextKey;
 
 @Service
 public class ModelFillerService implements EnvironmentAware {
@@ -33,6 +34,10 @@ public class ModelFillerService implements EnvironmentAware {
 	
 	@Autowired
 	private Environment environment;
+
+	@Autowired
+	private UiTextService ums;
+	
 	public void fillGlobal(Model model) {
 
 		logger.debug("Adding configs from application.properties");
@@ -57,6 +62,8 @@ public class ModelFillerService implements EnvironmentAware {
 
 		logger.debug("Preparing model for administration area");
 		model.addAttribute("URL_ADMIN_SHOWFEEDBACK", ApplicationPath.URL_ADMIN_SHOWFEEDBACK);
+		model.addAttribute("URL_ADMIN_EDITUITEXT", ApplicationPath.URL_ADMIN_EDITUITEXT);
+		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPath.URL_ADMIN_SHOWUSERAGENTS);
 		model.addAttribute("URL_LOGOUT", ApplicationPath.URL_LOGOUT);
 
 		
@@ -73,11 +80,13 @@ public class ModelFillerService implements EnvironmentAware {
 		}
 	}
 
-	public void fillExport(Model model, List<Participant> randomParticipantList, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
+	public void fillResults(Model model, List<Participant> randomParticipantList, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
 		model.addAttribute("randomParticipantList", randomParticipantList);
 		model.addAttribute("participantList", participantList);
 		model.addAttribute("rqListMale", rqListMale);
 		model.addAttribute("rqListFemale", rqListFemale);
+		
+		model.addAttribute("editParticipantURL", ApplicationPath.URL_ADMIN_EDITPARTICIPANT);
 	}
 
 	public void fillError(Model model, int statusCode, String errorTitle, String errorMessage, Exception errorException, String errorTrace, boolean printTrace) {
@@ -97,5 +106,9 @@ public class ModelFillerService implements EnvironmentAware {
 	@Override
 	public void setEnvironment(Environment environment) {
 		this.environment = environment;
+	}
+
+	public void fillUiText(Model model, UiTextKey uiTextKey) {
+		model.addAttribute(uiTextKey.toString(), ums.getText(uiTextKey));
 	}
 }

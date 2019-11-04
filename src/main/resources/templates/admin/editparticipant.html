@@ -8,9 +8,11 @@
 				<div class="card-header text-center"><h3 class="mb-0">Kontakt</h3></div>
 				<div class="card-block p-3">
 					<div class="col-lg-12 text-center">
-						<p class="lead" th:text="${MSG_FEEDBACKSTART}"></p>
+						<p class="lead">Nach der Teennight werden deine Daten gelöscht!</p>
 						
-						<form th:action="@{${URL_FEEDBACK_START}}" th:object="${participant}" method="post" onsubmit="setGender()">
+						<form th:action="@{${URL_ADMIN_EDITPARTICIPANT}}" th:object="${participant}" method="post" onsubmit="setGender()">
+							
+							<input type="hidden" th:field="*{idParticipant}" />
 							
 							<div class="form-group">
 								<input th:field="*{firstname}" class="form-control" placeholder="Vorname" />

@@ -20,6 +20,7 @@ import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.constants.SessionAttribute;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 
@@ -40,8 +41,9 @@ public class FeedbackStartController {
 		Participant participant = participantService.createParticipantForForm();
 		
 		model.addAttribute(participant);
-		mfs.fillGlobal(model);
 		
+		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKSTART);
+		mfs.fillGlobal(model);
 		return ApplicationPath.RES_FEEDBACK_START;
 	}
 	
@@ -53,10 +55,11 @@ public class FeedbackStartController {
 			
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
 			if(genderFieldError != null) {
-				logger.error("Gender is missing");
+				logger.debug("Gender is missing");
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
 			
+			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKSTART);
 			mfs.fillGlobal(model);
 			return ApplicationPath.RES_FEEDBACK_START;
 		}
@@ -79,8 +82,9 @@ public class FeedbackStartController {
 			logger.error("Participant exists already, returning to form");
 			
 			model.addAttribute("PARTICIPANT_EXISTS", true);
-			mfs.fillGlobal(model);
 			
+			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKSTART);
+			mfs.fillGlobal(model);			
 			return ApplicationPath.RES_FEEDBACK_START;
 		}
 	}

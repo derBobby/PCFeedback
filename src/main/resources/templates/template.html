@@ -4,7 +4,7 @@
 
 	<head lang="de" th:fragment="header">
 	
-		<title>Teennight Feedback App</title>
+		<title>Feedback App</title>
 		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<meta charset="UTF-8">
@@ -37,7 +37,7 @@
 		<!-- Navigation -->		
 		<nav th:fragment="nav" class="navbar navbar-expand-sm sticky-top navbar-dark bg-dark">
 		
-			<a class="navbar-brand" th:href="@{${URL_HOME}}">Teennight Feedback App</a>
+			<a class="navbar-brand" th:href="@{${URL_HOME}}">Feedback App</a>
 	
 			<button sec:authorize="hasAnyRole('ROLE_ADMIN')" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -50,8 +50,15 @@
 				<div class="navbar-nav ml-auto">
 
 				<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+					<!-- TODO Multiple elements are active -->
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{${URL_ADMIN_EDITUITEXT}}"><i class="fas fa-keyboard"></i> Texte</a>
+					</li>				
 					<li class="nav-item active">
 						<a class="nav-link" th:href="@{${URL_ADMIN_SHOWFEEDBACK}}"><i class="fas fa-users"></i> Ergebnisse</a>
+					</li>
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{${URL_ADMIN_SHOWUSERAGENTS}}"><i class="fas fa-user-tie"></i> User-Agents</a>
 					</li>
 					<li class="nav-item active">
 						<a class="nav-link" th:href="@{${URL_LOGOUT}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
