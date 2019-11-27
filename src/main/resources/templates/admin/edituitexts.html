@@ -10,9 +10,41 @@
 						<h3 class="p-3 mb-0 text-white">Anpassbare Texte</h3>
 					</div>
 	       		</div>
+	       		
 	       		<div class="row">
-	        		<div class="col-md-6 border-dark p-3 mb-3" th:each="uiText : ${uiTextList}" th:object="${uiText}">
-	        		
+  		
+			        <div class="col-md-6 border-dark p-3 mb-3">
+	        			<!--  FOR EACH UiText a card -->
+						<div class="card text-white bg-info h-100">
+							<div class="card-header">
+								<h5 class="mb-0" th:inline="text">
+									HTML-Tags
+								</h5>
+							</div>
+							<div class="card-body">
+								<p>Die Texte können mit XYZ-Tags veredelt werden:</p>
+
+	          				</div>
+	         			</div>
+					</div>
+
+<!--  ############################################################# -->
+				<div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+					<a class="btn btn-large" data-edit="bold"><i class="icon-bold"></i></a>
+				</div>
+				<div>
+					<div class="modal-body">
+						<textarea class="form-control" id="editor" rows="10"></textarea>
+					</div>
+				</div>
+				<script type="text/javascript">
+					$(function() {
+						$('#editor').wysiwyg();
+					});	
+				</script>
+<!--  ############################################################# -->
+
+				<div class="col-md-6 border-dark p-3 mb-3" th:each="uiText : ${uiTextList}" th:object="${uiText}">
 	        			<form class="h-100" th:action="@{${URL_ADMIN_EDITUITEXT}}" th:object="${uiText}" method="post">
 	        		
 	        				<input type="hidden" th:id="uiTextKey" th:name="uiTextKey" th:value="*{uiTextKey}"/>
@@ -22,7 +54,10 @@
 								<div class="card-header">
 									<h5 class="mb-0" th:inline="text">
 										[[*{description.toString()}]]
-											<button type="button" class="btn btn-outline-secondary btn-sm active float-right" data-toggle="modal" th:attr="data-target='#' + *{uiTextKey.toString()} + 'Modal'">
+											<button type="button" class="btn btn-outline-secondary btn-sm active float-right" data-toggle="modal" 
+												th:id="*{uiTextKey.toString()}" 
+												th:attr="data-target='#' + *{uiTextKey.toString()} + '_Modal'"
+												onclick="updateSimpleMDE(this.getAttribute('id'))">
 												<i class="fas fa-wrench"></i>
 											</button>
 									</h5>
@@ -33,7 +68,7 @@
 		         			</div>
 		         			
 		         			<!--  AND A MODEL FOR EDITING -->
-							<div class="modal fade" th:id="*{uiTextKey.toString()}+'Modal'" tabindex="-1" role="dialog" th:attr="aria-labelledby='' + *{uiTextKey.toString()} + 'ModalTitle'" aria-hidden="true">
+							<div class="modal fade" th:id="*{uiTextKey.toString()}+'_Modal'" tabindex="-1" role="dialog" th:attr="aria-labelledby='' + *{uiTextKey.toString()} + 'ModalTitle'" aria-hidden="true">
 								<div class="modal-dialog modal-dialog-centered" role="document">
 									<div class="modal-content">
 										<div class="modal-header">
@@ -43,7 +78,7 @@
 											</button>
 										</div>
 										<div class="modal-body">
-											<textarea class="form-control" th:id="text" th:name="text" th:text="*{text}" rows="10"></textarea>
+											<textarea class="form-control" th:id="*{uiTextKey.toString()}+'_TextArea'" th:name="text" th:text="*{text}" rows="10"></textarea>
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
@@ -52,13 +87,22 @@
 									</div>
 								</div>
 							</div>
-							
+							<script>
+								...
+							</script>
 						</form>
-	
 					</div>
 				</div>
+				
 			</div>
 		</main>
 	    <footer th:replace="template :: footer"></footer>		
+<!-- 		<script> -->
+// 			function updateSimpleMDE(id) {
+// 				var target = id + "_TextArea";
+// 				var simplemde = new SimpleMDE({ element:  document.getElementById(target) });
+				
+// 			}
+<!-- 		</script> -->
 	</body>
 </html>

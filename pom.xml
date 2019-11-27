@@ -132,10 +132,21 @@
 			<version>3.4.0</version>
 		</dependency>
 
+		<!-- Editor -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.webjars.bower</groupId> -->
+<!-- 			<artifactId>simplemde-markdown-editor</artifactId> -->
+<!-- 			<version>1.11.2</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!--     		<groupId>org.webjars.bower</groupId> -->
+<!--     		<artifactId>bootstrap-wysiwyg-steveathon</artifactId> -->
+<!--     		<version>1.0.5</version> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
-			<artifactId>simplemde-markdown-editor</artifactId>
-			<version>1.11.2</version>
+			<artifactId>summernote</artifactId>
+			<version>0.8.12</version>
 		</dependency>
 
 		<!-- Testing -->

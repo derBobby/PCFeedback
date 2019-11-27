@@ -23,8 +23,13 @@
 		<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.js}"></script>
 		<script th:src="@{/webjars/bootstrap4-toggle/js/bootstrap4-toggle.min.js}"></script>
 		
-		<link rel="stylesheet" media="screen" th:href="@{/webjars/simplemde-markdown-editor/css/simplemde.min.css}" />  
-		<script th:src="@{/webjars/simplemde-markdown-editor/js/simplemde.min.js}"></script>
+<!-- 		<link rel="stylesheet" media="screen" th:href="@{/webjars/simplemde-markdown-editor/dist/simplemde.min.css}" />   -->
+<!-- 		<script th:src="@{/webjars/simplemde-markdown-editor/dist/simplemde.min.js}"></script> -->
+		
+		<link th:href="@{/webjars/summernote/dist/summernote.css}" rel="stylesheet">
+		<script th:src="@{/webjars/summernote/dist/summernote.min.js}"></script>
+				
+		
 		
 		<style th:inline="text">
 			body{
