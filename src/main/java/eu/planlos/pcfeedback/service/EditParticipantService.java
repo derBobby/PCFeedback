@@ -52,6 +52,7 @@ public class EditParticipantService {
 			return false;
 		}
 		
+		logger.debug("Gender was changed, need to update a lot including RatingQuestion change (depending on gender)");
 		ParticipationResult participationResult = prs.findByParticipant(participant);
 		Map<Long, Integer> feedbackMap = participationResult.getFeedbackMap();
 		Gender wantedGender = participant.getGender();
@@ -70,10 +71,13 @@ public class EditParticipantService {
 		    
 		    newFeedbackMap.put(newRatingQuestion.getIdRatingQuestion(), votedObject);
 		}
-		
+		logger.debug("Old RatingQuestions: " + participationResult.printKeyList());
+		participationResult.setFeedbackMap(newFeedbackMap);
+		logger.debug("New RatingQuestions: " + participationResult.printKeyList());
 		try {
 			rqs.removeFeedback(feedbackMap);
 			rqs.saveFeedback(newFeedbackMap);
+			prs.saveParticipationResult(participationResult);
 		} catch (InvalidFeedbackException e) {
 			logger.error("Kritischer Fehler beim Neuanlegen der Feedbackergebnisse nach Gender-Änderung.");
 			e.printStackTrace();

@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FeedbackContainer {
+
+	//TODO implement this instead of the session?
+	private Participant participant;
 	
 	private Map<Long, Integer> feedbackMap = new HashMap<>();
 

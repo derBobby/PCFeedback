@@ -133,16 +133,8 @@
 		</dependency>
 
 		<!-- Editor -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.webjars.bower</groupId> -->
-<!-- 			<artifactId>simplemde-markdown-editor</artifactId> -->
-<!-- 			<version>1.11.2</version> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!--     		<groupId>org.webjars.bower</groupId> -->
-<!--     		<artifactId>bootstrap-wysiwyg-steveathon</artifactId> -->
-<!--     		<version>1.0.5</version> -->
-<!-- 		</dependency> -->
+			<!-- https://github.com/summernote/summernote/ -->
+			<!-- https://summernote.org/getting-started/#requires-html5-doctype -->
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
 			<artifactId>summernote</artifactId>

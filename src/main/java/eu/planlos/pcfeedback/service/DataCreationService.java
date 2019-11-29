@@ -1,17 +1,19 @@
 package eu.planlos.pcfeedback.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.UiTextException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.ParticipationResult;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
@@ -32,6 +34,9 @@ public class DataCreationService {
 	
 	@Autowired
 	private ParticipantService ps;
+	
+	@Autowired
+	private ParticipationResultService prs;
 	
 	public void createCommon() throws UiTextException {
 		
@@ -117,23 +122,29 @@ public class DataCreationService {
 		}
 	}
 
-	public void createParticipants() throws ParticipantAlreadyExistingException, InterruptedException {
+	public void createParticipations(Gender gender, int count) throws Exception {
 		
-		int femaleCount = 1;
-		int maleCount = 3;
-
-		while(maleCount-- != 0) {
-			Participant participantM = ps.createParticipantForDB(Gender.MALE);
-			ps.save(participantM);
+		while(count-- != 0) {
+			
+			// Create and save Participant itself
+			Participant participant = ps.createParticipantForDB(gender);
+			ps.save(participant);
 			Thread.sleep(1);
+			
+			// Create and save ParticipationResult
+			Map<Long, Integer> feedbackMap = new HashMap<>();
+			List<RatingQuestion> ratingQuestions = new ArrayList<>();
+			rqs.addRatingQuestionsForGenderToList(ratingQuestions, gender);
+			for(RatingQuestion rq : ratingQuestions) {
+				long id = rq.getIdRatingQuestion();
+				feedbackMap.put(id, gender.equals(Gender.MALE) ? 1 : 2);
+			}
+			ParticipationResult pr = new ParticipationResult(participant, feedbackMap);
+			prs.saveParticipationResult(pr);
+			
+			// Update RatingQuestion
+			rqs.saveFeedback(feedbackMap);
 		}
-		
-		while(femaleCount-- != 0) {
-			Participant participantW = ps.createParticipantForDB(Gender.FEMALE);
-			ps.save(participantW);
-			Thread.sleep(1);
-		}
-		
 	}
 
 	public boolean isDataAlreadyCreated() {

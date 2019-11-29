@@ -1,6 +1,7 @@
 package eu.planlos.pcfeedback.model;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -35,6 +36,10 @@ public class ParticipationResult {
 		this.participant = participant;
 		this.feedbackMap = feedbackMap;
 	}
+
+	public void setFeedbackMap(Map<Long, Integer> feedbackMap) {
+		this.feedbackMap = feedbackMap;		
+	}
 	
 	public Map<Long, Integer> getFeedbackMap() {
 		return feedbackMap;
@@ -42,5 +47,16 @@ public class ParticipationResult {
 
 	public Participant getParticipant() {
 		return participant;
+	}
+	
+	public String printKeyList() {
+		
+		Map<Long, Integer> sortedMap = new TreeMap<Long, Integer>(feedbackMap);
+		
+		String keyList = "";
+		for(Long key : sortedMap.keySet()) {
+			keyList+= key + ",";
+		}
+		return keyList;
 	}
 }

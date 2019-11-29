@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.constants.ApplicationProfile;
+import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.service.DataCreationService;
 
 @Component
@@ -32,7 +33,8 @@ public class DemoDataCreaterApplication implements ApplicationRunner {
 	@Transactional
 	private void initDB() throws Exception {
 		dcs.createCommon();
-		dcs.createParticipants();		
+		dcs.createParticipations(Gender.MALE, 0);
+		dcs.createParticipations(Gender.FEMALE, 1);
 	}
 
 }

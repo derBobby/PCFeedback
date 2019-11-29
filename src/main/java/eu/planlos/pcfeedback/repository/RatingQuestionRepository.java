@@ -54,7 +54,7 @@ public interface RatingQuestionRepository extends CrudRepository<RatingQuestion,
 	
 	@Modifying
 	@Query("UPDATE RatingQuestion R SET "
-			+ "R.votesOne = R.votesOne - 1, "
+			+ "R.votesTwo = R.votesTwo - 1, "
 			+ "R.countVoted = R.countVoted - 1 "
 			+ "WHERE R.idRatingQuestion = ?1 "
 		)

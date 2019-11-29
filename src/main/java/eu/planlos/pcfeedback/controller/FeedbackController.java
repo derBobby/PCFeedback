@@ -24,6 +24,7 @@ import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.FeedbackContainer;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.ParticipationResult;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.ModelFillerService;
@@ -99,7 +100,8 @@ public class FeedbackController {
 			participantService.save(participant);
 						
 			//Save the result for later plausibilisation to recreate results after data correction
-			participationResultService.saveParticipationResult(participant, feedbackMap);
+			ParticipationResult pr = new ParticipationResult(participant, feedbackMap);
+			participationResultService.saveParticipationResult(pr);
 			
 			//Save user agent for later analysis
 			userAgentService.saveUserAgent(userAgentText, participant.getGender());
