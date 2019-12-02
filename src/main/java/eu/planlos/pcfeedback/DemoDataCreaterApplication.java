@@ -33,7 +33,7 @@ public class DemoDataCreaterApplication implements ApplicationRunner {
 	@Transactional
 	private void initDB() throws Exception {
 		dcs.createCommon();
-		dcs.createParticipations(Gender.MALE, 0);
+		dcs.createParticipations(Gender.MALE, 1);
 		dcs.createParticipations(Gender.FEMALE, 1);
 	}
 

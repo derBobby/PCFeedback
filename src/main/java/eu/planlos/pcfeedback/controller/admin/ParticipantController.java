@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import eu.planlos.pcfeedback.constants.ApplicationPath;
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
 import eu.planlos.pcfeedback.model.Participant;
-import eu.planlos.pcfeedback.service.EditParticipantService;
+import eu.planlos.pcfeedback.service.DeleteParticipationService;
+import eu.planlos.pcfeedback.service.EditParticipationService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 
@@ -27,9 +28,12 @@ public class ParticipantController {
 	
 	@Autowired
 	private ModelFillerService mfs;
+
+	@Autowired
+	private EditParticipationService eps;
 	
 	@Autowired
-	private EditParticipantService eps;
+	private DeleteParticipationService dps;
 
 	@Autowired
 	private ParticipantService ps;
@@ -73,7 +77,7 @@ public class ParticipantController {
 		
 		try {
 
-			if(eps.saveParticipantAndCorrectRatingQuestions(participant)) {
+			if(eps.editParticipant(participant)) {
 				mfs.fillGlobal(model);
 				return ApplicationPath.RES_ADMIN_EDITPARTICIPANTDONE;
 			}
@@ -81,6 +85,23 @@ public class ParticipantController {
 			
 		} catch (ParticipantNotFoundException e) {
 			logger.debug(e.getMessage());
+			throw e;
+		}
+	}
+	
+	@RequestMapping(path = ApplicationPath.URL_ADMIN_DELETEPARTICIPANT + "{idParticipant}", method = RequestMethod.GET)	
+	public String deleteParticipant(@PathVariable Long idParticipant, Model model) throws ParticipantNotFoundException {
+		
+		Participant participant;
+		
+		try {
+			participant = ps.findByIdParticipant(idParticipant);
+			dps.deleteParticipant(participant);
+			return "redirect:" + ApplicationPath.URL_ADMIN_SHOWFEEDBACK;
+			
+		} catch (ParticipantNotFoundException e) {
+			logger.error(e.getMessage());
+			//TODO throw best?
 			throw e;
 		}
 	}

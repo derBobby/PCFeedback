@@ -86,7 +86,8 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("rqListMale", rqListMale);
 		model.addAttribute("rqListFemale", rqListFemale);
 		
-		model.addAttribute("editParticipantURL", ApplicationPath.URL_ADMIN_EDITPARTICIPANT);
+		model.addAttribute("URL_ADMIN_EDITPARTICIPANT", ApplicationPath.URL_ADMIN_EDITPARTICIPANT);
+		model.addAttribute("URL_ADMIN_DELETEPARTICIPANT", ApplicationPath.URL_ADMIN_DELETEPARTICIPANT);
 	}
 
 	public void fillError(Model model, int statusCode, String errorTitle, String errorMessage, Exception errorException, String errorTrace, boolean printTrace) {

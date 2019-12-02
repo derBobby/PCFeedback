@@ -20,4 +20,8 @@ public class ParticipationResultService {
 	public void saveParticipationResult(ParticipationResult participationResult) {
 		prRepo.save(participationResult);
 	}
+
+	public void deleteParticipationResult(ParticipationResult participationResult) {
+		prRepo.delete(participationResult);
+	}
 }

@@ -18,9 +18,9 @@ import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 
 @Service
-public class EditParticipantService {
+public class EditParticipationService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(EditParticipantService.class);
+	private static final Logger logger = LoggerFactory.getLogger(EditParticipationService.class);
 	
 	@Autowired
 	private ParticipantService ps;
@@ -42,7 +42,7 @@ public class EditParticipantService {
 	 * @return Returns true if gender is changed
 	 * @throws ParticipantNotFoundException
 	 */
-	public boolean saveParticipantAndCorrectRatingQuestions(Participant participant) throws ParticipantNotFoundException {
+	public boolean editParticipant(Participant participant) throws ParticipantNotFoundException {
 		
 		boolean genderChanged = ps.isGenderChanged(participant);
 		

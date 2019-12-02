@@ -63,6 +63,7 @@ public class ApplicationPath {
 	public static final String URL_ADMIN_SHOWFEEDBACK			= URL_AREA_ADMIN + "showresults";
 	public static final String URL_ADMIN_SHOWUSERAGENTS			= URL_AREA_ADMIN + "showuseragents";
 	public static final String URL_ADMIN_EDITPARTICIPANT		= URL_AREA_ADMIN + "editparticipant" + URL_DELIMETER;
+	public static final String URL_ADMIN_DELETEPARTICIPANT		= URL_AREA_ADMIN + "deleteparticipant" + URL_DELIMETER;
 	public static final String URL_ADMIN_EDITUITEXT				= URL_AREA_ADMIN + "edituitext" + URL_DELIMETER;
 
 	public static final String RES_ADMIN_SHOWFEEDBACK			= "admin/showresults";

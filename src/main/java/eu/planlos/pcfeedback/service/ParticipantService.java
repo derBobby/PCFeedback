@@ -39,13 +39,21 @@ public class ParticipantService implements EnvironmentAware {
 	private ParticipantRepository participantRepository;
 
 	private Environment environment;
-	
+
 	public void saveEdited(Participant participant) throws ParticipantNotFoundException {
 		
 		if(participant.getIdParticipant() == null) {
 			throw new ParticipantNotFoundException("Kann Teilnehmer nicht finden, da keine ID gesetzt ist.");
 		}
 		participantRepository.save(participant);
+	}
+	
+	public void delete(Participant participant) throws ParticipantNotFoundException {
+		
+		if(participant.getIdParticipant() == null) {
+			throw new ParticipantNotFoundException("Kann Teilnehmer nicht finden, da keine ID gesetzt ist.");
+		}
+		participantRepository.delete(participant);
 	}
 	
 	public void save(Participant participant) throws ParticipantAlreadyExistingException {
