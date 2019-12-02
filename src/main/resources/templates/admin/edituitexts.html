@@ -26,8 +26,7 @@
 								</h5>
 							</div>
 							<div class="card-body">
-								<p>Die Texte können mit XYZ-Tags veredelt werden:</p>
-
+								<p>Die Texte hier können mit einem Editor angepasst werden. Aktuell ist ein zurücksetzen auf "Standard" noch nicht möglich.</p>
 	          				</div>
 	         			</div>
 					</div>
@@ -42,8 +41,7 @@
 									[[*{description.toString()}]]
 										<button type="button" class="btn btn-outline-secondary btn-sm active float-right" data-toggle="modal" 
 											th:id="*{uiTextKey.toString()}" 
-											th:attr="data-target='#' + *{uiTextKey.toString()} + '_Modal'"
-											onclick="updateSimpleMDE(this.getAttribute('id'))">
+											th:attr="data-target='#' + *{uiTextKey.toString()} + '_Modal'">
 											<i class="fas fa-wrench"></i>
 										</button>
 								</h5>
@@ -56,9 +54,9 @@
 		         			
 	         			<!-- MODAL FOR EDITING -->
 						<div class="modal fade" th:id="*{uiTextKey.toString()}+'_Modal'" tabindex="-1" role="dialog" th:attr="aria-labelledby='' + *{uiTextKey.toString()} + 'ModalTitle'" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-centered" role="document">
+							<div class="modal-dialog modal-dialog-centered  modal-xl" role="document">
 								<div class="modal-content">
-				        			<form class="h-100" th:action="@{${URL_ADMIN_EDITUITEXT}}" method="post">
+				        			<form class="h-100" th:action="@{${URL_ADMIN_EDITUITEXT}}" method="post" enctype="multipart/form-data">
 	        							<input type="hidden" th:id="uiTextKey" th:name="uiTextKey" th:value="*{uiTextKey}"/>
 										<div class="modal-header">
 											<h5 class="modal-title" th:id="*{uiTextKey.toString()}+'ModalTitle'" th:inline="text">[[*{description.toString()}]]</h5>
@@ -68,11 +66,13 @@
 										</div>
 										<div class="modal-body">
 											<textarea class="form-control" th:id="*{uiTextKey.toString()}+'_TextArea'" th:name="text" th:text="*{text}" rows="10"></textarea>
+											<!-- SUMMERNOTE -->
 											<script type="text/javascript" th:inline="text">
 												$(document).ready(function() {
 									 				$('#[[*{uiTextKey.toString()}+'_TextArea']]').summernote();
 												});
 											</script>
+											<!-- SUMMERNOTE END -->
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>

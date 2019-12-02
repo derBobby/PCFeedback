@@ -16,14 +16,15 @@
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/font-awesome/css/all.css}" />
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/bootstrap4-toggle/css/bootstrap4-toggle.min.css}" />  
 		<link rel="stylesheet" media="screen" th:href="@{/css/custom.css}" />
-		<link rel="stylesheet" media="screen" th:href="@{/webjars/summernote/dist/summernote.css}">
+		<link rel="stylesheet" media="screen" th:href="@{/webjars/summernote/dist/summernote-bs4.css}">
 
 		<script th:src="@{/webjars/jquery/jquery.js}"></script>
+		<script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
 		<script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
 		<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.js}"></script>
-		<script th:src="@{/webjars/bootstrap4-toggle/js/bootstrap4-toggle.min.js}"></script>
-		<script th:src="@{/webjars/summernote/dist/summernote.min.js}"></script>
-				
+		<script th:src="@{/webjars/summernote/dist/summernote-bs4.min.js}"></script>
+		<script th:src="@{/webjars/bootstrap4-toggle/js/bootstrap4-toggle.min.js}"></script>	
+
 		<style th:inline="text">
 			body{
 				background: url([[@{/img/background.jpg}]])
@@ -82,6 +83,7 @@
 				<p th:text="'AUTHORITIES: ' + ${#authentication.Authorities}"></p>
 				<p th:text="'DETAILS: ' + ${#authentication.details}"></p>
 			</div>
+			
 		</footer> 
 		
 	</body>

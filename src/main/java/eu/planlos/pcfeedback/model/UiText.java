@@ -14,7 +14,7 @@ public class UiText {
 	@Column(unique = false)
 	private String description;
 	
-	@Column(unique = false)
+	@Column(unique = false, columnDefinition="LONGTEXT")
 	private String text;
 
 	public UiText() {

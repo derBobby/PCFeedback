@@ -135,6 +135,7 @@
 		<!-- Editor -->
 			<!-- https://github.com/summernote/summernote/ -->
 			<!-- https://summernote.org/getting-started/#requires-html5-doctype -->
+			<!-- https://summernote.org/getting-started/#run-summernote -->
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
 			<artifactId>summernote</artifactId>
