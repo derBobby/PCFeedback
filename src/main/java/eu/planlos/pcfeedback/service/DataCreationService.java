@@ -21,7 +21,7 @@ import eu.planlos.pcfeedback.model.UiTextKey;
 @Service
 public class DataCreationService {
 
-	private static final Logger logger = LoggerFactory.getLogger(DataCreationService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DataCreationService.class);
 	
 	@Autowired
 	private RatingObjectService ros;
@@ -77,10 +77,10 @@ public class DataCreationService {
 		roList.add(ro13);
 		roList.add(ro14);
 		
-		logger.debug("Saving rating object sample data");
+		LOG.debug("Saving rating object sample data");
 		ros.saveAll(roList);
 
-		logger.debug("Create rating question sample data");
+		LOG.debug("Create rating question sample data");
 		List<RatingQuestion> rqList = new ArrayList<>();
 		rqList.addAll(rqs.create(roList));
 
@@ -88,7 +88,7 @@ public class DataCreationService {
 			rq.setVotesOne(0);
 		}
 		
-		logger.debug("Saving rating question sample data");
+		LOG.debug("Saving rating question sample data");
 		rqs.saveAll(rqList);		
 	}
 

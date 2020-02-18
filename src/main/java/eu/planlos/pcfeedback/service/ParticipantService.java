@@ -24,7 +24,7 @@ import eu.planlos.pcfeedback.repository.ParticipantRepository;
 @Service
 public class ParticipantService implements EnvironmentAware {
 
-	private static final Logger logger = LoggerFactory.getLogger(ParticipantService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ParticipantService.class);
 
 	@Value("${eu.planlos.pcfeedback.winner-count}")
 	private int winnerCount;
@@ -60,10 +60,10 @@ public class ParticipantService implements EnvironmentAware {
 
 		// Throws exception if participant is already existing
 		exists(participant);
-		logger.debug("Participant does not exist, saving: " + participant.toString());
+		LOG.debug("Participant does not exist, saving: " + participant.toString());
 		participant.setParticipationDate();
 		
-		logger.debug("Saving participant: " + participant.toString());
+		LOG.debug("Saving participant: " + participant.toString());
 		try {
 			
 			participantRepository.save(participant);
@@ -71,7 +71,7 @@ public class ParticipantService implements EnvironmentAware {
 		} catch(Exception e) {
 			
 			if(e.getCause() instanceof ConstraintViolationException) {
-				logger.error("Participant exists meanwhile, wow, what are the chances!?");
+				LOG.error("Participant exists meanwhile, wow, what are the chances!?");
 				// Using this method because it already throws an exception depending on the problem
 				exists(participant);
 			}
@@ -82,17 +82,17 @@ public class ParticipantService implements EnvironmentAware {
 	public boolean exists(Participant participant) throws ParticipantAlreadyExistingException {
 		
 		if (participantRepository.existsByFirstnameAndName(participant.getFirstname(), participant.getName())) {
-			logger.error("Participant exists by firstname and name");
+			LOG.error("Participant exists by firstname and name");
 			throw new ParticipantAlreadyExistingException("Vor- / Nachname bereits vergeben!");
 		}
 
 		if (needMail && participantRepository.existsByEmail(participant.getEmail())) {
-			logger.error("Participant exists by email");
+			LOG.error("Participant exists by email");
 			throw new ParticipantAlreadyExistingException("E-Mail bereits vergeben!");
 		}
 
 		if (needMobile && participantRepository.existsByMobile(participant.getMobile())) {
-			logger.error("Participant exists by mobile");
+			LOG.error("Participant exists by mobile");
 			throw new ParticipantAlreadyExistingException("Handynummer bereits vergeben!");
 		}
 		

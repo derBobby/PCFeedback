@@ -14,7 +14,7 @@ import eu.planlos.pcfeedback.model.ParticipationResult;
 @Service
 public class DeleteParticipationService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DeleteParticipationService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DeleteParticipationService.class);
 	
 	@Autowired
 	private ParticipantService ps;
@@ -38,13 +38,13 @@ public class DeleteParticipationService {
 		ParticipationResult participationResult = prs.findByParticipant(participant);
 		Map<Long, Integer> feedbackMap = participationResult.getFeedbackMap();
 		
-		logger.debug("Removing participants personal feedback entry");
+		LOG.debug("Removing participants personal feedback entry");
 		rqs.removeFeedback(feedbackMap);
 		
-		logger.debug("Deleting...");
+		LOG.debug("Deleting...");
 		prs.deleteParticipationResult(participationResult);
 		
-		logger.debug("Removing participant");
+		LOG.debug("Removing participant");
 		ps.delete(participant);
 	}
 }

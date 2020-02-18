@@ -16,7 +16,7 @@ import eu.planlos.pcfeedback.service.DataCreationService;
 @Profile(value = ApplicationProfile.PROD_PROFILE)
 public class ProdDataCreaterApplication implements ApplicationRunner {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProdDataCreaterApplication.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ProdDataCreaterApplication.class);
 
 	@Autowired
 	private DataCreationService dcs;
@@ -25,13 +25,13 @@ public class ProdDataCreaterApplication implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws Exception {
 		
 		if(! dcs.isDataAlreadyCreated()) {
-			logger.debug("No db init necessary. Already rating questions existing");
+			LOG.debug("No db init necessary. Already rating questions existing");
 			return;
 		}
 		
-		logger.debug("Initializing database");
+		LOG.debug("Initializing database");
 		initDB();
-		logger.debug("Initializing database ... DONE");
+		LOG.debug("Initializing database ... DONE");
 	}
 
 	//TODO does this work? :D

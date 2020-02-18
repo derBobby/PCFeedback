@@ -13,7 +13,7 @@ import eu.planlos.pcfeedback.service.RatingQuestionService;
 @RestController
 public class ResetController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ResetController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ResetController.class);
 			
 	@Autowired
 	private ParticipantService ps;
@@ -24,12 +24,12 @@ public class ResetController {
 	@GetMapping(path = ApplicationPath.URL_ADMIN_RESET)
 	public String reset() {
 		
-		logger.error("#----------#   DATABASE IS BEING RESET BY AMDIN !!!   #----------#");
+		LOG.error("#----------#   DATABASE IS BEING RESET BY AMDIN !!!   #----------#");
 		
 		ps.resetDB();
 		rqs.resetDB();
 		
-		logger.error("#----------#   DATABASE HAS BEEN RESET BY AMDIN !!!   #----------#");
+		LOG.error("#----------#   DATABASE HAS BEEN RESET BY AMDIN !!!   #----------#");
 		
 		return "Die DB wurde zurückgesetzt.";
 	}

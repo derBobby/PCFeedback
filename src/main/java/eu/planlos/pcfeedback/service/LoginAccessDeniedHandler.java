@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginAccessDeniedHandler implements AccessDeniedHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoginAccessDeniedHandler.class);	
+	private static final Logger LOG = LoggerFactory.getLogger(LoginAccessDeniedHandler.class);	
 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
@@ -32,9 +32,9 @@ public class LoginAccessDeniedHandler implements AccessDeniedHandler {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		if(auth != null) {
-			logger.error("Fehlgeschlagener Zugriff von: " + auth.getName() + " auf " + request.getRequestURI());
+			LOG.error("Fehlgeschlagener Zugriff von: " + auth.getName() + " auf " + request.getRequestURI());
 		} else {
-			logger.error("Fehlgeschlagener Zugriff mit leerer Variable auth auf " + request.getRequestURI());
+			LOG.error("Fehlgeschlagener Zugriff mit leerer Variable auth auf " + request.getRequestURI());
 		}
 
 		response.sendError(HttpServletResponse.SC_FORBIDDEN);

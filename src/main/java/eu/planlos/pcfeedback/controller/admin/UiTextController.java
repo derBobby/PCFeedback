@@ -20,7 +20,7 @@ import eu.planlos.pcfeedback.service.UiTextService;
 @Controller
 public class UiTextController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UiTextController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UiTextController.class);
 	
 	@Autowired
 	private UiTextService uts;
@@ -45,7 +45,7 @@ public class UiTextController {
 			uts.updateText(uiText);
 			return "redirect:" + ApplicationPath.URL_ADMIN_EDITUITEXT;
 		} catch (UiTextException e) {
-			logger.error(e.getMessage());
+			LOG.error(e.getMessage());
 			throw e;
 		}
 	}

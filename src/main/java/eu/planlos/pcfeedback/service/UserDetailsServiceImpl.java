@@ -21,7 +21,7 @@ import eu.planlos.pcfeedback.constants.ApplicationRole;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
 	@Value("${eu.planlos.pcfeedback.adminuser}")
 	private String adminUser;
@@ -36,12 +36,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		List<GrantedAuthority> authoritiesList = new ArrayList<>();
 		
 		if(loginName.equals(adminUser)) {
-			logger.debug("Erstelle Benutzer aus Konfiguration: " + loginName + " (" + ApplicationRole.ROLE_ADMIN + ")");
+			LOG.debug("Erstelle Benutzer aus Konfiguration: " + loginName + " (" + ApplicationRole.ROLE_ADMIN + ")");
 			authoritiesList.add(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN));
 			return new User(loginName, bCryptPasswordEncoder.encode(adminPassword), authoritiesList);
 		}
 		
-		logger.debug("Login fehlgeschlagen. Angegebener Benutzer: " + loginName);
+		LOG.debug("Login fehlgeschlagen. Angegebener Benutzer: " + loginName);
 		throw new UsernameNotFoundException("Login fehlgeschlagen.");
 	}
 }

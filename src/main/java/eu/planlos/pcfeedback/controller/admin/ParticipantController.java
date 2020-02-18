@@ -24,7 +24,7 @@ import eu.planlos.pcfeedback.service.ParticipantService;
 @Controller
 public class ParticipantController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ParticipantController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ParticipantController.class);
 	
 	@Autowired
 	private ModelFillerService mfs;
@@ -51,7 +51,7 @@ public class ParticipantController {
 			return ApplicationPath.RES_ADMIN_EDITPARTICIPANT;
 			
 		} catch (ParticipantNotFoundException e) {
-			logger.error(e.getMessage());
+			LOG.error(e.getMessage());
 			//TODO throw best?
 			throw e;
 		}
@@ -61,11 +61,11 @@ public class ParticipantController {
 	public String submitEditParticipant(@Valid Participant participant, BindingResult bindingResult, Model model) throws ParticipantNotFoundException {
 		
 		if (bindingResult.hasErrors()) {
-			logger.debug("Input from form not valid");
+			LOG.debug("Input from form not valid");
 			
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
 			if(genderFieldError != null) {
-				logger.debug("Gender is missing");
+				LOG.debug("Gender is missing");
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
 			
@@ -73,7 +73,7 @@ public class ParticipantController {
 			return ApplicationPath.RES_FEEDBACK_START;
 		}
 		
-		logger.debug("Input from form is valid");
+		LOG.debug("Input from form is valid");
 		
 		try {
 
@@ -84,7 +84,7 @@ public class ParticipantController {
 			return "redirect:" + ApplicationPath.URL_ADMIN_SHOWFEEDBACK;
 			
 		} catch (ParticipantNotFoundException e) {
-			logger.debug(e.getMessage());
+			LOG.debug(e.getMessage());
 			throw e;
 		}
 	}
@@ -100,7 +100,7 @@ public class ParticipantController {
 			return "redirect:" + ApplicationPath.URL_ADMIN_SHOWFEEDBACK;
 			
 		} catch (ParticipantNotFoundException e) {
-			logger.error(e.getMessage());
+			LOG.error(e.getMessage());
 			//TODO throw best?
 			throw e;
 		}

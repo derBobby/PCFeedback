@@ -18,7 +18,7 @@ import eu.planlos.pcfeedback.service.UserAgentService;
 @Controller
 public class UserAgentController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserAgentController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UserAgentController.class);
 	
 	@Autowired
 	private ModelFillerService mfs;
@@ -29,7 +29,7 @@ public class UserAgentController {
 	@RequestMapping(path = ApplicationPath.URL_ADMIN_SHOWUSERAGENTS, method = RequestMethod.GET)
 	public String showUserAgents(Model model) {
 
-		logger.debug("Loading User-Agents");
+		LOG.debug("Loading User-Agents");
 		List<UserAgent> userAgentList = userAgentService.findAll();
 		
 		model.addAttribute("userAgentList", userAgentList);

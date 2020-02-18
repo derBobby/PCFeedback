@@ -27,7 +27,7 @@ import eu.planlos.pcfeedback.service.ParticipantService;
 @Controller
 public class FeedbackStartController {
 
-	private static final Logger logger = LoggerFactory.getLogger(FeedbackStartController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FeedbackStartController.class);
 
 	@Autowired
 	private ModelFillerService mfs;
@@ -51,11 +51,11 @@ public class FeedbackStartController {
 	public String feedbackStartSubmit(HttpSession session, @Valid Participant participant, BindingResult bindingResult, Model model) throws ServletException, IOException {
 
 		if (bindingResult.hasErrors()) {
-			logger.debug("Input from form not valid");
+			LOG.debug("Input from form not valid");
 			
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
 			if(genderFieldError != null) {
-				logger.debug("Gender is missing");
+				LOG.debug("Gender is missing");
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
 			
@@ -64,22 +64,22 @@ public class FeedbackStartController {
 			return ApplicationPath.RES_FEEDBACK_START;
 		}
 		
-		logger.debug("Input from form is valid");
+		LOG.debug("Input from form is valid");
 
 		try {
 			
-			logger.debug("Checking if participant exists: " + participant.toString());
+			LOG.debug("Checking if participant exists: " + participant.toString());
 			participantService.exists(participant);
 			
-			logger.debug("Adding participant to session");
+			LOG.debug("Adding participant to session");
 			session.setAttribute(SessionAttribute.PARTICIPANT, participant);
 			
-			logger.debug("Proceeding to feedback site");
+			LOG.debug("Proceeding to feedback site");
 			return "redirect:" + ApplicationPath.URL_FEEDBACK;
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			
-			logger.error("Participant exists already, returning to form");
+			LOG.error("Participant exists already, returning to form");
 			
 			model.addAttribute("PARTICIPANT_EXISTS", true);
 			

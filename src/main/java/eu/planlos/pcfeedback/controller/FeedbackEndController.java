@@ -18,7 +18,7 @@ import eu.planlos.pcfeedback.service.ModelFillerService;
 @Controller
 public class FeedbackEndController {
 
-	private static final Logger logger = LoggerFactory.getLogger(FeedbackEndController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FeedbackEndController.class);
 	
 	@Autowired
 	private ModelFillerService mfs;
@@ -29,7 +29,7 @@ public class FeedbackEndController {
 		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
 		
 		if(participant == null) {
-			logger.debug("User tried to access feedback end without entering participation info");
+			LOG.debug("User tried to access feedback end without entering participation info");
 			return "redirect:" + ApplicationPath.URL_FEEDBACK_START;
 		}
 		

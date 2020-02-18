@@ -36,7 +36,7 @@ import eu.planlos.pcfeedback.service.UserAgentService;
 @Controller
 public class FeedbackController {
 
-	private static final Logger logger = LoggerFactory.getLogger(FeedbackController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FeedbackController.class);
 	
 	@Autowired
 	private ModelFillerService mfs;
@@ -59,7 +59,7 @@ public class FeedbackController {
 		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
 		
 		if(participant == null) {
-			logger.debug("User tried to access feedback without entering participant details");
+			LOG.debug("User tried to access feedback without entering participant details");
 			return "redirect:" + ApplicationPath.URL_FEEDBACK_START;
 		}
 		
@@ -68,7 +68,7 @@ public class FeedbackController {
 		List<RatingQuestion> ratingQuestionList = new ArrayList<>();
 		
 		try {
-			logger.debug("Participant has gender: " + gender.toString());
+			LOG.debug("Participant has gender: " + gender.toString());
 			ratingQuestionService.addRatingQuestionsForGenderToList(ratingQuestionList, gender);
 			
 		} catch (RatingQuestionsNotExistentException e) {
@@ -107,16 +107,16 @@ public class FeedbackController {
 			userAgentService.saveUserAgent(userAgentText, participant.getGender());
 			
 		} catch (ParticipantAlreadyExistingException e) {
-			logger.error("This should not happen, because session is destroyed on submitting feedback");
-			logger.error(participant.toString());
+			LOG.error("This should not happen, because session is destroyed on submitting feedback");
+			LOG.error(participant.toString());
 			
 		} catch (NoParticipantException e) {
-			logger.error("No participant in session available");
+			LOG.error("No participant in session available");
 			//TODO call FeedbackStartController and pass error
 			throw e;
 			
 		} catch (InvalidFeedbackException e) {
-			logger.error("Something with the given feedback went wrong");
+			LOG.error("Something with the given feedback went wrong");
 			
 			List<RatingQuestion> ratingQuestionList = new ArrayList<>();
 			try {

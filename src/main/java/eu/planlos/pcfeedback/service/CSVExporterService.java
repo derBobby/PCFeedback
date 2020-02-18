@@ -19,7 +19,7 @@ import eu.planlos.pcfeedback.model.RatingQuestion;
 @Service
 public class CSVExporterService {
 
-	private static final Logger logger = LoggerFactory.getLogger(CSVExporterService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CSVExporterService.class);
 
 	private static final Object[] FILE_HEADER = { "Geschlecht", "A Bezeichnung", "A Stimmen", "B Stimmen",
 			"B Bezeichnung" };
@@ -31,7 +31,7 @@ public class CSVExporterService {
 		CSVFormat csvFile = CSVFormat.EXCEL.withHeader();
 		CSVPrinter csvPrinter = new CSVPrinter(fileWriter, csvFile);
 
-		logger.debug("Write csv file header");
+		LOG.debug("Write csv file header");
 		csvPrinter.printRecord(FILE_HEADER);
 
 		for (RatingQuestion ratingQuestion : ratingQuestionList) {
@@ -59,7 +59,7 @@ public class CSVExporterService {
 			ratingQuestionRecord.add(votesTwoStr);
 			ratingQuestionRecord.add(nameTwo);
 
-			logger.debug("Write ratingQuestion to file:" + 
+			LOG.debug("Write ratingQuestion to file:" + 
 					" idRatingQuestion=" + idRatingQuestion
 					+ " gender=" + gender.toString() 
 					+ " name1=" + nameOne
@@ -85,7 +85,7 @@ public class CSVExporterService {
 			participantRecord.add(gender.toString());
 			participantRecord.add(participationDate);
 
-			logger.debug("Write participant to file:" + 
+			LOG.debug("Write participant to file:" + 
 					" idParticipant=" + idParticipant
 					+ " firstname=" + firstname
 					+ " name=" + name

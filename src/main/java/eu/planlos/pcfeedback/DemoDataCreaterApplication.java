@@ -17,24 +17,24 @@ import eu.planlos.pcfeedback.service.DataCreationService;
 @Profile(value = {ApplicationProfile.DEV_PROFILE, ApplicationProfile.REV_PROFILE})
 public class DemoDataCreaterApplication implements ApplicationRunner {
 
-	private static final Logger logger = LoggerFactory.getLogger(DemoDataCreaterApplication.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DemoDataCreaterApplication.class);
 	
 	@Autowired
-	private DataCreationService dcs;
+	private DataCreationService dataCreationService;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		logger.debug("Initializing database");
+		LOG.debug("Initializing database");
 		initDB();
-		logger.debug("Initializing database ... DONE");
+		LOG.debug("Initializing database ... DONE");
 	}
 	
 	//TODO does this work? :D
 	@Transactional
 	private void initDB() throws Exception {
-		dcs.createCommon();
-		dcs.createParticipations(Gender.MALE, 1);
-		dcs.createParticipations(Gender.FEMALE, 1);
+		dataCreationService.createCommon();
+		dataCreationService.createParticipations(Gender.MALE, 1);
+		dataCreationService.createParticipations(Gender.FEMALE, 1);
 	}
 
 }

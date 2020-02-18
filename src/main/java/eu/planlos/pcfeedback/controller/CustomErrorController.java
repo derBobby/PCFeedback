@@ -25,7 +25,7 @@ import eu.planlos.pcfeedback.service.ModelFillerService;
 @Controller
 public class CustomErrorController implements ErrorController {
 
-	private static final Logger logger = LoggerFactory.getLogger(CustomErrorController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CustomErrorController.class);
 
 	@Autowired
 	private ErrorAttributes errorAttributes;
@@ -59,25 +59,25 @@ public class CustomErrorController implements ErrorController {
 	        
         	if(statusCode == HttpStatus.UNAUTHORIZED.value()) {
 	        	errorTitle = "Fehlende Authentifizierung";
-	        	logger.error("User was not authenticated when requesting site: " + requestedSite);
+	        	LOG.error("User was not authenticated when requesting site: " + requestedSite);
 	        }
 	        
 	        if(statusCode == HttpStatus.FORBIDDEN.value()) {
 	        	errorTitle = "Zugriff verboten";
-	        	logger.error("User was not authorized for requested site: " + requestedSite);
+	        	LOG.error("User was not authorized for requested site: " + requestedSite);
 	    		if(auth != null) {
-	    			logger.error("User was " + auth.getName() + "");
+	    			LOG.error("User was " + auth.getName() + "");
 	    		}
 	        }
 	        
 	        if(statusCode == HttpStatus.NOT_FOUND.value()) {
 	        	errorTitle = "Seite existiert nicht";
-	        	logger.error("Requested site does not exist: " + requestedSite);
+	        	LOG.error("Requested site does not exist: " + requestedSite);
 	        }
 	        
 	        if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
 	        	errorTitle = "Fehler im Server";
-	        	logger.error("Requested site produced internal server error: " + requestedSite);
+	        	LOG.error("Requested site produced internal server error: " + requestedSite);
 	        }
 		    
 		    // Send email notification
@@ -88,7 +88,7 @@ public class CustomErrorController implements ErrorController {
 			return RES_ERROR;
 	    }
 	    
-	    logger.error("~~~ We should not have gotten here ¯\\_(ツ)_/¯ ~~~");
+	    LOG.error("~~~ We should not have gotten here ¯\\_(ツ)_/¯ ~~~");
 	    throw new Exception("We should not have gotten here ¯\\_(ツ)_/¯");
 	}
 
