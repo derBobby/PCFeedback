@@ -14,7 +14,7 @@ import eu.planlos.pcfeedback.model.RatingQuestion;
 @Repository
 public interface RatingQuestionRepository extends CrudRepository<RatingQuestion, Long>{
 
-	public List<RatingQuestion> findByIdRatingQuestion(List<Integer> questionIds);
+	public List<RatingQuestion> findAllByIdRatingQuestionIn(List<Integer> questionIds);
 	public RatingQuestion findFirstByCountVotedGreaterThanAndGenderOrderByCountVotedAsc(int chosenCount, Gender gender);
 	
 //	@Query("SELECT R "
