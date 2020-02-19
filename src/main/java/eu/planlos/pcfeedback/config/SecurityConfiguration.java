@@ -61,6 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						"/webjars/**",
 						"/css/**",
 						"/img/**",
+						"/favicon.ico",
 						ApplicationPath.URL_AREA_PUBLIC + "**"
 					).permitAll()
 					
