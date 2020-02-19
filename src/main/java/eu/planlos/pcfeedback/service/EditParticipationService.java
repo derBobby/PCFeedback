@@ -23,16 +23,16 @@ public class EditParticipationService {
 	private static final Logger LOG = LoggerFactory.getLogger(EditParticipationService.class);
 	
 	@Autowired
-	private ParticipantService ps;
+	private ParticipantService pService;
 	
 	@Autowired
-	private RatingQuestionService rqs;
+	private RatingQuestionService rqService;
 
 	@Autowired
-	private RatingQuestionRepository rqr;
+	private RatingQuestionRepository rqRepository;
 	
 	@Autowired
-	private ParticipationResultService prs;
+	private ParticipationResultService prService;
 	
 	/**
 	 * Methods either saves Participant, if gender ist kept or does pretty much everything if gender is changed.
@@ -44,16 +44,16 @@ public class EditParticipationService {
 	 */
 	public boolean editParticipant(Participant participant) throws ParticipantNotFoundException {
 		
-		boolean genderChanged = ps.isGenderChanged(participant);
+		boolean genderChanged = pService.isGenderSame(participant);
 		
-		ps.saveEdited(participant);
+		pService.saveEdited(participant);
 
 		if(! genderChanged) {
 			return false;
 		}
 		
 		LOG.debug("Gender was changed, need to update a lot including RatingQuestion change (depending on gender)");
-		ParticipationResult participationResult = prs.findByParticipant(participant);
+		ParticipationResult participationResult = prService.findByParticipant(participant);
 		Map<Long, Integer> feedbackMap = participationResult.getFeedbackMap();
 		Gender wantedGender = participant.getGender();
 		
@@ -63,11 +63,11 @@ public class EditParticipationService {
 			Long idRatingQuestion = entry.getKey();
 		    Integer votedObject = entry.getValue();
 		    
-		    RatingQuestion oldRatingQuestion = rqr.findById(idRatingQuestion).get();
+		    RatingQuestion oldRatingQuestion = rqRepository.findById(idRatingQuestion).get();
 		    RatingObject ratingObjectOne = oldRatingQuestion.getObjectOne();
 		    RatingObject ratingObjectTwo = oldRatingQuestion.getObjectTwo();
 		    
-		    RatingQuestion newRatingQuestion = rqr.findByGenderAndObjectOneAndObjectTwo(wantedGender, ratingObjectOne, ratingObjectTwo);
+		    RatingQuestion newRatingQuestion = rqRepository.findByGenderAndObjectOneAndObjectTwo(wantedGender, ratingObjectOne, ratingObjectTwo);
 		    
 		    newFeedbackMap.put(newRatingQuestion.getIdRatingQuestion(), votedObject);
 		}
@@ -75,12 +75,11 @@ public class EditParticipationService {
 		participationResult.setFeedbackMap(newFeedbackMap);
 		LOG.debug("New RatingQuestions: " + participationResult.printKeyList());
 		try {
-			rqs.removeFeedback(feedbackMap);
-			rqs.saveFeedback(newFeedbackMap);
-			prs.saveParticipationResult(participationResult);
+			rqService.removeFeedback(feedbackMap);
+			rqService.saveFeedback(newFeedbackMap);
+			prService.saveParticipationResult(participationResult);
 		} catch (InvalidFeedbackException e) {
 			LOG.error("Kritischer Fehler beim Neuanlegen der Feedbackergebnisse nach Gender-Änderung.");
-			e.printStackTrace();
 		}
 		
 		return true;

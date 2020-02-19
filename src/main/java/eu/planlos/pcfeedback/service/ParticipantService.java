@@ -36,7 +36,7 @@ public class ParticipantService implements EnvironmentAware {
 	private boolean needMobile;
 	
 	@Autowired
-	private ParticipantRepository participantRepository;
+	private ParticipantRepository participantRepo;
 
 	private Environment environment;
 
@@ -45,7 +45,7 @@ public class ParticipantService implements EnvironmentAware {
 		if(participant.getIdParticipant() == null) {
 			throw new ParticipantNotFoundException("Kann Teilnehmer nicht finden, da keine ID gesetzt ist.");
 		}
-		participantRepository.save(participant);
+		participantRepo.save(participant);
 	}
 	
 	public void delete(Participant participant) throws ParticipantNotFoundException {
@@ -53,45 +53,37 @@ public class ParticipantService implements EnvironmentAware {
 		if(participant.getIdParticipant() == null) {
 			throw new ParticipantNotFoundException("Kann Teilnehmer nicht finden, da keine ID gesetzt ist.");
 		}
-		participantRepository.delete(participant);
+		participantRepo.delete(participant);
 	}
 	
 	public void save(Participant participant) throws ParticipantAlreadyExistingException {
 
 		// Throws exception if participant is already existing
 		exists(participant);
-		LOG.debug("Participant does not exist, saving: " + participant.toString());
-		participant.setParticipationDate();
 		
-		LOG.debug("Saving participant: " + participant.toString());
+		LOG.debug("Saving participant: {}", participant.toString());
 		try {
+			participant.setParticipationDate();
+			participantRepo.save(participant);
 			
-			participantRepository.save(participant);
-			
-		} catch(Exception e) {
-			
-			if(e.getCause() instanceof ConstraintViolationException) {
-				LOG.error("Participant exists meanwhile, wow, what are the chances!?");
-				// Using this method because it already throws an exception depending on the problem
-				exists(participant);
-			}
-			throw e;	
+		} catch(ConstraintViolationException e) {
+			LOG.debug("Participant was meanwhile created, wow, what are the chances!?");
 		}
 	}
 
 	public boolean exists(Participant participant) throws ParticipantAlreadyExistingException {
 		
-		if (participantRepository.existsByFirstnameAndName(participant.getFirstname(), participant.getName())) {
+		if (participantRepo.existsByFirstnameAndName(participant.getFirstname(), participant.getName())) {
 			LOG.error("Participant exists by firstname and name");
 			throw new ParticipantAlreadyExistingException("Vor- / Nachname bereits vergeben!");
 		}
 
-		if (needMail && participantRepository.existsByEmail(participant.getEmail())) {
+		if (needMail && participantRepo.existsByEmail(participant.getEmail())) {
 			LOG.error("Participant exists by email");
 			throw new ParticipantAlreadyExistingException("E-Mail bereits vergeben!");
 		}
 
-		if (needMobile && participantRepository.existsByMobile(participant.getMobile())) {
+		if (needMobile && participantRepo.existsByMobile(participant.getMobile())) {
 			LOG.error("Participant exists by mobile");
 			throw new ParticipantAlreadyExistingException("Handynummer bereits vergeben!");
 		}
@@ -101,7 +93,7 @@ public class ParticipantService implements EnvironmentAware {
 
 	public Participant findByIdParticipant(Long idParticipant) throws ParticipantNotFoundException {
 		
-		Optional<Participant> optParticipant = participantRepository.findById(idParticipant);
+		Optional<Participant> optParticipant = participantRepo.findById(idParticipant);
 		
 		if(!optParticipant.isPresent()) {
 			throw new ParticipantNotFoundException("Participant konnte anhand der id nicht gefunden werden.");
@@ -112,10 +104,9 @@ public class ParticipantService implements EnvironmentAware {
 	
 	
 	public List<Participant> getAllParticipants() {
-		return (List<Participant>) participantRepository.findAll();
+		return (List<Participant>) participantRepo.findAll();
 	}
 	
-	//TODO Creating sample objects in production code? Better use different Services for profiles?
 	/**
 	 * Method creates participant dependent on the active profiles.
 	 * For DEV sample data is created, for non-DEV an empty participant is created
@@ -123,15 +114,19 @@ public class ParticipantService implements EnvironmentAware {
 	 */
 	public Participant createParticipantForForm() {
 		
+		Participant participant;
+		
 		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
 		if(profiles.contains(ApplicationProfile.DEV_PROFILE)) {
 			
 			String text = ((Long) System.currentTimeMillis()).toString();
-			Participant participant = new Participant(text, text, text +"@example.com", text, Gender.MALE);
-			return participant;
+			participant = new Participant(text, text, text +"@example.com", text, Gender.MALE);
+
+		} else {
+			participant = new Participant();
 		}
-		
-		return new Participant();
+
+		return participant;
 	}
 	
 	/**
@@ -142,8 +137,7 @@ public class ParticipantService implements EnvironmentAware {
 	public Participant createParticipantForDB(Gender gender) {
 		
 		String text = ((Long) System.currentTimeMillis()).toString();
-		Participant participant = new Participant(text, text, text +"@example.com", text, gender);
-		return participant;
+		return new Participant(text, text, text +"@example.com", text, gender);
 	}
 
 	@Override
@@ -166,23 +160,20 @@ public class ParticipantService implements EnvironmentAware {
 	}
 
 	public void resetDB() {
-		participantRepository.deleteAll();		
+		participantRepo.deleteAll();		
 	}
 
-	public boolean isGenderChanged(Participant newParticipant) throws ParticipantNotFoundException {
+	public boolean isGenderSame(Participant newParticipant) throws ParticipantNotFoundException {
 
 		if(newParticipant.getIdParticipant() == null) {
 			throw new ParticipantNotFoundException("Kann Teilnehmer nicht finden, da keine ID gesetzt ist.");
 		}
 		
-		Participant oldParticipant = participantRepository.findById(newParticipant.getIdParticipant()).get();
+		Participant oldParticipant = participantRepo.findById(newParticipant.getIdParticipant()).get();
 		
 		Gender oldGender = oldParticipant.getGender();
 		Gender newGender = newParticipant.getGender();
 		
-		if(oldGender.equals(newGender)) {
-			return false;
-		}
-		return true;
+		return oldGender.equals(newGender);
 	}
 }

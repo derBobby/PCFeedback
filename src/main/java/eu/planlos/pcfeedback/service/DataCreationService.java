@@ -33,7 +33,7 @@ public class DataCreationService {
 	private UiTextService uts;
 	
 	@Autowired
-	private ParticipantService ps;
+	private ParticipantService pService;
 	
 	@Autowired
 	private ParticipationResultService prs;
@@ -124,23 +124,25 @@ public class DataCreationService {
 
 	public void createParticipations(Gender gender, int count) throws Exception {
 		
-		while(count-- != 0) {
+		while(count != 0) {
+			
+			count--;
 			
 			// Create and save Participant itself
-			Participant participant = ps.createParticipantForDB(gender);
-			ps.save(participant);
+			Participant participant = pService.createParticipantForDB(gender);
+			pService.save(participant);
 			Thread.sleep(1);
 			
 			// Create and save ParticipationResult
 			Map<Long, Integer> feedbackMap = new HashMap<>();
 			List<RatingQuestion> ratingQuestions = new ArrayList<>();
 			rqs.addRatingQuestionsForGenderToList(ratingQuestions, gender);
-			for(RatingQuestion rq : ratingQuestions) {
-				long id = rq.getIdRatingQuestion();
+			for(RatingQuestion ratingQuestion : ratingQuestions) {
+				long id = ratingQuestion.getIdRatingQuestion();
 				feedbackMap.put(id, gender.equals(Gender.MALE) ? 1 : 2);
 			}
-			ParticipationResult pr = new ParticipationResult(participant, feedbackMap);
-			prs.saveParticipationResult(pr);
+			ParticipationResult pResult = new ParticipationResult(participant, feedbackMap);
+			prs.saveParticipationResult(pResult);
 			
 			// Update RatingQuestion
 			rqs.saveFeedback(feedbackMap);

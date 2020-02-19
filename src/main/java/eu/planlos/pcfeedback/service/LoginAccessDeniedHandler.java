@@ -27,14 +27,16 @@ public class LoginAccessDeniedHandler implements AccessDeniedHandler {
 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
-			AccessDeniedException accessDeniedException) throws IOException, ServletException {
+			AccessDeniedException exception) throws IOException, ServletException {
 
+		//TODO use exception?
+		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
-		if(auth != null) {
-			LOG.error("Fehlgeschlagener Zugriff von: " + auth.getName() + " auf " + request.getRequestURI());
+		if(auth == null) {
+			LOG.error("Keine Authentication geliefert bei Zugriff auf {}", request.getRequestURI());
 		} else {
-			LOG.error("Fehlgeschlagener Zugriff mit leerer Variable auth auf " + request.getRequestURI());
+			LOG.error("Fehlgeschlagener Zugriff von {} auf {}", auth.getName(), request.getRequestURI());
 		}
 
 		response.sendError(HttpServletResponse.SC_FORBIDDEN);

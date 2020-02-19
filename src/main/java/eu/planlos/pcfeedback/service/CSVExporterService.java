@@ -1,7 +1,9 @@
 package eu.planlos.pcfeedback.service;
 
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +26,10 @@ public class CSVExporterService {
 	private static final Object[] FILE_HEADER = { "Geschlecht", "A Bezeichnung", "A Stimmen", "B Stimmen",
 			"B Bezeichnung" };
 
-	public void exportResultTo(List<RatingQuestion> ratingQuestionList, List<Participant> participantList, String targetPath) throws IOException {
+	//TODO exception handling not good enough
+	public void exportResultTo(List<RatingQuestion> rqList, List<Participant> pList, String targetPath) throws IOException {
 
-		FileWriter fileWriter = new FileWriter(targetPath);
+		BufferedWriter fileWriter = Files.newBufferedWriter(Paths.get(targetPath));
 
 		CSVFormat csvFile = CSVFormat.EXCEL.withHeader();
 		CSVPrinter csvPrinter = new CSVPrinter(fileWriter, csvFile);
@@ -34,69 +37,72 @@ public class CSVExporterService {
 		LOG.debug("Write csv file header");
 		csvPrinter.printRecord(FILE_HEADER);
 
-		for (RatingQuestion ratingQuestion : ratingQuestionList) {
-
-			Gender gender = ratingQuestion.getGender();
-			long idRatingQuestion = ratingQuestion.getIdRatingQuestion();
-
-			RatingObject ratingObjectOne = ratingQuestion.getObjectOne();
-
-			String nameOne = ratingObjectOne.getName();
-			Integer votesOne = ratingQuestion.getVotesOne();
-			String votesOneStr = String.valueOf(votesOne);
-
-			RatingObject ratingObjectTwo = ratingQuestion.getObjectTwo();
-
-			String nameTwo = ratingObjectTwo.getName();
-			Integer votesTwo = ratingQuestion.getVotesTwo();
-			String votesTwoStr = String.valueOf(votesTwo);
-
-			List<Object> ratingQuestionRecord = new ArrayList<Object>();
-
-			ratingQuestionRecord.add(gender.toString());
-			ratingQuestionRecord.add(nameOne);
-			ratingQuestionRecord.add(votesOneStr);
-			ratingQuestionRecord.add(votesTwoStr);
-			ratingQuestionRecord.add(nameTwo);
-
-			LOG.debug("Write ratingQuestion to file:" + 
-					" idRatingQuestion=" + idRatingQuestion
-					+ " gender=" + gender.toString() 
-					+ " name1=" + nameOne
-					+ " votes1=" + votesOneStr
-					+ " name2=" + nameTwo
-					+ " votes2=" + votesTwoStr
-				);
-			
-			csvPrinter.printRecord(ratingQuestionRecord);
+		// --- Print RatingQuestions ---
+		LOG.debug("Write ratingQuestions");
+		for (RatingQuestion ratingQuestion : rqList) {	
+			csvPrinter.printRecord(createRatingQuestionRecord(ratingQuestion));
 		}
 
-		for (Participant participant : participantList) {
-
-			long idParticipant = participant.getIdParticipant();
-			String firstname = participant.getFirstname();
-			String name = participant.getName();
-			Gender gender = participant.getGender();
-			String participationDate = participant.getformattedParticipationDateString();
-			
-			List<Object> participantRecord = new ArrayList<Object>();
-			participantRecord.add(firstname);
-			participantRecord.add(name);
-			participantRecord.add(gender.toString());
-			participantRecord.add(participationDate);
-
-			LOG.debug("Write participant to file:" + 
-					" idParticipant=" + idParticipant
-					+ " firstname=" + firstname
-					+ " name=" + name
-					+ " gender=" + gender.toString() 
-					+ " participationDate=" + participationDate
-				);
-			
-			csvPrinter.printRecord(participantRecord);
+		// --- Print Participants ---
+		LOG.debug("Write participants");
+		for (Participant participant : pList) {
+			csvPrinter.printRecord(createParticipantRecord(participant));
 		}
 
 		csvPrinter.close();
 		fileWriter.close();
+	}
+
+	private List<Object> createRatingQuestionRecord(RatingQuestion ratingQuestion) {
+		
+		Gender gender = ratingQuestion.getGender();
+		long idRatingQuestion = ratingQuestion.getIdRatingQuestion();
+
+		RatingObject ratingObjectOne = ratingQuestion.getObjectOne();
+
+		String nameOne = ratingObjectOne.getName();
+		Integer votesOne = ratingQuestion.getVotesOne();
+		String votesOneStr = String.valueOf(votesOne);
+
+		RatingObject ratingObjectTwo = ratingQuestion.getObjectTwo();
+
+		String nameTwo = ratingObjectTwo.getName();
+		Integer votesTwo = ratingQuestion.getVotesTwo();
+		String votesTwoStr = String.valueOf(votesTwo);
+
+		List<Object> rqRecord = new ArrayList<>();
+
+		rqRecord.add(gender.toString());
+		rqRecord.add(nameOne);
+		rqRecord.add(votesOneStr);
+		rqRecord.add(votesTwoStr);
+		rqRecord.add(nameTwo);
+
+		LOG.debug("Write ratingQuestion to file: idRatingQuestion={} gender={} name1={} votes1={} name2={} votes2={}",
+				idRatingQuestion, gender.toString(), nameOne, votesOneStr, nameTwo, votesTwoStr
+			);
+		
+		return rqRecord;
+	}
+
+	private List<Object> createParticipantRecord(Participant participant) {
+		
+		long idParticipant = participant.getIdParticipant();
+		String firstname = participant.getFirstname();
+		String name = participant.getName();
+		Gender gender = participant.getGender();
+		String participationDate = participant.getformattedParticipationDateString();
+		
+		List<Object> participantRecord = new ArrayList<>();
+		participantRecord.add(firstname);
+		participantRecord.add(name);
+		participantRecord.add(gender.toString());
+		participantRecord.add(participationDate);
+
+		LOG.debug("Creating record for participant: idParticipant={} firstname={} name={} gender={} participationDate{}=", 
+				idParticipant, firstname, name, gender.toString() , participationDate
+			);
+		
+		return participantRecord;
 	}
 }

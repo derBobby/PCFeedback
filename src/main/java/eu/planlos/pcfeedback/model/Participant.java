@@ -60,12 +60,14 @@ public class Participant implements Serializable {
 	}
 
 	public Participant(String firstname, String name, String email, String mobile, Gender gender) {
-		setFirstname(firstname);
-		setName(name);
-		setEmail(email);
-		setMobile(mobile);
-		setGender(gender);
-		setParticipationDate();
+		this.firstname = firstname;
+		this.name = name;
+		this.email = email;
+		this.mobile = mobile;
+		this.gender = gender;
+
+		ZoneId timeZone = ZoneId.of(TIME_ZONE);
+		this.participationDate = LocalDateTime.now(timeZone);
 	}
 	
 	public Long getIdParticipant() {
@@ -125,7 +127,7 @@ public class Participant implements Serializable {
 		return participationDate.format(formatter);
 	}
 
-	public void setParticipationDate() {
+	public final void setParticipationDate() {
 		ZoneId timeZone = ZoneId.of(TIME_ZONE);
 		this.participationDate = LocalDateTime.now(timeZone);
 	}

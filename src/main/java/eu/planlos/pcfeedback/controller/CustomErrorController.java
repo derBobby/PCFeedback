@@ -52,44 +52,41 @@ public class CustomErrorController implements ErrorController {
 		String errorTitle = "Unbekannter Fehler";
 	    Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 	    
+        Integer statusCode = status != null ? Integer.valueOf(status.toString()) : -1;
 	    
-	    if (status != null) {
-	    	
-	        Integer statusCode = Integer.valueOf(status.toString());
-	        
-        	if(statusCode == HttpStatus.UNAUTHORIZED.value()) {
-	        	errorTitle = "Fehlende Authentifizierung";
-	        	LOG.error("User was not authenticated when requesting site: " + requestedSite);
-	        }
-	        
-	        if(statusCode == HttpStatus.FORBIDDEN.value()) {
-	        	errorTitle = "Zugriff verboten";
-	        	LOG.error("User was not authorized for requested site: " + requestedSite);
-	    		if(auth != null) {
-	    			LOG.error("User was " + auth.getName() + "");
-	    		}
-	        }
-	        
-	        if(statusCode == HttpStatus.NOT_FOUND.value()) {
-	        	errorTitle = "Seite existiert nicht";
-	        	LOG.error("Requested site does not exist: " + requestedSite);
-	        }
-	        
-	        if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-	        	errorTitle = "Fehler im Server";
-	        	LOG.error("Requested site produced internal server error: " + requestedSite);
-	        }
-		    
-		    // Send email notification
-		    //	    errorMailNotificationService.sendErrorNotification(title, errorMessage, errorException, errorTrace);
-
-	    	mfs.fillError(model, statusCode, errorTitle, errorMessage, errorException, errorTrace, true);
-	    	mfs.fillGlobal(model);
-			return RES_ERROR;
-	    }
+    	if(statusCode == HttpStatus.UNAUTHORIZED.value()) {
+        	errorTitle = "Fehlende Authentifizierung";
+        	LOG.error("User was not authenticated when requesting site: " + requestedSite);
+        }
+        
+    	else if(statusCode == HttpStatus.FORBIDDEN.value()) {
+        	errorTitle = "Zugriff verboten";
+        	LOG.error("User was not authorized for requested site: " + requestedSite);
+    		if(auth != null) {
+    			LOG.error("User was " + auth.getName() + "");
+    		}
+        }
+        
+    	else if(statusCode == HttpStatus.NOT_FOUND.value()) {
+        	errorTitle = "Seite existiert nicht";
+        	LOG.error("Requested site does not exist: " + requestedSite);
+        }
+        
+    	else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+        	errorTitle = "Fehler im Server";
+        	LOG.error("Requested site produced internal server error: " + requestedSite);
+        	
+        } else {
+    	    errorTitle = "Unbekannter Fehler";
+    	    LOG.error("~~~ We should not have gotten here ¯\\_(ツ)_/¯ ~~~");
+        }
 	    
-	    LOG.error("~~~ We should not have gotten here ¯\\_(ツ)_/¯ ~~~");
-	    throw new Exception("We should not have gotten here ¯\\_(ツ)_/¯");
+	    // Send email notification
+	    //errorMailNotificationService.sendErrorNotification(title, errorMessage, errorException, errorTrace); 
+	    
+    	mfs.fillError(model, statusCode, errorTitle, errorMessage, errorException, errorTrace, true);
+    	mfs.fillGlobal(model);
+		return RES_ERROR;
 	}
 
 	@Override

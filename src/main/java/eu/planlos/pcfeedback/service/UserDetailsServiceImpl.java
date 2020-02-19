@@ -30,15 +30,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private String adminPassword;
 	
 	@Override
-	public UserDetails loadUserByUsername(String loginName) throws UsernameNotFoundException {
+	/**
+	*	@throws UsernameNotFoundException Thrown if the user provided is not the admin user
+	*/
+	public UserDetails loadUserByUsername(final String loginName) {
 
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		List<GrantedAuthority> authoritiesList = new ArrayList<>();
+		final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		final List<GrantedAuthority> authoritiesList = new ArrayList<>();
 		
 		if(loginName.equals(adminUser)) {
 			LOG.debug("Erstelle Benutzer aus Konfiguration: " + loginName + " (" + ApplicationRole.ROLE_ADMIN + ")");
 			authoritiesList.add(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN));
-			return new User(loginName, bCryptPasswordEncoder.encode(adminPassword), authoritiesList);
+			return new User(loginName, passwordEncoder.encode(adminPassword), authoritiesList);
 		}
 		
 		LOG.debug("Login fehlgeschlagen. Angegebener Benutzer: " + loginName);

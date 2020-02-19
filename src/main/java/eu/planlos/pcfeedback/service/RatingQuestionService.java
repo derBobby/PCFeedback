@@ -2,7 +2,6 @@ package eu.planlos.pcfeedback.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -25,11 +24,13 @@ public class RatingQuestionService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RatingQuestionService.class);
 
+	private static final int OBJECT_ONE = 1;
+
 	@Value("${eu.planlos.pcfeedback.question-count}")
 	public int neededQuestionCount;
 	
 	@Autowired
-	private RatingQuestionRepository ratingQuestionRepository;
+	private RatingQuestionRepository rqRepository;
 	
 	/**
 	 * Returns all rating questions for given gender
@@ -37,8 +38,7 @@ public class RatingQuestionService {
 	 * @return List<RatingQuestion>
 	 */
 	public List<RatingQuestion> loadByGender(Gender gender) {
-		List<RatingQuestion> ratingQuestions = ratingQuestionRepository.findByGender(gender);
-		return ratingQuestions;	
+		return rqRepository.findByGender(gender);
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class RatingQuestionService {
 			
 			// Load IDs with minimum count of answers
 			LOG.debug("Load all questions for lowest number voted: " + lowestVotedCount);
-			List<RatingQuestion> loadedQuestions = ratingQuestionRepository.findByGenderAndCountVoted(gender, lowestVotedCount);
+			List<RatingQuestion> loadedQuestions = rqRepository.findByGenderAndCountVoted(gender, lowestVotedCount);
 			loadedQuestions.removeAll(givenQuestions);
 			
 			LOG.debug("Shuffle rating questions in list");
@@ -99,8 +99,9 @@ public class RatingQuestionService {
 	
 	private int getLowestCountRatingQuestionIsVoted(Gender gender, int chosenCount) throws RatingQuestionsNotExistentException {
 
-		// Get the count of the least voted question so the least voted or least+1 voted questions can be loaded
-		RatingQuestion lowestVotedCountQuestion = ratingQuestionRepository.findFirstByCountVotedGreaterThanAndGenderOrderByCountVotedAsc(chosenCount, gender);
+		// Get the count of the least voted question
+		// so the least voted or least+1 voted questions can be loaded
+		RatingQuestion lowestVotedCountQuestion = rqRepository.findFirstByCountVotedGreaterThanAndGenderOrderByCountVotedAsc(chosenCount, gender);
 		
 		if(lowestVotedCountQuestion == null) {
 			LOG.error("No rating questions found with more votes than: " + chosenCount);
@@ -125,15 +126,15 @@ public class RatingQuestionService {
 			LOG.debug("Rating question " + idRatingQuestion + " got vote for rating object \"" + voteFor + "\"");
 			
 			//TODO just for debugging removal of RQs
-			RatingQuestion rq = ratingQuestionRepository.findById(idRatingQuestion).get();
-			LOG.debug(rq.getObjectOne().getName() + " " + rq.getObjectTwo().getName());
+			RatingQuestion ratingQuestion = rqRepository.findById(idRatingQuestion).get();
+			LOG.debug(ratingQuestion.getObjectOne().getName() + " " + ratingQuestion.getObjectTwo().getName());
 			//TODO End
 			
-			if(voteFor == 1) {
-				ratingQuestionRepository.addVoteForRatingObjectOne(idRatingQuestion);
+			if(voteFor == OBJECT_ONE) {
+				rqRepository.addVoteForRatingObjectOne(idRatingQuestion);
 				continue;
 			}
-			ratingQuestionRepository.addVoteForRatingObjectTwo(idRatingQuestion);
+			rqRepository.addVoteForRatingObjectTwo(idRatingQuestion);
 		}	
 	}
 	
@@ -148,15 +149,15 @@ public class RatingQuestionService {
 			LOG.debug("Rating question " + idRatingQuestion + " gets vote for rating object \"" + voteFor + "\" removed");
 
 			//TODO just for debugging removal of RQs
-			RatingQuestion rq = ratingQuestionRepository.findById(idRatingQuestion).get();
-			LOG.debug(rq.getObjectOne().getName() + " " + rq.getObjectTwo().getName());
+			RatingQuestion ratingQuestion = rqRepository.findById(idRatingQuestion).get();
+			LOG.debug(ratingQuestion.getObjectOne().getName() + " " + ratingQuestion.getObjectTwo().getName());
 			//TODO End
 			
-			if(voteFor == 1) {
-				ratingQuestionRepository.removeVoteForRatingObjectOne(idRatingQuestion);
+			if(voteFor == OBJECT_ONE) {
+				rqRepository.removeVoteForRatingObjectOne(idRatingQuestion);
 				continue;
 			}
-			ratingQuestionRepository.removeVoteForRatingObjectTwo(idRatingQuestion);
+			rqRepository.removeVoteForRatingObjectTwo(idRatingQuestion);
 		}	
 	}
 
@@ -183,24 +184,23 @@ public class RatingQuestionService {
 		LOG.debug("Feedback is valid");
 	}
 	
-	public void saveAll(List<RatingQuestion> ratingQuestionList) {
-		ratingQuestionRepository.saveAll(ratingQuestionList);
+	public void saveAll(List<RatingQuestion> rqList) {
+		rqRepository.saveAll(rqList);
 	}
 	
 	public List<RatingQuestion> create(List<RatingObject> roList) {
 		
-		List<RatingQuestion> rqList = new ArrayList<RatingQuestion>();
+		List<RatingQuestion> rqList = new ArrayList<>();
 		
-		for (Iterator<?> roOneIterator = roList.iterator(); roOneIterator.hasNext();) {
-			
-			RatingObject roOne = (RatingObject) roOneIterator.next();
-			
-			for (Iterator<?> roTwoIterator = roList.iterator(); roTwoIterator.hasNext();) {
+		for (RatingObject roOne : roList) {
+					
+			for (RatingObject roTwo : roList) {
 				
-				RatingObject roTwo = (RatingObject) roTwoIterator.next();
-
-				if(roOne.equals(roTwo)) break;
+				if(roOne.equals(roTwo)) {
+					break;
+				}
 				
+				// --- MALE ---
 				RatingQuestion rqMale = new RatingQuestion();
 				rqMale.setVotesOne(0);
 				rqMale.setVotesTwo(0);
@@ -210,8 +210,12 @@ public class RatingQuestionService {
 				rqMale.setObjectTwo(roTwo);
 				
 				rqList.add(rqMale);
-				LOG.debug("Created rating question: " + rqMale.getGender() + ": " + rqMale.getObjectOne().toString() + " - " + rqMale.getObjectTwo().toString());
-				
+				LOG.debug("Created rating question: {}: {} - {}",
+						Gender.MALE,
+						roOne.toString(),
+						roTwo.toString());
+
+				// --- FEMALE ---
 				RatingQuestion rqFemale = new RatingQuestion();
 				rqFemale.setVotesOne(0);
 				rqFemale.setVotesTwo(0);
@@ -221,7 +225,10 @@ public class RatingQuestionService {
 				rqFemale.setObjectTwo(roTwo);
 
 				rqList.add(rqFemale);
-				LOG.debug("Created rating question: " + rqFemale.getGender() + ": " + rqMale.getObjectOne().toString() + " - " + rqMale.getObjectTwo().toString());
+				LOG.debug("Created rating question: {}: {} - {}",
+						Gender.FEMALE,
+						roOne.toString(),
+						roTwo.toString());
 
 			}
 		}
@@ -242,7 +249,7 @@ public class RatingQuestionService {
 	public List<RatingQuestion> reloadForInvalidFeedback(Gender gender, Map<Long, Integer> feedbackMap) throws RatingQuestionsNotExistentException {
 
 		LOG.debug("Reloaded rating questions");
-		List<RatingQuestion> reloadedList = (List<RatingQuestion>) ratingQuestionRepository.findAllById(feedbackMap.keySet());
+		List<RatingQuestion> reloadedList = (List<RatingQuestion>) rqRepository.findAllById(feedbackMap.keySet());
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
 		rqList.addAll(reloadedList);
@@ -254,12 +261,12 @@ public class RatingQuestionService {
 	}
 
 	public void resetDB() {
-		List<RatingQuestion> rqList = (List<RatingQuestion>) ratingQuestionRepository.findAll();
+		List<RatingQuestion> rqList = (List<RatingQuestion>) rqRepository.findAll();
 		for(RatingQuestion rq : rqList) {
 			rq.setCountVoted(0);
 			rq.setVotesOne(0);
 			rq.setVotesTwo(0);
 		}
-		ratingQuestionRepository.saveAll(rqList);
+		rqRepository.saveAll(rqList);
 	}
 }

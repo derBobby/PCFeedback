@@ -20,7 +20,7 @@ public class DemoDataCreaterApplication implements ApplicationRunner {
 	private static final Logger LOG = LoggerFactory.getLogger(DemoDataCreaterApplication.class);
 	
 	@Autowired
-	private DataCreationService dataCreationService;
+	private DataCreationService dcService;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -32,9 +32,9 @@ public class DemoDataCreaterApplication implements ApplicationRunner {
 	//TODO does this work? :D
 	@Transactional
 	private void initDB() throws Exception {
-		dataCreationService.createCommon();
-		dataCreationService.createParticipations(Gender.MALE, 1);
-		dataCreationService.createParticipations(Gender.FEMALE, 1);
+		dcService.createCommon();
+		dcService.createParticipations(Gender.MALE, 1);
+		dcService.createParticipations(Gender.FEMALE, 1);
 	}
 
 }
