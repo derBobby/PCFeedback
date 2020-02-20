@@ -65,6 +65,10 @@ public class ApplicationPath {
 	public static final String URL_ADMIN_EDITPARTICIPANT		= URL_AREA_ADMIN + "editparticipant" + URL_DELIMETER;
 	public static final String URL_ADMIN_DELETEPARTICIPANT		= URL_AREA_ADMIN + "deleteparticipant" + URL_DELIMETER;
 	public static final String URL_ADMIN_EDITUITEXT				= URL_AREA_ADMIN + "edituitext" + URL_DELIMETER;
+	public static final String URL_ADMIN_CSVPARTICIPANTS		= URL_AREA_ADMIN + "csvparticipants" + URL_DELIMETER;
+	public static final String URL_ADMIN_CSVFEEDBACK			= URL_AREA_ADMIN + "csvfeedback" + URL_DELIMETER;
+	public static final String URL_ADMIN_CSVFEEDBACK_M			= URL_AREA_ADMIN + "csvfeedbackm" + URL_DELIMETER;
+	public static final String URL_ADMIN_CSVFEEDBACK_W			= URL_AREA_ADMIN + "csvfeedbackw" + URL_DELIMETER;
 
 	public static final String RES_ADMIN_SHOWFEEDBACK			= "admin/showresults";
 	public static final String RES_ADMIN_SHOWUSERAGENTS			= "admin/showuseragents";

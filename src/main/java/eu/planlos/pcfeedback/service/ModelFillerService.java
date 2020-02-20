@@ -88,6 +88,11 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("participantList", participantList);
 		model.addAttribute("rqListMale", rqListMale);
 		model.addAttribute("rqListFemale", rqListFemale);
+
+		model.addAttribute("URL_ADMIN_CSVPARTICIPANTS", ApplicationPath.URL_ADMIN_CSVPARTICIPANTS);
+		model.addAttribute("URL_ADMIN_CSVFEEDBACK", ApplicationPath.URL_ADMIN_CSVFEEDBACK);
+		model.addAttribute("URL_ADMIN_CSVFEEDBACK_M", ApplicationPath.URL_ADMIN_CSVFEEDBACK_M);
+		model.addAttribute("URL_ADMIN_CSVFEEDBACK_W", ApplicationPath.URL_ADMIN_CSVFEEDBACK_W);
 		
 		model.addAttribute("URL_ADMIN_EDITPARTICIPANT", ApplicationPath.URL_ADMIN_EDITPARTICIPANT);
 		model.addAttribute("URL_ADMIN_DELETEPARTICIPANT", ApplicationPath.URL_ADMIN_DELETEPARTICIPANT);
