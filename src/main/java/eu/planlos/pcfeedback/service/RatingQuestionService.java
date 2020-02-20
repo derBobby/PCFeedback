@@ -25,6 +25,7 @@ public class RatingQuestionService {
 	private static final Logger LOG = LoggerFactory.getLogger(RatingQuestionService.class);
 
 	private static final int OBJECT_ONE = 1;
+	private static final int OBJECT_TWO = 2;
 
 	@Value("${eu.planlos.pcfeedback.question-count}")
 	public int neededQuestionCount;
@@ -117,25 +118,22 @@ public class RatingQuestionService {
 
 		// Makes sure voteFor will be 1 or 2 
 		LOG.debug("Check if feedback is valid");
-		checkIfRatingQuestionsAreValid(feedbackMap);
-		
+		if(!isValidFeedback(feedbackMap)) {
+			throw new InvalidFeedbackException("Feedback ist ungültig!");
+		}
+			
 		LOG.debug("Save feedback to database");
 		for(Long idRatingQuestion : feedbackMap.keySet()) {
 			
 			int voteFor = feedbackMap.get(idRatingQuestion);
 			LOG.debug("Rating question " + idRatingQuestion + " got vote for rating object \"" + voteFor + "\"");
 			
-			//TODO just for debugging removal of RQs
-			RatingQuestion ratingQuestion = rqRepository.findById(idRatingQuestion).get();
-			LOG.debug(ratingQuestion.getObjectOne().getName() + " " + ratingQuestion.getObjectTwo().getName());
-			//TODO End
-			
 			if(voteFor == OBJECT_ONE) {
 				rqRepository.addVoteForRatingObjectOne(idRatingQuestion);
 				continue;
 			}
 			rqRepository.addVoteForRatingObjectTwo(idRatingQuestion);
-		}	
+		}
 	}
 	
 	//TODO does this work? :D
@@ -147,11 +145,6 @@ public class RatingQuestionService {
 			
 			int voteFor = feedbackMap.get(idRatingQuestion);
 			LOG.debug("Rating question " + idRatingQuestion + " gets vote for rating object \"" + voteFor + "\" removed");
-
-			//TODO just for debugging removal of RQs
-			RatingQuestion ratingQuestion = rqRepository.findById(idRatingQuestion).get();
-			LOG.debug(ratingQuestion.getObjectOne().getName() + " " + ratingQuestion.getObjectTwo().getName());
-			//TODO End
 			
 			if(voteFor == OBJECT_ONE) {
 				rqRepository.removeVoteForRatingObjectOne(idRatingQuestion);
@@ -161,27 +154,31 @@ public class RatingQuestionService {
 		}	
 	}
 
-	private void checkIfRatingQuestionsAreValid(Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
+	private boolean isValidFeedback(Map<Long, Integer> feedbackMap) {
 		
-		if(feedbackMap.size() != neededQuestionCount) {
-			LOG.error("Feedback HashMap is invalid: not matching needed amount of questions");
-			throw new InvalidFeedbackException("Es wurde nicht für jedes Paar eine Wahl getroffen!");
-		}
+		int givenQuestionCount = feedbackMap.size();
+		boolean result = true;
 		
-		for(Long idRatingQuestion : feedbackMap.keySet()) {
+		//has needed count
+		if(givenQuestionCount == neededQuestionCount) {
 			
-			Integer voteFor = feedbackMap.get(idRatingQuestion);
-
-			if(voteFor == null) {
-				LOG.error("Feedback HashMap is invalid: vote is null");
-				throw new InvalidFeedbackException("Ein technischer Fehler ist aufgetreten.");
+			for(Long idRatingQuestion : feedbackMap.keySet()) {
+				
+				Integer voteFor = feedbackMap.get(idRatingQuestion);
+	
+				if(voteFor == null || (voteFor != OBJECT_ONE && voteFor != OBJECT_TWO)) {
+					LOG.error("Feedback invalid. voteFor={}", voteFor);
+					result = false;
+					break;
+				}
 			}
-			if(voteFor != 1 && voteFor != 2) {
-				LOG.error("Feedback HashMap is invalid: vote is not equal 1 or 2");
-				throw new InvalidFeedbackException("Ein technischer Fehler ist aufgetreten.");
-			}
+			
+		} else {
+			LOG.error("Feedback invalid: questions needed/given={}/{}", neededQuestionCount, givenQuestionCount);
+			result = false;
 		}
-		LOG.debug("Feedback is valid");
+		
+		return result;
 	}
 	
 	public void saveAll(List<RatingQuestion> rqList) {
@@ -233,17 +230,6 @@ public class RatingQuestionService {
 			}
 		}
 		return rqList;
-	}
-	
-	//TODO unused yet
-	public int maxQuestionCountForNumberOfRatingObjects(int existingRatingItems) {
-		
-		int possibleQuestionCount = 0;
-		for(int i=0; i<existingRatingItems; i++) {
-			possibleQuestionCount+=i;
-		}
-		
-		return possibleQuestionCount;
 	}
 
 	public List<RatingQuestion> reloadForInvalidFeedback(Gender gender, Map<Long, Integer> feedbackMap) throws RatingQuestionsNotExistentException {

@@ -39,7 +39,7 @@ public class ModelFillerService implements EnvironmentAware {
 	private UiTextService ums;
 	
 	public void fillGlobal(Model model) {
-
+		
 		LOG.debug("Adding configs from application.properties");
 		model.addAttribute("needMail", needMail);
 		model.addAttribute("needMobile", needMobile);
@@ -72,11 +72,14 @@ public class ModelFillerService implements EnvironmentAware {
 		 * URLs for DEV profile
 		 */
 		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
-		boolean isDevProfile = profiles.contains(ApplicationProfile.DEV_PROFILE);
 
-		if (isDevProfile) {
+		if (profiles.contains(ApplicationProfile.DEV_PROFILE)) {
 			LOG.debug("Preparing model for DEV profile.");
 			model.addAttribute("isDevProfile", true);
+		}
+		if (profiles.contains(ApplicationProfile.REV_PROFILE)) {
+			LOG.debug("Preparing model for REV profile.");
+			model.addAttribute("isRevProfile", true);
 		}
 	}
 

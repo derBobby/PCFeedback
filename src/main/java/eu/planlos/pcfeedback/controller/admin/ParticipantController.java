@@ -52,7 +52,6 @@ public class ParticipantController {
 			
 		} catch (ParticipantNotFoundException e) {
 			LOG.error(e.getMessage());
-			//TODO throw best?
 			throw e;
 		}
 	}
@@ -101,7 +100,6 @@ public class ParticipantController {
 			
 		} catch (ParticipantNotFoundException e) {
 			LOG.error(e.getMessage());
-			//TODO throw best?
 			throw e;
 		}
 	}

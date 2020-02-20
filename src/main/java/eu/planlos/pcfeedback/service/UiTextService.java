@@ -19,7 +19,6 @@ public class UiTextService {
 	@Autowired
 	private UiTextRepository utr;
 	
-	//TODO can this be broken?
 	public void createText(UiTextKey uiTextKey, String description, String text) {
 		UiText uiText = new UiText(uiTextKey, description, text);
 		utr.save(uiText);
