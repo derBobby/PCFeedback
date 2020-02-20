@@ -15,6 +15,11 @@ public class HomeController {
 	@Autowired
 	private ModelFillerService mfs;
 	
+	/**
+	 * Provides to index page
+	 * @param model
+	 * @return home template to load
+	 */
 	@RequestMapping(ApplicationPath.URL_HOME)
 	public String home(Model model) {
 	

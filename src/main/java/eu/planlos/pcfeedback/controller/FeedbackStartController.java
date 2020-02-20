@@ -35,6 +35,11 @@ public class FeedbackStartController {
 	@Autowired
 	private ParticipantService participantService;
 
+	/**
+	 * Shows form to enter participant details like name etc.
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(path = ApplicationPath.URL_FEEDBACK_START)
 	public String feedbackStart(Model model) {
 
@@ -47,8 +52,19 @@ public class FeedbackStartController {
 		return ApplicationPath.RES_FEEDBACK_START;
 	}
 	
+	/**
+	 * Checks submitted participant details for validity.
+	 * If successfull writed these into session and redirects to feedpack page
+	 * @param session stores participant details
+	 * @param participant details provided by form
+	 * @param bindingResult object to validate inputs
+	 * @param model
+	 * @return template to load / redirect
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	@PostMapping(path = ApplicationPath.URL_FEEDBACK_START)
-	public String feedbackStartSubmit(HttpSession session, @Valid Participant participant, BindingResult bindingResult, Model model) throws ServletException, IOException {
+	public String feedbackStartSubmit(HttpSession session, @Valid Participant participant, BindingResult bindingResult, Model model) {
 
 		if (bindingResult.hasErrors()) {
 			LOG.debug("Input from form not valid");

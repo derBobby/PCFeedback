@@ -35,7 +35,15 @@ public class CustomErrorController implements ErrorController {
 	
 //	@Autowired
 //	private MailService errorMailNotificationService;
-    	
+    
+	/**
+	 * Is called whenever an error is thrown during web access
+	 * @param request automatically provided
+	 * @param auth automatically provided
+	 * @param webRequest automatically provided
+	 * @param model automatically provided
+	 * @return error template to load 
+	 */
 	@RequestMapping(path = ApplicationPath.URL_ERROR)
 	public String handleError(HttpServletRequest request, Authentication auth, WebRequest webRequest, Model model) {
 	

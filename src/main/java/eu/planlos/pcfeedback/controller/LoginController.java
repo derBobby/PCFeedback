@@ -16,6 +16,12 @@ public class LoginController {
 	@Autowired
 	private ModelFillerService mfs;
 	
+	/**
+	 * Provides the login form page with login container object
+	 * @param model
+	 * @param error
+	 * @return
+	 */
 	@GetMapping(path = ApplicationPath.URL_LOGIN_FORM)
 	public String loginpage(Model model, @RequestParam(defaultValue = "false") boolean error) {
 		

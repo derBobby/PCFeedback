@@ -24,4 +24,8 @@ public class ParticipationResultService {
 	public void deleteParticipationResult(ParticipationResult participationResult) {
 		prRepo.delete(participationResult);
 	}
+
+	public void resetDB() {
+		prRepo.deleteAll();
+	}
 }

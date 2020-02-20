@@ -23,6 +23,13 @@ public class FeedbackEndController {
 	@Autowired
 	private ModelFillerService mfs;
 	
+	/**
+	 * After feedback is saved user gets redirected to end page.
+	 * Controller also clears participant from session.
+	 * @param session provides participant details
+	 * @param model
+	 * @return template to load
+	 */
 	@RequestMapping(ApplicationPath.URL_FEEDBACK_END)
 	public String end(HttpSession session, Model model) {
 

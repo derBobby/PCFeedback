@@ -53,6 +53,12 @@ public class FeedbackController {
 	@Autowired
 	private ParticipationResultService participationResultService;
 	
+	/**
+	 * User is redirected to this controller after successfully writing participant info to session 
+	 * @param model
+	 * @param session provides participant details
+	 * @return template to load
+	 */
 	@RequestMapping(path = ApplicationPath.URL_FEEDBACK)
 	public String feedback(Model model, HttpSession session) {
 		
@@ -83,6 +89,15 @@ public class FeedbackController {
 		return ApplicationPath.RES_FEEDBACK;
 	}
 	
+	/**
+	 * Method which takes the feedback container and saves it in the DB.
+	 * @param userAgentText Is automatically read from http header. Used to store Browser statistics 
+	 * @param fbc Feedback container provided by form
+	 * @param session stores participant
+	 * @param model
+	 * @return template to load
+	 * @throws NoParticipantException
+	 */
 	@RequestMapping(path = ApplicationPath.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
 	public String feedbackSubmit(@RequestHeader("User-Agent") String userAgentText, @ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) throws NoParticipantException {
 		
@@ -110,8 +125,10 @@ public class FeedbackController {
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			LOG.error("This should not happen, because session is destroyed on submitting feedback");
+			ressource = "feedback_error";
 		} catch (NoParticipantException e) {
 			LOG.error("No participant in session available");
+			ressource = "feedback_error";
 		} catch (InvalidFeedbackException e) {
 			LOG.error("Something with the given feedback went wrong");
 			
@@ -127,14 +144,13 @@ public class FeedbackController {
 				mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
 				mfs.fillGlobal(model);
 				
-				return ApplicationPath.RES_FEEDBACK;
+				ressource = ApplicationPath.RES_FEEDBACK;
 				
 			} catch (RatingQuestionsNotExistentException f) {
 				f.printStackTrace();
+				ressource = "feedback_error";
 			}
 			
-		} finally {
-			ressource = "feedback_error";
 		}
 		
 		return ressource;

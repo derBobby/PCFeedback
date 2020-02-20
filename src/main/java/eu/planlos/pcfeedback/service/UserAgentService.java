@@ -28,4 +28,8 @@ public class UserAgentService {
 		
 		return (List<UserAgent>) uaRepo.findAll();
 	}
+
+	public void resetDB() {
+		uaRepo.deleteAll();		
+	}
 }
