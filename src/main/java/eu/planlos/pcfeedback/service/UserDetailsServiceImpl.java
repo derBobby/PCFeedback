@@ -39,12 +39,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		final List<GrantedAuthority> authoritiesList = new ArrayList<>();
 		
 		if(loginName.equals(adminUser)) {
-			LOG.debug("Erstelle Benutzer aus Konfiguration: " + loginName + " (" + ApplicationRole.ROLE_ADMIN + ")");
+			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, ApplicationRole.ROLE_ADMIN);
 			authoritiesList.add(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN));
 			return new User(loginName, passwordEncoder.encode(adminPassword), authoritiesList);
 		}
 		
-		LOG.debug("Login fehlgeschlagen. Angegebener Benutzer: " + loginName);
+		LOG.debug("Login fehlgeschlagen. Angegebener Benutzer: {}", loginName);
 		throw new UsernameNotFoundException("Login fehlgeschlagen.");
 	}
 }

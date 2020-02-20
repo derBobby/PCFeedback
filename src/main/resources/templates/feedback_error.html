@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-3">
+   	        <div class="card mb-3">
+	            <div class="card-header text-center"><h3 class="mb-0">:-(</h3></div>
+	            <div class="card-body text-center p-3">
+					<h1 th:inline="text">Fehler beim Speichern</h1>
+					<p class="lead">Etwas ist beim Speichern schief gelaufen, wenn du das hier liest.</p>
+					<p class="lead">Bleibt nur schmollen! ¯\_(ツ)_/¯</p>
+					<p class="lead">Oder probier es einfach noch mal?</p>					
+	            </div>
+	            <div class="card-footer">&nbsp;</div>			
+			</div>	
+		</main>
+	    <footer th:replace="template :: footer"></footer>		
+	</body>
+</html>

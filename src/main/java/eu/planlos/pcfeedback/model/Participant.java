@@ -136,7 +136,7 @@ public class Participant implements Serializable {
 	 * Functions
 	 */	
 	public String toString() {
-		return firstname + " " + name + " (" + gender + ")";
+		return String.format("firstname=%s, name=%s, gender=%s", firstname, name, gender.toString());
 	}
 	
     @Override

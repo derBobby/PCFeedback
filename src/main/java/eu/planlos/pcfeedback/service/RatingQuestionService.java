@@ -43,6 +43,16 @@ public class RatingQuestionService {
 	}
 	
 	/**
+	 * Checks if sufficient rating questions exist
+	 * @param neededQuestionCount number of needed questions
+	 * @returns true if enough questions are available, otherwise false
+	 */
+	public boolean enoughRatingQuestionsExisting(int neededQuestionCount) {
+		LOG.debug("Checking question count: '{} <= {}'?", neededQuestionCount, rqRepository.countByGender(Gender.MALE));
+		return neededQuestionCount <= rqRepository.countByGender(Gender.MALE) ? true : false;
+	}
+	
+	/**
 	 * Returns rating questions for the feedback process for fiven gender
 	 * @param gender
 	 * @return List<RatingQuestion>
@@ -50,22 +60,19 @@ public class RatingQuestionService {
 	 */
 	public void addRatingQuestionsForGenderToList(List<RatingQuestion> givenQuestions, Gender gender) throws RatingQuestionsNotExistentException {
 
-		LOG.debug("Needed ratingQuestion count is: " + neededQuestionCount);
+		LOG.debug("Needed ratingQuestion count is: {}", neededQuestionCount);
 		
-		LOG.debug("Get the lowest number a ratingQuestion is voted for gender: " + gender.toString());
+		LOG.debug("Get the lowest number a ratingQuestion is voted for gender: {}", gender.toString());
 		int lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender);
 		
 		LOG.debug("Start adding ratingQuestions to result set");
 		while(givenQuestions.size() <= neededQuestionCount) {
 			
 			// Load IDs with minimum count of answers
-			LOG.debug("Load all questions for lowest number voted: " + lowestVotedCount);
+			LOG.debug("Load all questions for lowest number voted: {}", lowestVotedCount);
 			List<RatingQuestion> loadedQuestions = rqRepository.findByGenderAndCountVoted(gender, lowestVotedCount);
 			loadedQuestions.removeAll(givenQuestions);
 			
-			LOG.debug("Shuffle rating questions in list");
-			Collections.shuffle(loadedQuestions);
-
 			// If exact amount is found
 			if(loadedQuestions.size() == neededQuestionCount) {
 
@@ -91,7 +98,9 @@ public class RatingQuestionService {
 				lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender, lowestVotedCount);		
 			}
 		}
-		LOG.debug("End of adding ratingQuestions to result set");
+
+		LOG.debug("Shuffle rating questions in list");
+		Collections.shuffle(givenQuestions);
 	}
 
 	private int getLowestCountRatingQuestionIsVoted(Gender gender) throws RatingQuestionsNotExistentException {
@@ -105,14 +114,15 @@ public class RatingQuestionService {
 		RatingQuestion lowestVotedCountQuestion = rqRepository.findFirstByCountVotedGreaterThanAndGenderOrderByCountVotedAsc(chosenCount, gender);
 		
 		if(lowestVotedCountQuestion == null) {
-			LOG.error("No rating questions found with more votes than: " + chosenCount);
-			throw new RatingQuestionsNotExistentException("No rating questions found with more votes than: " + chosenCount);
+			String message = String.format("No rating questions found with more votes than: %s", chosenCount);
+			LOG.error(message);
+			throw new RatingQuestionsNotExistentException(message);
 		}
 					
 		return lowestVotedCountQuestion.getCountVoted();
 	}
 	
-	//TODO does this work? :D
+	//TODO MONGO Transactional working?
 	@Transactional
 	public void saveFeedback(Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
 
@@ -126,7 +136,7 @@ public class RatingQuestionService {
 		for(Long idRatingQuestion : feedbackMap.keySet()) {
 			
 			int voteFor = feedbackMap.get(idRatingQuestion);
-			LOG.debug("Rating question " + idRatingQuestion + " got vote for rating object \"" + voteFor + "\"");
+			LOG.debug("Rating question {} got vote for rating object {}", idRatingQuestion, voteFor);
 			
 			if(voteFor == OBJECT_ONE) {
 				rqRepository.addVoteForRatingObjectOne(idRatingQuestion);
@@ -136,7 +146,7 @@ public class RatingQuestionService {
 		}
 	}
 	
-	//TODO does this work? :D
+	//TODO MONGO Transactional working?
 	@Transactional
 	public void removeFeedback(Map<Long, Integer> feedbackMap) {
 		
@@ -144,7 +154,7 @@ public class RatingQuestionService {
 		for(Long idRatingQuestion : feedbackMap.keySet()) {
 			
 			int voteFor = feedbackMap.get(idRatingQuestion);
-			LOG.debug("Rating question " + idRatingQuestion + " gets vote for rating object \"" + voteFor + "\" removed");
+			LOG.debug("Rating question {} gets vote for rating object {} removed", idRatingQuestion, voteFor);
 			
 			if(voteFor == OBJECT_ONE) {
 				rqRepository.removeVoteForRatingObjectOne(idRatingQuestion);

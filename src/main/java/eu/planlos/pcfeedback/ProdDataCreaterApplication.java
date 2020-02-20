@@ -34,7 +34,7 @@ public class ProdDataCreaterApplication implements ApplicationRunner {
 		LOG.debug("Initializing database ... DONE");
 	}
 
-	//TODO does this work? :D
+	//TODO MONGO Transactional working?
 	@Transactional
 	private void initDB() throws Exception {
 		dcs.createCommon();

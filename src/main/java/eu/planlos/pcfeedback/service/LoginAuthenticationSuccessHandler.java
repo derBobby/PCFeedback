@@ -12,7 +12,7 @@ package eu.planlos.pcfeedback.service;
 //	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 //			Authentication authentication) throws IOException, ServletException {
 //		
-//		LOG.debug("Successfull login for: \"" + authentication.getName() + "\"");
+//		LOG.debug("Successfull login for: {}", authentication.getName());
 //
 //		User user = (User) authentication.getPrincipal();
 //		String loginName = user.getUsername();

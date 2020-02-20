@@ -24,13 +24,13 @@ public class DataCreationService {
 	private static final Logger LOG = LoggerFactory.getLogger(DataCreationService.class);
 	
 	@Autowired
-	private RatingObjectService ros;
+	private RatingObjectService roService;
 
 	@Autowired
-	private RatingQuestionService rqs;
+	private RatingQuestionService rqService;
 
 	@Autowired
-	private UiTextService uts;
+	private UiTextService uiTextService;
 	
 	@Autowired
 	private ParticipantService pService;
@@ -78,46 +78,46 @@ public class DataCreationService {
 		roList.add(ro14);
 		
 		LOG.debug("Saving rating object sample data");
-		ros.saveAll(roList);
+		roService.saveAll(roList);
 
 		LOG.debug("Create rating question sample data");
 		List<RatingQuestion> rqList = new ArrayList<>();
-		rqList.addAll(rqs.create(roList));
+		rqList.addAll(rqService.create(roList));
 
 		for(RatingQuestion rq : rqList) {
 			rq.setVotesOne(0);
 		}
 		
 		LOG.debug("Saving rating question sample data");
-		rqs.saveAll(rqList);		
+		rqService.saveAll(rqList);		
 	}
 
 	private void createUiText() throws UiTextException {
 		
-		uts.initializeUiText();
+		uiTextService.initializeUiText();
 		
-		uts.createText(
+		uiTextService.createText(
 				UiTextKey.MSG_HOME,
 				"Begrüßung",
 				"Gib uns Feedback und hilf uns die Teennight noch besser zu machen. Unter den Teilnehmern verlosen wir zwei Freiplätze für die Teennight 2020!"
 			);
-		uts.createText(
+		uiTextService.createText(
 				UiTextKey.MSG_FEEDBACKSTART,
 				"Formular",
 				"Nach der Teennight werden deine Daten gelöscht!"
 			);
-		uts.createText(
+		uiTextService.createText(
 				UiTextKey.MSG_FEEDBACKQUESTION,
 				"Fragestellung",
 				"Was ist dir während der Teennight <u>wichtiger</u>?"
 			);
-		uts.createText(
+		uiTextService.createText(
 				UiTextKey.MSG_FEEDBACKEND,
 				"Ende",
 				"Die Teennight sagt danke! Dein Feedback hilft uns sehr. Du bist jetzt im Lostopf fürs Closing."
 			);
 		
-		if(! uts.isFullyInitialized()) {
+		if(! uiTextService.isFullyInitialized()) {
 			throw new UiTextException("Es wurden nicht für jedes UiTextField ein Element initialisiert oder der zugehörige Text fehlt.");
 		}
 	}
@@ -136,7 +136,7 @@ public class DataCreationService {
 			// Create and save ParticipationResult
 			Map<Long, Integer> feedbackMap = new HashMap<>();
 			List<RatingQuestion> ratingQuestions = new ArrayList<>();
-			rqs.addRatingQuestionsForGenderToList(ratingQuestions, gender);
+			rqService.addRatingQuestionsForGenderToList(ratingQuestions, gender);
 			for(RatingQuestion ratingQuestion : ratingQuestions) {
 				long id = ratingQuestion.getIdRatingQuestion();
 				feedbackMap.put(id, gender.equals(Gender.MALE) ? 1 : 2);
@@ -145,13 +145,17 @@ public class DataCreationService {
 			prs.saveParticipationResult(pResult);
 			
 			// Update RatingQuestion
-			rqs.saveFeedback(feedbackMap);
+			rqService.saveFeedback(feedbackMap);
 		}
 	}
 
+	public boolean enoughRatingQuestionsExisting(int neededQuestionCount) {
+		return rqService.enoughRatingQuestionsExisting(neededQuestionCount);
+	}
+	
 	public boolean isDataAlreadyCreated() {
 		
-		if(rqs.loadByGender(Gender.MALE).size() == 0) {
+		if(rqService.loadByGender(Gender.MALE).size() == 0) {
 			return false;
 		}
 		return true;

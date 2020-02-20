@@ -68,7 +68,7 @@ public class FeedbackStartController {
 
 		try {
 			
-			LOG.debug("Checking if participant exists: " + participant.toString());
+			LOG.debug("Checking if participant exists: {}", participant.toString());
 			participantService.exists(participant);
 			
 			LOG.debug("Adding participant to session");

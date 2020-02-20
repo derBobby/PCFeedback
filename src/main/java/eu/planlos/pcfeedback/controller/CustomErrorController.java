@@ -36,9 +36,8 @@ public class CustomErrorController implements ErrorController {
 //	@Autowired
 //	private MailService errorMailNotificationService;
     	
-	//TODO NEW prevent stacktrace from being written to log
 	@RequestMapping(path = ApplicationPath.URL_ERROR)
-	public String handleError(HttpServletRequest request, Authentication auth, WebRequest webRequest, Model model) throws Exception {
+	public String handleError(HttpServletRequest request, Authentication auth, WebRequest webRequest, Model model) {
 	
         String errorMessage = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
         Exception errorException = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
@@ -56,25 +55,25 @@ public class CustomErrorController implements ErrorController {
 	    
     	if(statusCode == HttpStatus.UNAUTHORIZED.value()) {
         	errorTitle = "Fehlende Authentifizierung";
-        	LOG.error("User was not authenticated when requesting site: " + requestedSite);
+        	LOG.error("User was not authenticated when requesting site: {}", requestedSite);
         }
         
     	else if(statusCode == HttpStatus.FORBIDDEN.value()) {
         	errorTitle = "Zugriff verboten";
-        	LOG.error("User was not authorized for requested site: " + requestedSite);
+        	LOG.error("User was not authorized for requested site: {}", requestedSite);
     		if(auth != null) {
-    			LOG.error("User was " + auth.getName() + "");
+    			LOG.error("User was: {}", auth.getName());
     		}
         }
         
     	else if(statusCode == HttpStatus.NOT_FOUND.value()) {
         	errorTitle = "Seite existiert nicht";
-        	LOG.error("Requested site does not exist: " + requestedSite);
+        	LOG.error("Requested site does not exist: {}", requestedSite);
         }
         
     	else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
         	errorTitle = "Fehler im Server";
-        	LOG.error("Requested site produced internal server error: " + requestedSite);
+        	LOG.error("Requested site produced internal server error: {}", requestedSite);
         	
         } else {
     	    errorTitle = "Unbekannter Fehler";

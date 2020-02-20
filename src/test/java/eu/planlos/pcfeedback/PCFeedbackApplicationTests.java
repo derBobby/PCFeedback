@@ -13,5 +13,5 @@ public class PCFeedbackApplicationTests {
 	public void contextLoads() {
 	}
 
-	//TODO Testen, ob Datenschutz und Impressum 200 sind.
+	//TODO TEST Testen, ob Datenschutz und Impressum 200 sind.
 }

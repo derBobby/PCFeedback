@@ -63,12 +63,12 @@ public class FeedbackController {
 			return "redirect:" + ApplicationPath.URL_FEEDBACK_START;
 		}
 		
-		Gender gender = participant.getGender();
+		LOG.debug("Participant: {}", participant.toString());
 		
 		List<RatingQuestion> ratingQuestionList = new ArrayList<>();
+		Gender gender = participant.getGender();
 		
 		try {
-			LOG.debug("Participant has gender: " + gender.toString());
 			ratingQuestionService.addRatingQuestionsForGenderToList(ratingQuestionList, gender);
 			
 		} catch (RatingQuestionsNotExistentException e) {
@@ -89,17 +89,19 @@ public class FeedbackController {
 		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
 		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
 		
+		String ressource = "redirect:" + ApplicationPath.URL_FEEDBACK_END;
+		
 		try {
 
 			if(participant == null) {
 				throw new NoParticipantException();
 			}
 			
-			//Save feedback
-			ratingQuestionService.saveFeedback(feedbackMap);
+			//Save participant first, might not complete
 			participantService.save(participant);
+			ratingQuestionService.saveFeedback(feedbackMap);
 						
-			//Save the result for later plausibilisation to recreate results after data correction
+			//Save the result for later plausibilisation/correction
 			ParticipationResult pr = new ParticipationResult(participant, feedbackMap);
 			participationResultService.saveParticipationResult(pr);
 			
@@ -108,13 +110,8 @@ public class FeedbackController {
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			LOG.error("This should not happen, because session is destroyed on submitting feedback");
-			LOG.error(participant.toString());
-			
 		} catch (NoParticipantException e) {
 			LOG.error("No participant in session available");
-			//TODO call FeedbackStartController and pass error
-			throw e;
-			
 		} catch (InvalidFeedbackException e) {
 			LOG.error("Something with the given feedback went wrong");
 			
@@ -122,21 +119,24 @@ public class FeedbackController {
 			try {
 				
 				ratingQuestionList.addAll(ratingQuestionService.reloadForInvalidFeedback(participant.getGender(), feedbackMap));
+			
+				model.addAttribute("feedbackError", e.getMessage());
+				model.addAttribute("ratingQuestionList", ratingQuestionList);
+				model.addAttribute("chosenList", feedbackMap);
+				
+				mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
+				mfs.fillGlobal(model);
+				
+				return ApplicationPath.RES_FEEDBACK;
 				
 			} catch (RatingQuestionsNotExistentException f) {
-				//TODO Can this happen?
 				f.printStackTrace();
 			}
 			
-			model.addAttribute("feedbackError", e.getMessage());
-			model.addAttribute("ratingQuestionList", ratingQuestionList);
-			model.addAttribute("chosenList", feedbackMap);
-			
-			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
-			mfs.fillGlobal(model);
-			return ApplicationPath.RES_FEEDBACK;
+		} finally {
+			ressource = "feedback_error";
 		}
 		
-		return "redirect:" + ApplicationPath.URL_FEEDBACK_END;
+		return ressource;
 	}
 }

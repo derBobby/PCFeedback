@@ -71,9 +71,9 @@ public class EditParticipationService {
 		    
 		    newFeedbackMap.put(newRatingQuestion.getIdRatingQuestion(), votedObject);
 		}
-		LOG.debug("Old RatingQuestions: " + participationResult.printKeyList());
+		LOG.debug("Old RatingQuestions: {}", participationResult.printKeyList());
 		participationResult.setFeedbackMap(newFeedbackMap);
-		LOG.debug("New RatingQuestions: " + participationResult.printKeyList());
+		LOG.debug("New RatingQuestions: {}", participationResult.printKeyList());
 		try {
 			rqService.removeFeedback(feedbackMap);
 			rqService.saveFeedback(newFeedbackMap);

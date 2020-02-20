@@ -17,15 +17,15 @@ import eu.planlos.pcfeedback.repository.UiTextRepository;
 public class UiTextService {
 		
 	@Autowired
-	private UiTextRepository utr;
+	private UiTextRepository uiTextRepo;
 	
 	public void createText(UiTextKey uiTextKey, String description, String text) {
 		UiText uiText = new UiText(uiTextKey, description, text);
-		utr.save(uiText);
+		uiTextRepo.save(uiText);
 	}
 
 	public String getText(UiTextKey uiTextKey) {
-		UiText uit = utr.findById(uiTextKey).get();
+		UiText uit = uiTextRepo.findById(uiTextKey).get();
 		return uit.getText();
 	}
 	
@@ -38,37 +38,31 @@ public class UiTextService {
 			uiTextList.add(new UiText(uiTextKey));
 		}
 		
-		utr.saveAll(uiTextList);
+		uiTextRepo.saveAll(uiTextList);
 	}	
 	
-	//TODO where to use?
 	public boolean isFullyInitialized() {
 		
-		int neededSize = UiTextKey.values().length;
-		int existingSize = ((List<UiText>) utr.findAll()).size();
-		int notNullSize = utr.countByTextIsNull();
+		boolean result = true;
 		
-		if(notNullSize > 0) {
-			return false;
+		if(uiTextRepo.countByTextIsNull() > 0) {
+			result = false;
 		}
-		if(neededSize > existingSize) {
-			return false;
-		}
-		
-		return true;
+	
+		return result;
 	}
 
 	public List<UiText> getAllUiText() {
-		return (List<UiText>) utr.findAll();
+		return (List<UiText>) uiTextRepo.findAll();
 	}
 
 	public void updateText(UiText uiText) throws UiTextException {
-		Optional<UiText> optionalDdbUiText = utr.findById(uiText.getUiTextKey());
+		Optional<UiText> optionalDdbUiText = uiTextRepo.findById(uiText.getUiTextKey());
 		if(! optionalDdbUiText.isPresent()) {
 			throw new UiTextException("Konnte Text nicht speichern, weil das Element " + uiText.getUiTextKey().toString() + " nicht existiert");
 		}
 		UiText dbUiText = optionalDdbUiText.get();
 		dbUiText.setText(uiText.getText());
-		utr.save(dbUiText);
+		uiTextRepo.save(dbUiText);
 	}
 }

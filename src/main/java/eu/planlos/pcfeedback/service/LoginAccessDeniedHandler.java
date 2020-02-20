@@ -28,8 +28,6 @@ public class LoginAccessDeniedHandler implements AccessDeniedHandler {
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException exception) throws IOException, ServletException {
-
-		//TODO use exception?
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
