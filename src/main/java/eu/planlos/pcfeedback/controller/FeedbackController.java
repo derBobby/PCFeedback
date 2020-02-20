@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
-import eu.planlos.pcfeedback.constants.SessionAttribute;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
@@ -59,14 +59,14 @@ public class FeedbackController {
 	 * @param session provides participant details
 	 * @return template to load
 	 */
-	@RequestMapping(path = ApplicationPath.URL_FEEDBACK)
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK)
 	public String feedback(Model model, HttpSession session) {
 		
-		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
+		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
 		
 		if(participant == null) {
 			LOG.debug("User tried to access feedback without entering participant details");
-			return "redirect:" + ApplicationPath.URL_FEEDBACK_START;
+			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_START;
 		}
 		
 		LOG.debug("Participant: {}", participant.toString());
@@ -86,7 +86,7 @@ public class FeedbackController {
 
 		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
 		mfs.fillGlobal(model);
-		return ApplicationPath.RES_FEEDBACK;
+		return ApplicationPathHelper.RES_FEEDBACK;
 	}
 	
 	/**
@@ -98,13 +98,13 @@ public class FeedbackController {
 	 * @return template to load
 	 * @throws NoParticipantException
 	 */
-	@RequestMapping(path = ApplicationPath.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
 	public String feedbackSubmit(@RequestHeader("User-Agent") String userAgentText, @ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) throws NoParticipantException {
 		
-		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
+		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
 		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
 		
-		String ressource = "redirect:" + ApplicationPath.URL_FEEDBACK_END;
+		String ressource = "redirect:" + ApplicationPathHelper.URL_FEEDBACK_END;
 		
 		try {
 
@@ -144,7 +144,7 @@ public class FeedbackController {
 				mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
 				mfs.fillGlobal(model);
 				
-				ressource = ApplicationPath.RES_FEEDBACK;
+				ressource = ApplicationPathHelper.RES_FEEDBACK;
 				
 			} catch (RatingQuestionsNotExistentException f) {
 				f.printStackTrace();

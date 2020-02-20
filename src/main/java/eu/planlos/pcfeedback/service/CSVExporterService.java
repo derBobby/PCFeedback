@@ -57,8 +57,7 @@ public class CSVExporterService {
 				writer.close();
 				csvPrinter.close();
 			} catch (IOException e) {
-				System.out.println("Error while flushing/closing fileWriter/csvPrinter !!!");
-				e.printStackTrace();
+				LOG.error("Error while flushing/closing fileWriter/csvPrinter !!!");
 			}
 		}
 	}
@@ -95,8 +94,7 @@ public class CSVExporterService {
 				writer.close();
 				csvPrinter.close();
 			} catch (IOException e) {
-				System.out.println("Error while flushing/closing fileWriter/csvPrinter !!!");
-				e.printStackTrace();
+				LOG.error("Error while flushing/closing fileWriter/csvPrinter !!!");
 			}
 		}
 	}

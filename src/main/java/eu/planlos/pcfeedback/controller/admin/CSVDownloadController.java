@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.service.CSVExporterService;
 
@@ -19,7 +19,7 @@ public class CSVDownloadController {
 	@Autowired
 	private CSVExporterService expService;
 
-	@GetMapping(ApplicationPath.URL_ADMIN_CSVPARTICIPANTS)
+	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVPARTICIPANTS)
 	@ResponseBody
 	public void participantsCSV(HttpServletResponse response) throws IOException {
 		
@@ -29,7 +29,7 @@ public class CSVDownloadController {
 	    expService.writeParticipantsCSV(response.getWriter());
 	}
 	
-	@GetMapping(ApplicationPath.URL_ADMIN_CSVFEEDBACK)
+	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK)
 	@ResponseBody
 	public void feedbackCSV(HttpServletResponse response) throws IOException {
 		
@@ -39,7 +39,7 @@ public class CSVDownloadController {
 	    expService.writeRatingQuestionCSV(response.getWriter(), null);
 	}
 	
-	@GetMapping(ApplicationPath.URL_ADMIN_CSVFEEDBACK_M)
+	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_M)
 	@ResponseBody
 	public void feedbackMaleCSV(HttpServletResponse response) throws IOException {
 		
@@ -49,7 +49,7 @@ public class CSVDownloadController {
 	    expService.writeRatingQuestionCSV(response.getWriter(), Gender.MALE);
 	}
 	
-	@GetMapping(ApplicationPath.URL_ADMIN_CSVFEEDBACK_W)
+	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_W)
 	@ResponseBody
 	public void feedbackFemaleCSV(HttpServletResponse response) throws IOException {
 		

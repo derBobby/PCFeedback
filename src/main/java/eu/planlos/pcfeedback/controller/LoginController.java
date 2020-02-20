@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.model.LoginFormContainer;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 
@@ -22,11 +22,11 @@ public class LoginController {
 	 * @param error
 	 * @return
 	 */
-	@GetMapping(path = ApplicationPath.URL_LOGIN_FORM)
+	@GetMapping(path = ApplicationPathHelper.URL_LOGIN_FORM)
 	public String loginpage(Model model, @RequestParam(defaultValue = "false") boolean error) {
 		
 		prepareContent(model, error);
-		return ApplicationPath.RES_LOGIN_FORM;
+		return ApplicationPathHelper.RES_LOGIN_FORM;
 	}
 	
 	private void prepareContent(Model model, boolean error) {
@@ -37,7 +37,7 @@ public class LoginController {
 		
 		mfs.fillGlobal(model);
 		model.addAttribute("loginFormContainer", new LoginFormContainer());
-		model.addAttribute("formAction", ApplicationPath.URL_LOGIN);
+		model.addAttribute("formAction", ApplicationPathHelper.URL_LOGIN);
 		
 	}
 }

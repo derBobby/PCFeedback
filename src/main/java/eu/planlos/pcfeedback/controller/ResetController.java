@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
@@ -29,7 +29,7 @@ public class ResetController {
 	@Autowired
 	private ParticipationResultService prService;
 
-	@GetMapping(path = ApplicationPath.URL_ADMIN_RESET)
+	@GetMapping(path = ApplicationPathHelper.URL_ADMIN_RESET)
 	public String reset() {
 		
 		LOG.error("#----------#   DATABASE IS BEING RESET BY AMDIN !!!   #----------#");

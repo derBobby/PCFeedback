@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.UiTextException;
 import eu.planlos.pcfeedback.model.UiText;
 import eu.planlos.pcfeedback.service.ModelFillerService;
@@ -28,22 +28,22 @@ public class UiTextController {
 	@Autowired
 	private ModelFillerService mfs;
 	
-	@RequestMapping(path = ApplicationPath.URL_ADMIN_EDITUITEXT, method = RequestMethod.GET)
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITUITEXT, method = RequestMethod.GET)
 	public String showUiText(Model model) {
 		
 		List<UiText> uiTextList = uts.getAllUiText();
 		model.addAttribute("uiTextList", uiTextList);
 		
 		mfs.fillGlobal(model);
-		return ApplicationPath.RES_ADMIN_EDITUITEXT;
+		return ApplicationPathHelper.RES_ADMIN_EDITUITEXT;
 	}
 	
-	@RequestMapping(path = ApplicationPath.URL_ADMIN_EDITUITEXT, method = RequestMethod.POST)
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITUITEXT, method = RequestMethod.POST)
 	public String submitEdit(@ModelAttribute UiText uiText, Model model) throws UiTextException {
 
 		try {
 			uts.updateText(uiText);
-			return "redirect:" + ApplicationPath.URL_ADMIN_EDITUITEXT;
+			return "redirect:" + ApplicationPathHelper.URL_ADMIN_EDITUITEXT;
 		} catch (UiTextException e) {
 			LOG.error(e.getMessage());
 			throw e;

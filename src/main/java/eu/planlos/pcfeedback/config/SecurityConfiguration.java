@@ -8,8 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
-import eu.planlos.pcfeedback.constants.ApplicationRole;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.ApplicationRoleHelper;
 import eu.planlos.pcfeedback.service.LoginAccessDeniedHandler;
 import eu.planlos.pcfeedback.service.UserDetailsServiceImpl;
 
@@ -48,10 +48,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				 * ADMIN
 				 */
 				.antMatchers(
-						ApplicationPath.URL_AREA_ADMIN + "**",
-						ApplicationPath.URL_AREA_ACTUATOR + "/**"
+						ApplicationPathHelper.URL_AREA_ADMIN + "**",
+						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
 					).hasAnyAuthority(
-						ApplicationRole.ROLE_ADMIN
+						ApplicationRoleHelper.ROLE_ADMIN
 					)
 				
 				/*
@@ -62,7 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						"/css/**",
 						"/img/**",
 						"/favicon.ico",
-						ApplicationPath.URL_AREA_PUBLIC + "**"
+						ApplicationPathHelper.URL_AREA_PUBLIC + "**"
 					).permitAll()
 					
 			
@@ -72,26 +72,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.and().formLogin()
 				
 				// Overrides the default created login form site
-				.loginPage(ApplicationPath.URL_LOGIN_FORM)
+				.loginPage(ApplicationPathHelper.URL_LOGIN_FORM)
 				
 				// Names URL on which Spring should listen itself
-				.loginProcessingUrl(ApplicationPath.URL_LOGIN)
+				.loginProcessingUrl(ApplicationPathHelper.URL_LOGIN)
 				
 				// NOT USED - Controller for successfull login
 				//.successHandler(successHandler)
 				
 				// Redirects to given page 
-				.defaultSuccessUrl(ApplicationPath.URL_ADMIN_SHOWFEEDBACK, false)
+				.defaultSuccessUrl(ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK, false)
 				
 				// Which site to load after login error
-				.failureUrl(ApplicationPath.URL_LOGIN_FORM)
+				.failureUrl(ApplicationPathHelper.URL_LOGIN_FORM)
 										
 			/*
 			 * Logout procedure
 			 */
 			.and().logout()
-				.logoutUrl(ApplicationPath.URL_LOGOUT)
-				.logoutSuccessUrl(ApplicationPath.URL_HOME)
+				.logoutUrl(ApplicationPathHelper.URL_LOGOUT)
+				.logoutSuccessUrl(ApplicationPathHelper.URL_HOME)
 				.invalidateHttpSession(true)
 				.clearAuthentication(true)
 				

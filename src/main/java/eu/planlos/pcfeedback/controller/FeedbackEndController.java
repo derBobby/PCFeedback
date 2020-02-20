@@ -9,8 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
-import eu.planlos.pcfeedback.constants.SessionAttribute;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.ModelFillerService;
@@ -30,20 +30,20 @@ public class FeedbackEndController {
 	 * @param model
 	 * @return template to load
 	 */
-	@RequestMapping(ApplicationPath.URL_FEEDBACK_END)
+	@RequestMapping(ApplicationPathHelper.URL_FEEDBACK_END)
 	public String end(HttpSession session, Model model) {
 
-		Participant participant = (Participant) session.getAttribute(SessionAttribute.PARTICIPANT);
+		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
 		
 		if(participant == null) {
 			LOG.debug("User tried to access feedback end without entering participation info");
-			return "redirect:" + ApplicationPath.URL_FEEDBACK_START;
+			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_START;
 		}
 		
-		session.setAttribute(SessionAttribute.PARTICIPANT, null);
+		session.setAttribute(SessionAttributeHelper.PARTICIPANT, null);
 		
 		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKEND);
 		mfs.fillGlobal(model);
-		return ApplicationPath.RES_FEEDBACK_END;
+		return ApplicationPathHelper.RES_FEEDBACK_END;
 	}
 }

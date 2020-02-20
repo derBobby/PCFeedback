@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import eu.planlos.pcfeedback.constants.ApplicationProfile;
+import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.service.DataCreationService;
 
 @Component
-@Profile(value = {ApplicationProfile.DEV_PROFILE, ApplicationProfile.REV_PROFILE})
+@Profile(value = {ApplicationProfileHelper.DEV_PROFILE, ApplicationProfileHelper.REV_PROFILE})
 public class DemoDataCreaterApplication implements ApplicationRunner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DemoDataCreaterApplication.class);

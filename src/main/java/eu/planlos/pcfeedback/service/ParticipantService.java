@@ -14,7 +14,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.constants.ApplicationProfile;
+import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
 import eu.planlos.pcfeedback.model.Gender;
@@ -117,7 +117,7 @@ public class ParticipantService implements EnvironmentAware {
 		Participant participant;
 		
 		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
-		if(profiles.contains(ApplicationProfile.DEV_PROFILE)) {
+		if(profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
 			
 			String text = ((Long) System.currentTimeMillis()).toString();
 			participant = new Participant(text, text, text +"@example.com", text, Gender.MALE);

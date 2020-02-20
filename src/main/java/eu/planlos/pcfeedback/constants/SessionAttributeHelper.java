@@ -1,6 +1,6 @@
 package eu.planlos.pcfeedback.constants;
 
-public class SessionAttribute {
+public class SessionAttributeHelper {
 		
 	// Key to access the participant object from the session
 	public static final String PARTICIPANT 	= "participant";

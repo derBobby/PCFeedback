@@ -1,6 +1,6 @@
 package eu.planlos.pcfeedback.controller;
 
-import static eu.planlos.pcfeedback.constants.ApplicationPath.RES_ERROR;
+import static eu.planlos.pcfeedback.constants.ApplicationPathHelper.RES_ERROR;
 
 import java.util.Map;
 
@@ -19,7 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 
 @Controller
@@ -44,7 +44,7 @@ public class CustomErrorController implements ErrorController {
 	 * @param model automatically provided
 	 * @return error template to load 
 	 */
-	@RequestMapping(path = ApplicationPath.URL_ERROR)
+	@RequestMapping(path = ApplicationPathHelper.URL_ERROR)
 	public String handleError(HttpServletRequest request, Authentication auth, WebRequest webRequest, Model model) {
 	
         String errorMessage = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
@@ -98,6 +98,6 @@ public class CustomErrorController implements ErrorController {
 
 	@Override
 	public String getErrorPath() {
-		return ApplicationPath.URL_ERROR;
+		return ApplicationPathHelper.URL_ERROR;
 	}
 }

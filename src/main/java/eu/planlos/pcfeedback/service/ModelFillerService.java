@@ -12,8 +12,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
-import eu.planlos.pcfeedback.constants.ApplicationProfile;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
@@ -45,26 +45,26 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("needMobile", needMobile);
 		
 		LOG.debug("Preparing model for global area");
-		model.addAttribute("URL_HOME", ApplicationPath.URL_HOME);
-		model.addAttribute("URL_IMPRESSUM", ApplicationPath.URL_IMPRESSUM);
-		model.addAttribute("URL_DATENSCHUTZ", ApplicationPath.URL_DATENSCHUTZ);
+		model.addAttribute("URL_HOME", ApplicationPathHelper.URL_HOME);
+		model.addAttribute("URL_IMPRESSUM", ApplicationPathHelper.URL_IMPRESSUM);
+		model.addAttribute("URL_DATENSCHUTZ", ApplicationPathHelper.URL_DATENSCHUTZ);
 
 		LOG.debug("Preparing model for home area");
 		model.addAttribute("NEEDED_QUESTION_COUNT", neededQuestionCount);
 		
 		LOG.debug("Preparing model for feedback start area");
-		model.addAttribute("URL_FEEDBACK_START", ApplicationPath.URL_FEEDBACK_START);
-		model.addAttribute("URL_FEEDBACK_SUBMIT", ApplicationPath.URL_FEEDBACK_SUBMIT);
+		model.addAttribute("URL_FEEDBACK_START", ApplicationPathHelper.URL_FEEDBACK_START);
+		model.addAttribute("URL_FEEDBACK_SUBMIT", ApplicationPathHelper.URL_FEEDBACK_SUBMIT);
 		
 		LOG.debug("Preparing model for anonymous area");
-		model.addAttribute("URL_LOGIN_FORM", ApplicationPath.URL_LOGIN_FORM);
-		model.addAttribute("URL_LOGIN", ApplicationPath.URL_LOGIN);
+		model.addAttribute("URL_LOGIN_FORM", ApplicationPathHelper.URL_LOGIN_FORM);
+		model.addAttribute("URL_LOGIN", ApplicationPathHelper.URL_LOGIN);
 
 		LOG.debug("Preparing model for administration area");
-		model.addAttribute("URL_ADMIN_SHOWFEEDBACK", ApplicationPath.URL_ADMIN_SHOWFEEDBACK);
-		model.addAttribute("URL_ADMIN_EDITUITEXT", ApplicationPath.URL_ADMIN_EDITUITEXT);
-		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPath.URL_ADMIN_SHOWUSERAGENTS);
-		model.addAttribute("URL_LOGOUT", ApplicationPath.URL_LOGOUT);
+		model.addAttribute("URL_ADMIN_SHOWFEEDBACK", ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK);
+		model.addAttribute("URL_ADMIN_EDITUITEXT", ApplicationPathHelper.URL_ADMIN_EDITUITEXT);
+		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS);
+		model.addAttribute("URL_LOGOUT", ApplicationPathHelper.URL_LOGOUT);
 
 		
 		
@@ -73,11 +73,11 @@ public class ModelFillerService implements EnvironmentAware {
 		 */
 		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
 
-		if (profiles.contains(ApplicationProfile.DEV_PROFILE)) {
+		if (profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
 			LOG.debug("Preparing model for DEV profile.");
 			model.addAttribute("isDevProfile", true);
 		}
-		if (profiles.contains(ApplicationProfile.REV_PROFILE)) {
+		if (profiles.contains(ApplicationProfileHelper.REV_PROFILE)) {
 			LOG.debug("Preparing model for REV profile.");
 			model.addAttribute("isRevProfile", true);
 		}
@@ -89,13 +89,13 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("rqListMale", rqListMale);
 		model.addAttribute("rqListFemale", rqListFemale);
 
-		model.addAttribute("URL_ADMIN_CSVPARTICIPANTS", ApplicationPath.URL_ADMIN_CSVPARTICIPANTS);
-		model.addAttribute("URL_ADMIN_CSVFEEDBACK", ApplicationPath.URL_ADMIN_CSVFEEDBACK);
-		model.addAttribute("URL_ADMIN_CSVFEEDBACK_M", ApplicationPath.URL_ADMIN_CSVFEEDBACK_M);
-		model.addAttribute("URL_ADMIN_CSVFEEDBACK_W", ApplicationPath.URL_ADMIN_CSVFEEDBACK_W);
+		model.addAttribute("URL_ADMIN_CSVPARTICIPANTS", ApplicationPathHelper.URL_ADMIN_CSVPARTICIPANTS);
+		model.addAttribute("URL_ADMIN_CSVFEEDBACK", ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK);
+		model.addAttribute("URL_ADMIN_CSVFEEDBACK_M", ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_M);
+		model.addAttribute("URL_ADMIN_CSVFEEDBACK_W", ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_W);
 		
-		model.addAttribute("URL_ADMIN_EDITPARTICIPANT", ApplicationPath.URL_ADMIN_EDITPARTICIPANT);
-		model.addAttribute("URL_ADMIN_DELETEPARTICIPANT", ApplicationPath.URL_ADMIN_DELETEPARTICIPANT);
+		model.addAttribute("URL_ADMIN_EDITPARTICIPANT", ApplicationPathHelper.URL_ADMIN_EDITPARTICIPANT);
+		model.addAttribute("URL_ADMIN_DELETEPARTICIPANT", ApplicationPathHelper.URL_ADMIN_DELETEPARTICIPANT);
 	}
 
 	public void fillError(Model model, int statusCode, String errorTitle, String errorMessage, Exception errorException, String errorTrace, boolean printTrace) {

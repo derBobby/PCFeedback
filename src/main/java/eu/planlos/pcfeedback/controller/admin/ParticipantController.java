@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.service.DeleteParticipationService;
@@ -38,7 +38,7 @@ public class ParticipantController {
 	@Autowired
 	private ParticipantService ps;
 	
-	@RequestMapping(path = ApplicationPath.URL_ADMIN_EDITPARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITPARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
 	public String editParticipant(@PathVariable Long idParticipant, Model model) throws ParticipantNotFoundException {
 
 		Participant participant;
@@ -46,9 +46,9 @@ public class ParticipantController {
 		try {
 			participant = ps.findByIdParticipant(idParticipant);
 			model.addAttribute(participant);
-			model.addAttribute("URL_ADMIN_EDITPARTICIPANT", ApplicationPath.URL_ADMIN_EDITPARTICIPANT);
+			model.addAttribute("URL_ADMIN_EDITPARTICIPANT", ApplicationPathHelper.URL_ADMIN_EDITPARTICIPANT);
 			mfs.fillGlobal(model);
-			return ApplicationPath.RES_ADMIN_EDITPARTICIPANT;
+			return ApplicationPathHelper.RES_ADMIN_EDITPARTICIPANT;
 			
 		} catch (ParticipantNotFoundException e) {
 			LOG.error(e.getMessage());
@@ -56,7 +56,7 @@ public class ParticipantController {
 		}
 	}
 	
-	@RequestMapping(path = ApplicationPath.URL_ADMIN_EDITPARTICIPANT, method = RequestMethod.POST)
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITPARTICIPANT, method = RequestMethod.POST)
 	public String submitEditParticipant(@Valid Participant participant, BindingResult bindingResult, Model model) throws ParticipantNotFoundException {
 		
 		if (bindingResult.hasErrors()) {
@@ -69,7 +69,7 @@ public class ParticipantController {
 			}
 			
 			mfs.fillGlobal(model);
-			return ApplicationPath.RES_FEEDBACK_START;
+			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}
 		
 		LOG.debug("Input from form is valid");
@@ -78,9 +78,9 @@ public class ParticipantController {
 
 			if(eps.editParticipant(participant)) {
 				mfs.fillGlobal(model);
-				return ApplicationPath.RES_ADMIN_EDITPARTICIPANTDONE;
+				return ApplicationPathHelper.RES_ADMIN_EDITPARTICIPANTDONE;
 			}
-			return "redirect:" + ApplicationPath.URL_ADMIN_SHOWFEEDBACK;
+			return "redirect:" + ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK;
 			
 		} catch (ParticipantNotFoundException e) {
 			LOG.debug(e.getMessage());
@@ -88,7 +88,7 @@ public class ParticipantController {
 		}
 	}
 	
-	@RequestMapping(path = ApplicationPath.URL_ADMIN_DELETEPARTICIPANT + "{idParticipant}", method = RequestMethod.GET)	
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_DELETEPARTICIPANT + "{idParticipant}", method = RequestMethod.GET)	
 	public String deleteParticipant(@PathVariable Long idParticipant, Model model) throws ParticipantNotFoundException {
 		
 		Participant participant;
@@ -96,7 +96,7 @@ public class ParticipantController {
 		try {
 			participant = ps.findByIdParticipant(idParticipant);
 			dps.deleteParticipant(participant);
-			return "redirect:" + ApplicationPath.URL_ADMIN_SHOWFEEDBACK;
+			return "redirect:" + ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK;
 			
 		} catch (ParticipantNotFoundException e) {
 			LOG.error(e.getMessage());

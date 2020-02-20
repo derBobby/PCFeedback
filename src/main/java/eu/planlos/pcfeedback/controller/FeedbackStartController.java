@@ -16,8 +16,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
-import eu.planlos.pcfeedback.constants.SessionAttribute;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.UiTextKey;
@@ -40,7 +40,7 @@ public class FeedbackStartController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(path = ApplicationPath.URL_FEEDBACK_START)
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
 	public String feedbackStart(Model model) {
 
 		Participant participant = participantService.createParticipantForForm();
@@ -49,7 +49,7 @@ public class FeedbackStartController {
 		
 		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKSTART);
 		mfs.fillGlobal(model);
-		return ApplicationPath.RES_FEEDBACK_START;
+		return ApplicationPathHelper.RES_FEEDBACK_START;
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class FeedbackStartController {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	@PostMapping(path = ApplicationPath.URL_FEEDBACK_START)
+	@PostMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
 	public String feedbackStartSubmit(HttpSession session, @Valid Participant participant, BindingResult bindingResult, Model model) {
 
 		if (bindingResult.hasErrors()) {
@@ -77,7 +77,7 @@ public class FeedbackStartController {
 			
 			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKSTART);
 			mfs.fillGlobal(model);
-			return ApplicationPath.RES_FEEDBACK_START;
+			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}
 		
 		LOG.debug("Input from form is valid");
@@ -88,10 +88,10 @@ public class FeedbackStartController {
 			participantService.exists(participant);
 			
 			LOG.debug("Adding participant to session");
-			session.setAttribute(SessionAttribute.PARTICIPANT, participant);
+			session.setAttribute(SessionAttributeHelper.PARTICIPANT, participant);
 			
 			LOG.debug("Proceeding to feedback site");
-			return "redirect:" + ApplicationPath.URL_FEEDBACK;
+			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK;
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			
@@ -101,7 +101,7 @@ public class FeedbackStartController {
 			
 			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKSTART);
 			mfs.fillGlobal(model);			
-			return ApplicationPath.RES_FEEDBACK_START;
+			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}
 	}
 }

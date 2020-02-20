@@ -124,14 +124,15 @@ public class DataCreationService {
 
 	public void createParticipations(Gender gender, int count) throws Exception {
 		
-		while(count != 0) {
+		int localCount = count;
+		
+		while(localCount != 0) {
 			
-			count--;
+			localCount--;
 			
 			// Create and save Participant itself
 			Participant participant = pService.createParticipantForDB(gender);
 			pService.save(participant);
-			Thread.sleep(1);
 			
 			// Create and save ParticipationResult
 			Map<Long, Integer> feedbackMap = new HashMap<>();
@@ -154,10 +155,6 @@ public class DataCreationService {
 	}
 	
 	public boolean isDataAlreadyCreated() {
-		
-		if(rqService.loadByGender(Gender.MALE).size() == 0) {
-			return false;
-		}
-		return true;
+		return rqService.loadByGender(Gender.MALE).size() == 0 ? false : true;
 	}
 }

@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.model.UserAgent;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.UserAgentService;
@@ -26,7 +26,7 @@ public class UserAgentController {
 	@Autowired
 	private UserAgentService userAgentService;
 	
-	@RequestMapping(path = ApplicationPath.URL_ADMIN_SHOWUSERAGENTS, method = RequestMethod.GET)
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS, method = RequestMethod.GET)
 	public String showUserAgents(Model model) {
 
 		LOG.debug("Loading User-Agents");
@@ -36,6 +36,6 @@ public class UserAgentController {
 
 		mfs.fillGlobal(model);
 		
-		return ApplicationPath.RES_ADMIN_SHOWUSERAGENTS;
+		return ApplicationPathHelper.RES_ADMIN_SHOWUSERAGENTS;
 	}
 }

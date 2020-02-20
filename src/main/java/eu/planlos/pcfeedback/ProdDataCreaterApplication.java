@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import eu.planlos.pcfeedback.constants.ApplicationProfile;
+import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 import eu.planlos.pcfeedback.service.DataCreationService;
 
 @Component
-@Profile(value = ApplicationProfile.PROD_PROFILE)
+@Profile(value = ApplicationProfileHelper.PROD_PROFILE)
 public class ProdDataCreaterApplication implements ApplicationRunner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProdDataCreaterApplication.class);

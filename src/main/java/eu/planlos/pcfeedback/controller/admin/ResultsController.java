@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import eu.planlos.pcfeedback.constants.ApplicationPath;
+import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
@@ -33,7 +33,7 @@ public class ResultsController {
 	@Autowired
 	private ModelFillerService mfs;
 	
-	@RequestMapping(path = ApplicationPath.URL_ADMIN_SHOWFEEDBACK, method = RequestMethod.GET)
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK, method = RequestMethod.GET)
 	public String showResults(Model model) throws RatingQuestionsNotExistentException {
 
 		LOG.debug("Loading random participants");
@@ -51,6 +51,6 @@ public class ResultsController {
 		mfs.fillGlobal(model);
 		mfs.fillResults(model, randomParticipantList, participantList, rqListMale, rqListFemale);
 		
-		return ApplicationPath.RES_ADMIN_SHOWFEEDBACK;
+		return ApplicationPathHelper.RES_ADMIN_SHOWFEEDBACK;
 	}
 }

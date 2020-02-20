@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.constants.ApplicationRole;
+import eu.planlos.pcfeedback.constants.ApplicationRoleHelper;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -39,8 +39,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		final List<GrantedAuthority> authoritiesList = new ArrayList<>();
 		
 		if(loginName.equals(adminUser)) {
-			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, ApplicationRole.ROLE_ADMIN);
-			authoritiesList.add(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN));
+			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, ApplicationRoleHelper.ROLE_ADMIN);
+			authoritiesList.add(new SimpleGrantedAuthority(ApplicationRoleHelper.ROLE_ADMIN));
 			return new User(loginName, passwordEncoder.encode(adminPassword), authoritiesList);
 		}
 		
