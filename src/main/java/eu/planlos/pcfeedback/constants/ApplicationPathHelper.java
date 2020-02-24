@@ -34,10 +34,12 @@ public class ApplicationPathHelper {
 	public static final String URL_FEEDBACK_RESTART 			= URL_AREA_PUBLIC + "feedbackrestart";
 	public static final String URL_FEEDBACK_SUBMIT 				= URL_AREA_PUBLIC + "feedbacksubmit";
 	public static final String URL_FEEDBACK		 				= URL_AREA_PUBLIC + "feedback";
+	public static final String URL_FEEDBACK_FREETEXT			= URL_AREA_PUBLIC + "feedbackfreetext";
 	public static final String URL_FEEDBACK_END		 			= URL_AREA_PUBLIC + "feedbackend";
 	public static final String RES_HOME 						= "home";
 	public static final String RES_FEEDBACK_START 				= "feedbackstart";
 	public static final String RES_FEEDBACK 					= "feedback";
+	public static final String RES_FEEDBACK_FREETEXT			= "feedbackfreetext";
 	public static final String RES_FEEDBACK_END 				= "feedbackend";
 	
 	// ERROR

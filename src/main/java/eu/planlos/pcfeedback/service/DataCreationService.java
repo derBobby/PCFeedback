@@ -112,6 +112,15 @@ public class DataCreationService {
 				"Was ist dir während der Teennight <u>wichtiger</u>?"
 			);
 		uiTextService.createText(
+				UiTextKey.MSG_FEEDBACKFREETEXT,
+				"Freitext",
+				"HIER IST PLATZ FÜR ALLES WAS DU SAGEN WILLST:<br />" +
+						"- das feier ich an der Teennight<br />" +
+						"- das könntet ihr noch besser machen<br />" +
+						"- das wäre mal eine Idee für die Teennight<br />" + 
+						"- das habe ich mit Gott erlebt auf der Teennight<br />"
+			);
+		uiTextService.createText(
 				UiTextKey.MSG_FEEDBACKEND,
 				"Ende",
 				"Die Teennight sagt danke! Dein Feedback hilft uns sehr. Du bist jetzt im Lostopf fürs Closing."

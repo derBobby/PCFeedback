@@ -80,7 +80,7 @@ public class FeedbackStartController {
 			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}
 		
-		LOG.debug("Input from form is valid");
+		LOG.debug("Form input is valid");
 
 		try {
 			
