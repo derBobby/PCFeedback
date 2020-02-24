@@ -100,6 +100,8 @@ public class FeedbackController {
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_FREETEXT, method = RequestMethod.POST)
 	public String feedbackFreeText(@ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) throws NoParticipantException {
 		
+		String freeText = (String) session.getAttribute(SessionAttributeHelper.FREETEXT);
+		
 		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
 		if(participant == null) {
 			throw new NoParticipantException();
@@ -108,6 +110,7 @@ public class FeedbackController {
 		LOG.debug("Adding participant to session");
 		session.setAttribute(SessionAttributeHelper.FEEDBACK, fbc);
 	
+		model.addAttribute("freeText", freeText);
 		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKFREETEXT);
 		mfs.fillGlobal(model);		
 		return ApplicationPathHelper.RES_FEEDBACK_FREETEXT;
@@ -125,9 +128,11 @@ public class FeedbackController {
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
 	public String feedbackSubmit(@RequestHeader("User-Agent") String userAgentText, @RequestParam String freeText,  HttpSession session, Model model) {
 		
+		session.setAttribute(SessionAttributeHelper.FREETEXT, freeText);
+		
 		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
 		FeedbackContainer feedbackContainer = (FeedbackContainer) session.getAttribute(SessionAttributeHelper.FEEDBACK);
-		Map<Long, Integer> feedbackMap = null; 
+		Map<Long, Integer> feedbackMap = feedbackContainer.getFeedbackMap();
 				
 		String ressource = "redirect:" + ApplicationPathHelper.URL_FEEDBACK_END;
 		
@@ -139,7 +144,6 @@ public class FeedbackController {
 			
 			validationService.isValidFeedback(feedbackMap);
 			
-			feedbackMap = feedbackContainer.getFeedbackMap();
 			
 			//Save participant first, might not complete
 			participantService.save(participant);
@@ -155,9 +159,11 @@ public class FeedbackController {
 		} catch (ParticipantAlreadyExistingException e) {
 			LOG.error("This should not happen, because session is destroyed on submitting feedback");
 			ressource = ERROR_TEMPLATE;
+			
 		} catch (NoParticipantException e) {
 			LOG.error("No participant in session available");
 			ressource = ERROR_TEMPLATE;
+			
 		} catch (NoFeedbackException e) {
 			LOG.error("No feedback in session available");
 			ressource = ERROR_TEMPLATE;
@@ -170,6 +176,7 @@ public class FeedbackController {
 				
 				ratingQuestionList.addAll(ratingQuestionService.reloadForInvalidFeedback(participant.getGender(), feedbackMap));
 			
+				model.addAttribute("freeText", freeText);
 				model.addAttribute("feedbackError", e.getMessage());
 				model.addAttribute("ratingQuestionList", ratingQuestionList);
 				model.addAttribute("chosenList", feedbackMap);
@@ -184,6 +191,10 @@ public class FeedbackController {
 				ressource = ERROR_TEMPLATE;
 			}
 			
+		} finally {
+			if(ressource.equals(ERROR_TEMPLATE)) {
+				mfs.fillGlobal(model);
+			}
 		}
 		
 		return ressource;
