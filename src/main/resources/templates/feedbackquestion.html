@@ -4,12 +4,12 @@
 	<body>
 		<nav th:replace="template :: nav"></nav>
 	    <main class="container col-md-6  pt-3">
-   			<form th:action="@{${URL_FEEDBACK_SUBMIT}}" method="post">
+   			<form th:action="@{${URL_FEEDBACK_FREETEXT}}" method="post">
 	   	        <div class="card mb-3">
 	   	        
 		            <div class="card-header text-center"><h3 class="mb-0">Wähle!</h3></div>
 		            
-		            <div class="card-body text-center p-3" th:utext="${MSG_FEEDBACKQUESTION}"></div>
+		            <div class="card-body text-center p-3" th:utext="${MSG_FEEDBACK_QUESTION}"></div>
    	            	<div class="alert alert-danger m-3" role="alert" th:if="${feedbackError} != null" th:text="${feedbackError}"></div>
 					
 					<!-- START Questions -->
@@ -20,7 +20,7 @@
 							
 								<div class="col-sm-auto text-center" th:inline="text">
 									<b>- [[${ratingQuestionStat.index+1}]] -</b>
-									<div th:remove"tag" th:if="${not #lists.isEmpty(chosenList) and chosenList.get(ratingQuestion.idRatingQuestion) == null}">
+									<div th:remove="tag" th:if="${not #lists.isEmpty(chosenList) and chosenList.get(ratingQuestion.idRatingQuestion) == null}">
 										<i class="fas fa-exclamation-triangle text-warning"></i>
 									</div>
 								</div>
@@ -76,8 +76,8 @@
 					
 						<div class="form-group mb-0">
 							<div>
-								<button type="submit" id="submit" class="btn btn-success">
-									Absenden!<br /><i class="fas fa-paper-plane"></i>
+								<button type="submit" id="submit" class="btn btn-primary">
+									Weiter<br /><i class="fas fa-step-forward"></i>
 								</button>
 							</div>
 						</div>

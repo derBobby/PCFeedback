@@ -2,6 +2,7 @@ package eu.planlos.pcfeedback.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.RatingObject;
@@ -24,8 +24,8 @@ public class RatingQuestionService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RatingQuestionService.class);
 
-	private static final int OBJECT_ONE = 1;
-	private static final int OBJECT_TWO = 2;
+	public static final int OBJECT_ONE = 1;
+	public static final int OBJECT_TWO = 2;
 
 	@Value("${eu.planlos.pcfeedback.question-count}")
 	public int neededQuestionCount;
@@ -124,13 +124,7 @@ public class RatingQuestionService {
 	
 	//TODO MONGO Transactional working?
 	@Transactional
-	public void saveFeedback(Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
-
-		// Makes sure voteFor will be 1 or 2 
-		LOG.debug("Check if feedback is valid");
-		if(!isValidFeedback(feedbackMap)) {
-			throw new InvalidFeedbackException("Feedback ist ungültig!");
-		}
+	public void saveFeedback(Map<Long, Integer> feedbackMap) {
 			
 		LOG.debug("Save feedback to database");
 		for(Long idRatingQuestion : feedbackMap.keySet()) {
@@ -164,33 +158,6 @@ public class RatingQuestionService {
 		}	
 	}
 
-	private boolean isValidFeedback(Map<Long, Integer> feedbackMap) {
-		
-		int givenQuestionCount = feedbackMap.size();
-		boolean result = true;
-		
-		//has needed count
-		if(givenQuestionCount == neededQuestionCount) {
-			
-			for(Long idRatingQuestion : feedbackMap.keySet()) {
-				
-				Integer voteFor = feedbackMap.get(idRatingQuestion);
-	
-				if(voteFor == null || (voteFor != OBJECT_ONE && voteFor != OBJECT_TWO)) {
-					LOG.error("Feedback invalid. voteFor={}", voteFor);
-					result = false;
-					break;
-				}
-			}
-			
-		} else {
-			LOG.error("Feedback invalid: questions needed/given={}/{}", neededQuestionCount, givenQuestionCount);
-			result = false;
-		}
-		
-		return result;
-	}
-	
 	public void saveAll(List<RatingQuestion> rqList) {
 		rqRepository.saveAll(rqList);
 	}
@@ -242,8 +209,13 @@ public class RatingQuestionService {
 		return rqList;
 	}
 
+	//TODO what happens here, when??
 	public List<RatingQuestion> reloadForInvalidFeedback(Gender gender, Map<Long, Integer> feedbackMap) throws RatingQuestionsNotExistentException {
 
+		if(feedbackMap == null) {
+			feedbackMap = new HashMap<>();
+		}
+		
 		LOG.debug("Reloaded rating questions");
 		List<RatingQuestion> reloadedList = (List<RatingQuestion>) rqRepository.findAllById(feedbackMap.keySet());
 		

@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
+import eu.planlos.pcfeedback.exceptions.NoFeedbackException;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.FeedbackContainer;
@@ -27,6 +29,8 @@ import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.ParticipationResult;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
+import eu.planlos.pcfeedback.service.FeedbackValidationService;
+import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
@@ -38,6 +42,8 @@ public class FeedbackController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FeedbackController.class);
 	
+	private static final String ERROR_TEMPLATE = "feedback_error";
+	
 	@Autowired
 	private ModelFillerService mfs;
 	
@@ -46,20 +52,28 @@ public class FeedbackController {
 	
 	@Autowired
 	private ParticipantService participantService;
-	
+
 	@Autowired
 	private UserAgentService userAgentService;
+
+	@Autowired
+	private FreeTextService freeTextService;
+	
+	@Autowired
+	private FeedbackValidationService validationService;
 	
 	@Autowired
 	private ParticipationResultService participationResultService;
 	
+	
+	//TODO describe what it does
 	/**
 	 * User is redirected to this controller after successfully writing participant info to session 
 	 * @param model
 	 * @param session provides participant details
 	 * @return template to load
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK)
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_QUESTION)
 	public String feedback(Model model, HttpSession session) {
 		
 		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
@@ -84,13 +98,53 @@ public class FeedbackController {
 				
 		model.addAttribute("ratingQuestionList", ratingQuestionList);
 
-		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
+		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_QUESTION);
 		mfs.fillGlobal(model);
-		return ApplicationPathHelper.RES_FEEDBACK;
+		return ApplicationPathHelper.RES_FEEDBACK_QUESTION;
+	}
+	
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
+	public String feedbackSubmit(@ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) {
+
+		String resource = ApplicationPathHelper.RES_FEEDBACK_FREETEXT;
+		
+		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
+		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
+		
+		try {
+			validationService.isValidFeedback(feedbackMap);
+			LOG.debug("Adding feedback to session");
+			session.setAttribute(SessionAttributeHelper.FEEDBACK, fbc);
+			
+		} catch (NoFeedbackException | InvalidFeedbackException e) {
+
+			try {
+				
+				List<RatingQuestion> ratingQuestionList = new ArrayList<>();
+				ratingQuestionList.addAll(ratingQuestionService.reloadForInvalidFeedback(participant.getGender(), feedbackMap));
+				model.addAttribute("ratingQuestionList", ratingQuestionList);
+			
+				model.addAttribute("feedbackError", e.getMessage());
+				model.addAttribute("chosenList", feedbackMap);
+				
+				mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_QUESTION);
+				
+				resource = ApplicationPathHelper.RES_FEEDBACK_QUESTION;
+				
+			} catch (RatingQuestionsNotExistentException f) {
+				f.printStackTrace();
+				resource = ERROR_TEMPLATE;
+			}
+			
+		}
+	
+		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_FREETEXT);
+		mfs.fillGlobal(model);		
+		return resource;
 	}
 	
 	/**
-	 * Method which takes the feedback container and saves it in the DB.
+	 * Method which saves all results. Takes participant and feedback from session
 	 * @param userAgentText Is automatically read from http header. Used to store Browser statistics 
 	 * @param fbc Feedback container provided by form
 	 * @param session stores participant
@@ -98,24 +152,22 @@ public class FeedbackController {
 	 * @return template to load
 	 * @throws NoParticipantException
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
-	public String feedbackSubmit(@RequestHeader("User-Agent") String userAgentText, @ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) throws NoParticipantException {
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_FREETEXT_SUBMIT, method = RequestMethod.POST)
+	public String freeTextSubmit(@RequestHeader("User-Agent") String userAgentText, @RequestParam String freeText,  HttpSession session, Model model) {
 		
 		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
-		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
-		
-		String ressource = "redirect:" + ApplicationPathHelper.URL_FEEDBACK_END;
+		FeedbackContainer fbContainer = (FeedbackContainer) session.getAttribute(SessionAttributeHelper.FEEDBACK);
+		Map<Long, Integer> feedbackMap = fbContainer.getFeedbackMap();
+				
+		String resource = "redirect:" + ApplicationPathHelper.URL_FEEDBACK_END;
 		
 		try {
-
-			if(participant == null) {
-				throw new NoParticipantException();
-			}
 			
 			//Save participant first, might not complete
 			participantService.save(participant);
 			ratingQuestionService.saveFeedback(feedbackMap);
-						
+			freeTextService.saveFreeText(freeText, participant.getGender());			
+			
 			//Save the result for later plausibilisation/correction
 			ParticipationResult pr = new ParticipationResult(participant, feedbackMap);
 			participationResultService.saveParticipationResult(pr);
@@ -125,34 +177,14 @@ public class FeedbackController {
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			LOG.error("This should not happen, because session is destroyed on submitting feedback");
-			ressource = "feedback_error";
-		} catch (NoParticipantException e) {
-			LOG.error("No participant in session available");
-			ressource = "feedback_error";
-		} catch (InvalidFeedbackException e) {
-			LOG.error("Something with the given feedback went wrong");
+			resource = ERROR_TEMPLATE;
 			
-			List<RatingQuestion> ratingQuestionList = new ArrayList<>();
-			try {
-				
-				ratingQuestionList.addAll(ratingQuestionService.reloadForInvalidFeedback(participant.getGender(), feedbackMap));
-			
-				model.addAttribute("feedbackError", e.getMessage());
-				model.addAttribute("ratingQuestionList", ratingQuestionList);
-				model.addAttribute("chosenList", feedbackMap);
-				
-				mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
+		} finally {
+			if(resource.equals(ERROR_TEMPLATE)) {
 				mfs.fillGlobal(model);
-				
-				ressource = ApplicationPathHelper.RES_FEEDBACK;
-				
-			} catch (RatingQuestionsNotExistentException f) {
-				f.printStackTrace();
-				ressource = "feedback_error";
 			}
-			
 		}
 		
-		return ressource;
+		return resource;
 	}
 }

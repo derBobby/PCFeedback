@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
@@ -74,13 +73,10 @@ public class EditParticipationService {
 		LOG.debug("Old RatingQuestions: {}", participationResult.printKeyList());
 		participationResult.setFeedbackMap(newFeedbackMap);
 		LOG.debug("New RatingQuestions: {}", participationResult.printKeyList());
-		try {
-			rqService.removeFeedback(feedbackMap);
-			rqService.saveFeedback(newFeedbackMap);
-			prService.saveParticipationResult(participationResult);
-		} catch (InvalidFeedbackException e) {
-			LOG.error("Kritischer Fehler beim Neuanlegen der Feedbackergebnisse nach Gender-Änderung.");
-		}
+		
+		rqService.removeFeedback(feedbackMap);
+		rqService.saveFeedback(newFeedbackMap);
+		prService.saveParticipationResult(participationResult);
 		
 		return true;
 	}

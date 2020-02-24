@@ -102,17 +102,26 @@ public class DataCreationService {
 				"Gib uns Feedback und hilf uns die Teennight noch besser zu machen. Unter den Teilnehmern verlosen wir zwei Freiplätze für die Teennight 2020!"
 			);
 		uiTextService.createText(
-				UiTextKey.MSG_FEEDBACKSTART,
+				UiTextKey.MSG_FEEDBACK_START,
 				"Formular",
 				"Nach der Teennight werden deine Daten gelöscht!"
 			);
 		uiTextService.createText(
-				UiTextKey.MSG_FEEDBACKQUESTION,
+				UiTextKey.MSG_FEEDBACK_QUESTION,
 				"Fragestellung",
 				"Was ist dir während der Teennight <u>wichtiger</u>?"
 			);
 		uiTextService.createText(
-				UiTextKey.MSG_FEEDBACKEND,
+				UiTextKey.MSG_FEEDBACK_FREETEXT,
+				"Freitext",
+				"HIER IST PLATZ FÜR ALLES WAS DU SAGEN WILLST:<br />" +
+						"- das feier ich an der Teennight<br />" +
+						"- das könntet ihr noch besser machen<br />" +
+						"- das wäre mal eine Idee für die Teennight<br />" + 
+						"- das habe ich mit Gott erlebt auf der Teennight<br />"
+			);
+		uiTextService.createText(
+				UiTextKey.MSG_FEEDBACK_END,
 				"Ende",
 				"Die Teennight sagt danke! Dein Feedback hilft uns sehr. Du bist jetzt im Lostopf fürs Closing."
 			);
