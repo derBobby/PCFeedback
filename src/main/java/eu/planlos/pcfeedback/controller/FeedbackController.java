@@ -61,13 +61,15 @@ public class FeedbackController {
 	@Autowired
 	private ParticipationResultService participationResultService;
 	
+	
+	//TODO describe what it does
 	/**
 	 * User is redirected to this controller after successfully writing participant info to session 
 	 * @param model
 	 * @param session provides participant details
 	 * @return template to load
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK)
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_QUESTION)
 	public String feedback(Model model, HttpSession session) {
 		
 		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
@@ -92,28 +94,49 @@ public class FeedbackController {
 				
 		model.addAttribute("ratingQuestionList", ratingQuestionList);
 
-		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
+		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_QUESTION);
 		mfs.fillGlobal(model);
-		return ApplicationPathHelper.RES_FEEDBACK;
+		return ApplicationPathHelper.RES_FEEDBACK_QUESTION;
 	}
 	
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_FREETEXT, method = RequestMethod.POST)
-	public String feedbackFreeText(@ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) throws NoParticipantException {
-		
-		String freeText = (String) session.getAttribute(SessionAttributeHelper.FREETEXT);
-		
-		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
-		if(participant == null) {
-			throw new NoParticipantException();
-		}
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
+	public String feedbackSubmit(@ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) {
 
-		LOG.debug("Adding participant to session");
-		session.setAttribute(SessionAttributeHelper.FEEDBACK, fbc);
+		String resource = ApplicationPathHelper.RES_FEEDBACK_FREETEXT;
+		
+		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
+		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
+		
+		try {
+			validationService.isValidFeedback(feedbackMap);
+			LOG.debug("Adding feedback to session");
+			session.setAttribute(SessionAttributeHelper.FEEDBACK, fbc);
+			
+		} catch (NoFeedbackException | InvalidFeedbackException e) {
+
+			try {
+				
+				List<RatingQuestion> ratingQuestionList = new ArrayList<>();
+				ratingQuestionList.addAll(ratingQuestionService.reloadForInvalidFeedback(participant.getGender(), feedbackMap));
+				model.addAttribute("ratingQuestionList", ratingQuestionList);
+			
+				model.addAttribute("feedbackError", e.getMessage());
+				model.addAttribute("chosenList", feedbackMap);
+				
+				mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_QUESTION);
+				
+				resource = ApplicationPathHelper.RES_FEEDBACK_QUESTION;
+				
+			} catch (RatingQuestionsNotExistentException f) {
+				f.printStackTrace();
+				resource = ERROR_TEMPLATE;
+			}
+			
+		}
 	
-		model.addAttribute("freeText", freeText);
-		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKFREETEXT);
+		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_FREETEXT);
 		mfs.fillGlobal(model);		
-		return ApplicationPathHelper.RES_FEEDBACK_FREETEXT;
+		return resource;
 	}
 	
 	/**
@@ -125,25 +148,16 @@ public class FeedbackController {
 	 * @return template to load
 	 * @throws NoParticipantException
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
-	public String feedbackSubmit(@RequestHeader("User-Agent") String userAgentText, @RequestParam String freeText,  HttpSession session, Model model) {
-		
-		session.setAttribute(SessionAttributeHelper.FREETEXT, freeText);
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_FREETEXT_SUBMIT, method = RequestMethod.POST)
+	public String freeTextSubmit(@RequestHeader("User-Agent") String userAgentText, @RequestParam String freeText,  HttpSession session, Model model) {
 		
 		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
-		FeedbackContainer feedbackContainer = (FeedbackContainer) session.getAttribute(SessionAttributeHelper.FEEDBACK);
-		Map<Long, Integer> feedbackMap = feedbackContainer.getFeedbackMap();
+		FeedbackContainer fbContainer = (FeedbackContainer) session.getAttribute(SessionAttributeHelper.FEEDBACK);
+		Map<Long, Integer> feedbackMap = fbContainer.getFeedbackMap();
 				
-		String ressource = "redirect:" + ApplicationPathHelper.URL_FEEDBACK_END;
+		String resource = "redirect:" + ApplicationPathHelper.URL_FEEDBACK_END;
 		
 		try {
-
-			if(participant == null) {
-				throw new NoParticipantException();
-			}
-			
-			validationService.isValidFeedback(feedbackMap);
-			
 			
 			//Save participant first, might not complete
 			participantService.save(participant);
@@ -158,45 +172,14 @@ public class FeedbackController {
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			LOG.error("This should not happen, because session is destroyed on submitting feedback");
-			ressource = ERROR_TEMPLATE;
-			
-		} catch (NoParticipantException e) {
-			LOG.error("No participant in session available");
-			ressource = ERROR_TEMPLATE;
-			
-		} catch (NoFeedbackException e) {
-			LOG.error("No feedback in session available");
-			ressource = ERROR_TEMPLATE;
-		
-		} catch (InvalidFeedbackException e) {
-			LOG.error("Something with the given feedback went wrong");
-			
-			List<RatingQuestion> ratingQuestionList = new ArrayList<>();
-			try {
-				
-				ratingQuestionList.addAll(ratingQuestionService.reloadForInvalidFeedback(participant.getGender(), feedbackMap));
-			
-				model.addAttribute("freeText", freeText);
-				model.addAttribute("feedbackError", e.getMessage());
-				model.addAttribute("ratingQuestionList", ratingQuestionList);
-				model.addAttribute("chosenList", feedbackMap);
-				
-				mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKQUESTION);
-				mfs.fillGlobal(model);
-				
-				ressource = ApplicationPathHelper.RES_FEEDBACK;
-				
-			} catch (RatingQuestionsNotExistentException f) {
-				f.printStackTrace();
-				ressource = ERROR_TEMPLATE;
-			}
+			resource = ERROR_TEMPLATE;
 			
 		} finally {
-			if(ressource.equals(ERROR_TEMPLATE)) {
+			if(resource.equals(ERROR_TEMPLATE)) {
 				mfs.fillGlobal(model);
 			}
 		}
 		
-		return ressource;
+		return resource;
 	}
 }

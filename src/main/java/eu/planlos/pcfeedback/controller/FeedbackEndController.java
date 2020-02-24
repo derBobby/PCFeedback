@@ -42,7 +42,7 @@ public class FeedbackEndController {
 		
 		session.setAttribute(SessionAttributeHelper.PARTICIPANT, null);
 		
-		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKEND);
+		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_END);
 		mfs.fillGlobal(model);
 		return ApplicationPathHelper.RES_FEEDBACK_END;
 	}

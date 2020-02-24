@@ -47,7 +47,7 @@ public class FeedbackStartController {
 		
 		model.addAttribute(participant);
 		
-		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKSTART);
+		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_START);
 		mfs.fillGlobal(model);
 		return ApplicationPathHelper.RES_FEEDBACK_START;
 	}
@@ -75,7 +75,7 @@ public class FeedbackStartController {
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
 			
-			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKSTART);
+			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_START);
 			mfs.fillGlobal(model);
 			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}
@@ -91,7 +91,7 @@ public class FeedbackStartController {
 			session.setAttribute(SessionAttributeHelper.PARTICIPANT, participant);
 			
 			LOG.debug("Proceeding to feedback site");
-			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK;
+			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_QUESTION;
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			
@@ -99,7 +99,7 @@ public class FeedbackStartController {
 			
 			model.addAttribute("PARTICIPANT_EXISTS", true);
 			
-			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACKSTART);
+			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_START);
 			mfs.fillGlobal(model);			
 			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}

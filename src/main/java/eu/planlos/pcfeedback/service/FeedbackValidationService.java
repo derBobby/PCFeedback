@@ -27,7 +27,7 @@ public class FeedbackValidationService {
 
 		int givenQuestionCount = feedbackMap.size();
 		
-		//feedback has not needed question count
+		//feedback has needed question count
 		if(givenQuestionCount == neededQuestionCount) {
 			
 			for(Long idRatingQuestion : feedbackMap.keySet()) {
@@ -35,17 +35,15 @@ public class FeedbackValidationService {
 				Integer voteFor = feedbackMap.get(idRatingQuestion);
 	
 				if(voteFor == null || (voteFor != RatingQuestionService.OBJECT_ONE && voteFor != RatingQuestionService.OBJECT_TWO)) {
-					String errorMsg = String.format("Feedback invalid. voteFor=%s", voteFor);
-					LOG.error(errorMsg);
-					throw new InvalidFeedbackException(errorMsg);
+					LOG.error("Feedback invalid. voteFor={}", voteFor);
+					throw new InvalidFeedbackException("Fehler im Feedback, bitte noch mal versuchen.");
 				}
 			}
 			
-		//feedback has neede question count but wrong answers
+		//feedback has needed question count but wrong answers
 		} else {
-			String errorMsg = String.format("Feedback invalid: questions needed/given=%s/%s", neededQuestionCount, givenQuestionCount);
-			LOG.error(errorMsg);
-			throw new InvalidFeedbackException(errorMsg);
+			LOG.error("Feedback invalid: questions given/needed={} / {}", givenQuestionCount, neededQuestionCount);
+			throw new InvalidFeedbackException(String.format("Es wurden nicht alle Fragen beantwortet (%s/%s)", givenQuestionCount, neededQuestionCount));
 		}
 	}
 }
