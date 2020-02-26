@@ -48,6 +48,7 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("URL_HOME", ApplicationPathHelper.URL_HOME);
 		model.addAttribute("URL_IMPRESSUM", ApplicationPathHelper.URL_IMPRESSUM);
 		model.addAttribute("URL_DATENSCHUTZ", ApplicationPathHelper.URL_DATENSCHUTZ);
+		model.addAttribute("URL_PRICEGAME", ApplicationPathHelper.URL_PRICEGAME);
 
 		LOG.debug("Preparing model for home area");
 		model.addAttribute("NEEDED_QUESTION_COUNT", neededQuestionCount);

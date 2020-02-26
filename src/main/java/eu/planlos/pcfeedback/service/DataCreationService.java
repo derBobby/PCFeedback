@@ -94,13 +94,22 @@ public class DataCreationService {
 
 	private void createUiText() throws UiTextException {
 		
+		// ~~~~~~~~~~~~~~~~ Preparing texts ~~~~~~~~~~~~~~~~
 		uiTextService.initializeUiText();
 		
+		// ~~~~~~~~~~~~~~~~ General texts ~~~~~~~~~~~~~~~~
 		uiTextService.createText(
 				UiTextKey.MSG_HOME,
 				"Begrüßung",
 				"Gib uns Feedback und hilf uns die Teennight noch besser zu machen. Unter den Teilnehmern verlosen wir zwei Freiplätze für die Teennight 2020!"
 			);
+		uiTextService.createText(
+				UiTextKey.MSG_PRICEGAME,
+				"Gewinnspielhinweise",
+				priceGameHints()
+			);
+		
+		// ~~~~~~~~~~~~~~~~ Feedback texts ~~~~~~~~~~~~~~~~
 		uiTextService.createText(
 				UiTextKey.MSG_FEEDBACK_START,
 				"Formular",
@@ -126,9 +135,27 @@ public class DataCreationService {
 				"Die Teennight sagt danke! Dein Feedback hilft uns sehr. Du bist jetzt im Lostopf fürs Closing."
 			);
 		
+		// ~~~~~~~~~~~~~~~~ Checking all texts ~~~~~~~~~~~~~~~~
 		if(! uiTextService.isFullyInitialized()) {
 			throw new UiTextException("Es wurden nicht für jedes UiTextField ein Element initialisiert oder der zugehörige Text fehlt.");
 		}
+	}
+	
+	private String priceGameHints() {
+		return "<h3>Verlosung</h3><br />"
+				+ "Die Teilnahme am Gewinnspiel ist möglich zwischen Ende des \"Opening\" und Beginn des \"Closing\" der Teennight.<br />"
+				+ "Teilnahmeberechtigt sind alle Teilnehmer der Teennight. Mitarbeiter sind ?ausgeschlossen?.<br />"
+				+ "Der oder die Gewinner wird oder werden aus allen Teilnehmenden zufällig vom Feedbacktool bestimmt.<br />"
+				+ "Der Gewinner wird während des \"Closing\" auf der Bühne bekannt gegeben.<br />"
+				+ "Dieser kann den Preis nach dem Closing am EC Merchandisingstand abholen.<br />" + "<br />"
+				+ "<h3>Preis</h3><br />"
+				+ "Der oder die Gewinner erhalten für das folgende Jahr eine Freikarte zur Teennight.<br />"
+				+ "Der Preis kann nicht getauscht oder übertragen werden<br />" + "<br />"
+				+ "<h3>Rechtliches</h3><br />"
+				+ "Der Erwerb von Produkten oder Dienstleistungen hat keine Auwirkung auf das Gewinnspiel.<br />"
+				+ "Der Teilnehmer erklärt sich damit einverstanden, dass sein Name beim \"Closing\" auf Bühne bekannt gegeben wird.<br />"
+				+ "Es gelten die üblichen Datenschutzhinweise des SWD EC. Siehe Link zum Datenschutz unten auf der Seite.<br />"
+				+ "Der Rechtsweg ist ausgeschlossen.";
 	}
 
 	public void createParticipations(Gender gender, int count) throws Exception {
