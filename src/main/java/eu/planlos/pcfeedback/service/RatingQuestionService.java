@@ -28,7 +28,7 @@ public class RatingQuestionService {
 	public static final int OBJECT_TWO = 2;
 
 	@Value("${eu.planlos.pcfeedback.question-count}")
-	public int neededQuestionCount;
+	public int totalQuestionCount;
 	
 	@Autowired
 	private RatingQuestionRepository rqRepository;
@@ -60,13 +60,15 @@ public class RatingQuestionService {
 	 */
 	public void addRatingQuestionsForGenderToList(List<RatingQuestion> givenQuestions, Gender gender) throws RatingQuestionsNotExistentException {
 
+		int neededQuestionCount = totalQuestionCount - givenQuestions.size();
+		
 		LOG.debug("Needed ratingQuestion count is: {}", neededQuestionCount);
 		
 		LOG.debug("Get the lowest number a ratingQuestion is voted for gender: {}", gender.toString());
 		int lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender);
 		
 		LOG.debug("Start adding ratingQuestions to result set");
-		while(givenQuestions.size() <= neededQuestionCount) {
+		while(givenQuestions.size() <= totalQuestionCount) {
 			
 			// Load IDs with minimum count of answers
 			LOG.debug("Load all questions for lowest number voted: {}", lowestVotedCount);
@@ -85,7 +87,7 @@ public class RatingQuestionService {
 			if(loadedQuestions.size() > neededQuestionCount) {
 
 				LOG.debug("More than required count was loaded, get random ratingQuestions of that list");
-				List<RatingQuestion> shortenedList = loadedQuestions.subList(0, neededQuestionCount-givenQuestions.size());
+				List<RatingQuestion> shortenedList = loadedQuestions.subList(0, totalQuestionCount-givenQuestions.size());
 				givenQuestions.addAll(shortenedList);
 				break;
 			}
