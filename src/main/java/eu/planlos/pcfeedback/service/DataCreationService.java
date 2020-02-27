@@ -106,7 +106,7 @@ public class DataCreationService {
 		uiTextService.createText(
 				UiTextKey.MSG_PRICEGAME,
 				"Gewinnspielhinweise",
-				priceGameHints()
+				priceGameStatement()
 			);
 		
 		// ~~~~~~~~~~~~~~~~ Feedback texts ~~~~~~~~~~~~~~~~
@@ -123,11 +123,11 @@ public class DataCreationService {
 		uiTextService.createText(
 				UiTextKey.MSG_FEEDBACK_FREETEXT,
 				"Freitext",
-				"HIER IST PLATZ FÜR ALLES WAS DU SAGEN WILLST:<br />" +
-						"- das feier ich an der Teennight<br />" +
-						"- das könntet ihr noch besser machen<br />" +
-						"- das wäre mal eine Idee für die Teennight<br />" + 
-						"- das habe ich mit Gott erlebt auf der Teennight<br />"
+				"HIER IST PLATZ FÜR ALLES WAS DU SAGEN WILLST:<br>" +
+						"- das feier ich an der Teennight<br>" +
+						"- das könntet ihr noch besser machen<br>" +
+						"- das wäre mal eine Idee für die Teennight<br>" + 
+						"- das habe ich mit Gott erlebt auf der Teennight<br>"
 			);
 		uiTextService.createText(
 				UiTextKey.MSG_FEEDBACK_END,
@@ -141,20 +141,21 @@ public class DataCreationService {
 		}
 	}
 	
-	private String priceGameHints() {
-		return "<h3>Verlosung</h3><br />"
-				+ "Die Teilnahme am Gewinnspiel ist möglich zwischen Ende des \"Opening\" und Beginn des \"Closing\" der Teennight.<br />"
-				+ "Teilnahmeberechtigt sind alle Teilnehmer der Teennight. Mitarbeiter sind ?ausgeschlossen?.<br />"
-				+ "Der oder die Gewinner wird oder werden aus allen Teilnehmenden zufällig vom Feedbacktool bestimmt.<br />"
-				+ "Der Gewinner wird während des \"Closing\" auf der Bühne bekannt gegeben.<br />"
-				+ "Dieser kann den Preis nach dem Closing am EC Merchandisingstand abholen.<br />" + "<br />"
-				+ "<h3>Preis</h3><br />"
-				+ "Der oder die Gewinner erhalten für das folgende Jahr eine Freikarte zur Teennight.<br />"
-				+ "Der Preis kann nicht getauscht oder übertragen werden<br />" + "<br />"
-				+ "<h3>Rechtliches</h3><br />"
-				+ "Der Erwerb von Produkten oder Dienstleistungen hat keine Auwirkung auf das Gewinnspiel.<br />"
-				+ "Der Teilnehmer erklärt sich damit einverstanden, dass sein Name beim \"Closing\" auf Bühne bekannt gegeben wird.<br />"
-				+ "Es gelten die üblichen Datenschutzhinweise des SWD EC. Siehe Link zum Datenschutz unten auf der Seite.<br />"
+	private String priceGameStatement() {
+		return "<h3>Verlosung</h3>"
+				+ "Die Teilnahme am Gewinnspiel ist möglich zwischen Ende des \"Opening\" und Beginn des \"Closing\" der Teennight.<br>"
+				+ "Teilnahmeberechtigt sind alle Teilnehmer der Teennight. Mitarbeiter sind ?ausgeschlossen?.<br>"
+				+ "Pro Teennight-Teilnehmer darf nur eine Teilnahme am Gewinnspiel erfolgen. Eine Mehrfachteilnahme führt zum Ausschluss.<br>"
+				+ "Der oder die Gewinner wird oder werden aus allen Teilnehmenden zufällig vom Feedbacktool bestimmt.<br>"
+				+ "Der Gewinner wird während des \"Closing\" auf der Bühne bekannt gegeben.<br>"
+				+ "Dieser kann den Preis nach dem Closing am EC Merchandisingstand abholen.<br>" + "<br>"
+				+ "<h3>Preis</h3>"
+				+ "Der oder die Gewinner erhalten für das folgende Jahr eine Freikarte zur Teennight.<br>"
+				+ "Der Preis kann nicht getauscht oder übertragen werden<br>" + "<br>"
+				+ "<h3>Rechtliches</h3>"
+				+ "Der Erwerb von Produkten oder Dienstleistungen hat keine Auwirkung auf das Gewinnspiel.<br>"
+				+ "Der Teilnehmer erklärt sich damit einverstanden, dass sein Name beim \"Closing\" auf Bühne bekannt gegeben wird.<br>"
+				+ "Es gelten die üblichen <a href=\"https://swdec.de/datenschutz\">Datenschutzhinweise</a> des SWD EC.<br>"
 				+ "Der Rechtsweg ist ausgeschlossen.";
 	}
 
