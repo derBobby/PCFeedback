@@ -29,20 +29,20 @@ public class ParticipantUnitTest {
 	@Test
 	public final void femaleParticipant_returnsFemaleGender() {
 
-		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.FEMALE);
+		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.FEMALE, true, true);
 		assertEquals(participant.getGender(), Gender.FEMALE);
 	}
 
 	@Test
 	public final void maleParticipant_returnsMaleGender() {
 
-		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE);
+		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, true, true);
 		assertEquals(participant.getGender(), Gender.MALE);
 	}
 	
 	@Test
 	public final void participantToString_containsFirstnameNameAndGender() {
-		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE);
+		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, true, true);
 		assertTrue(participant.toString().contains(FIRSTNAME));
 		assertTrue(participant.toString().contains(NAME));
 		assertTrue(participant.toString().contains(Gender.MALE.toString()));
@@ -57,7 +57,7 @@ public class ParticipantUnitTest {
 			LocalDateTime dt1 = LocalDateTime.now(timeZone);
 			Thread.sleep(1);
 
-			Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE);
+			Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, true, true);
 			LocalDateTime participationDate = participant.getParticipationDate();
 						
 			Thread.sleep(1);
@@ -74,7 +74,7 @@ public class ParticipantUnitTest {
 	@Test
 	public final void participantCreated_formatsCorrect() {
 		
-		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE);
+		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, true, true);
 		String formattedParticipationDate = participant.getformattedParticipationDateString();
 
 		assertTrue(formattedParticipationDate.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"));

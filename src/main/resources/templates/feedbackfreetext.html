@@ -10,21 +10,21 @@
 					<div class="col-lg-12 text-center">
 						<p class="" th:utext="${MSG_FEEDBACK_FREETEXT}"></p>
 						
-							<form th:action="@{${URL_FEEDBACK_SUBMIT}}" method="post">
-												
-								<div class="form-group">
-									<textarea class="form-control" id="freeText" th:text="${freeText}" name="freeText" cols="40" rows="5"></textarea>
-								</div>						
-														
-								<div class="form-group mb-0">
-									<div>
-										<button type="submit" id="submit" class="btn btn-success">
-											Absenden!<br /><i class="fas fa-step-forward"></i>
-										</button>
-									</div>
-								</div>								
-								
-							</form>
+						<form th:action="@{${URL_FEEDBACK_SUBMIT}}" method="post">
+											
+							<div class="form-group">
+								<textarea class="form-control" id="freeText" th:text="${freeText}" name="freeText" cols="40" rows="5"></textarea>
+							</div>						
+													
+							<div class="form-group mb-0">
+								<div>
+									<button type="submit" id="submit" class="btn btn-success">
+										Absenden!<br /><i class="fas fa-step-forward"></i>
+									</button>
+								</div>
+							</div>								
+							
+						</form>
 							
 					</div>
 	            </div>

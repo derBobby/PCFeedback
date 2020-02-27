@@ -120,7 +120,7 @@ public class ParticipantService implements EnvironmentAware {
 		if(profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
 			
 			String text = ((Long) System.currentTimeMillis()).toString();
-			participant = new Participant(text, text, text +"@example.com", text, Gender.MALE);
+			participant = new Participant(text, text, text +"@example.com", text, Gender.MALE, false, false);
 
 		} else {
 			participant = new Participant();
@@ -137,7 +137,7 @@ public class ParticipantService implements EnvironmentAware {
 	public Participant createParticipantForDB(Gender gender) {
 		
 		String text = ((Long) System.currentTimeMillis()).toString();
-		return new Participant(text, text, text +"@example.com", text, gender);
+		return new Participant(text, text, text +"@example.com", text, gender, false, false);
 	}
 
 	@Override

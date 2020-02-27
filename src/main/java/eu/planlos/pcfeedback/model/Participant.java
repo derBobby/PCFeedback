@@ -51,6 +51,14 @@ public class Participant implements Serializable {
 	private Gender gender;
 	
 	@Column(nullable=false)
+	@NotNull
+	private boolean priceGameStatementAccepted;
+	
+	@Column(nullable=false)
+	@NotNull
+	private boolean dataPrivacyStatementAccepted;
+	
+	@Column(nullable=false)
 	private LocalDateTime participationDate;
 	
 	private static final String TIME_ZONE = "Europe/Berlin";
@@ -59,12 +67,14 @@ public class Participant implements Serializable {
 		setParticipationDate();
 	}
 
-	public Participant(String firstname, String name, String email, String mobile, Gender gender) {
+	public Participant(String firstname, String name, String email, String mobile, Gender gender, boolean priceGameStatementAccepted, boolean dataPrivacyStatementAccepted) {
 		this.firstname = firstname;
 		this.name = name;
 		this.email = email;
 		this.mobile = mobile;
 		this.gender = gender;
+		this.priceGameStatementAccepted = priceGameStatementAccepted;
+		this.dataPrivacyStatementAccepted = dataPrivacyStatementAccepted;
 
 		ZoneId timeZone = ZoneId.of(TIME_ZONE);
 		this.participationDate = LocalDateTime.now(timeZone);
@@ -106,16 +116,32 @@ public class Participant implements Serializable {
 		return gender;
 	}
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	public boolean isDataPrivacyStatementAccepted() {
+		return dataPrivacyStatementAccepted;
+	}
+
+	public void setDataPrivacyStatementAccepted(boolean dataPrivacyStatementAccepted) {
+		this.dataPrivacyStatementAccepted = dataPrivacyStatementAccepted;
+	}
+
+	public boolean isPriceGameStatementAccepted() {
+		return priceGameStatementAccepted;
+	}
+
+	public void setPriceGameStatementAccepted(boolean priceGameStatementAccepted) {
+		this.priceGameStatementAccepted = priceGameStatementAccepted;
 	}
 
 	public String getMobile() {
 		return mobile;
 	}
 
-	public void setGender(Gender gender) {
-		this.gender = gender;
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	public LocalDateTime getParticipationDate() {
