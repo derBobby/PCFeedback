@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,9 @@ import eu.planlos.pcfeedback.repository.UiTextRepository;
 
 @Service
 public class UiTextService {
-		
+	
+	private Logger LOG = LoggerFactory.getLogger(UiTextService.class);
+	
 	@Autowired
 	private UiTextRepository uiTextRepo;
 	
@@ -40,17 +44,6 @@ public class UiTextService {
 		
 		uiTextRepo.saveAll(uiTextList);
 	}	
-	
-	public boolean isFullyInitialized() {
-		
-		boolean result = true;
-		
-		if(uiTextRepo.countByTextIsNull() > 0) {
-			result = false;
-		}
-	
-		return result;
-	}
 
 	public List<UiText> getAllUiText() {
 		return (List<UiText>) uiTextRepo.findAll();
@@ -64,5 +57,20 @@ public class UiTextService {
 		UiText dbUiText = optionalDdbUiText.get();
 		dbUiText.setText(uiText.getText());
 		uiTextRepo.save(dbUiText);
+	}
+	
+	
+	/**
+	 * Checks if sufficient UiTexts exist
+	 * @param proactive is true if method is called proactively and ERROR output is not necessary.
+	 * @throws UiTextException 
+	 */
+	public void checkEnoughUiTexts(boolean proactive) throws UiTextException {
+		if(uiTextRepo.countByTextIsNull() > 0) {
+			if(!proactive) {
+				LOG.error("# ~~~~~~~~ Not enough rating questions initialized! ~~~~~~~~ #");
+			}
+			throw new UiTextException("Es wurden nicht für jedes UiTextField ein Element initialisiert oder der zugehörige Text fehlt.");
+		}
 	}
 }

@@ -37,12 +37,6 @@ public class DemoDataCreaterApplication implements ApplicationRunner {
 	@Transactional
 	private void initDB() throws Exception {
 		dcService.createCommon();
-		
-		if(! dcService.enoughRatingQuestionsExisting(neededQuestionCount)) {
-			LOG.error("# ~~~~~~~~ Not enough rating questions available! ~~~~~~~~ #");
-			System.exit(-1);
-		}
-
 		dcService.createParticipations(Gender.MALE, 4);
 		dcService.createParticipations(Gender.FEMALE, 2);
 	}

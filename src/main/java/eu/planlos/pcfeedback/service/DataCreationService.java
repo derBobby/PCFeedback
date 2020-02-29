@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.UiTextException;
+import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.ParticipationResult;
@@ -38,10 +39,41 @@ public class DataCreationService {
 	@Autowired
 	private ParticipationResultService prs;
 	
-	public void createCommon() throws UiTextException {
+	/**
+	 * Method creates data for all the stages and throws Exception if not enough UiTexts or RatingQuestions are created
+	 * @throws UiTextException if not enough UiTexts are created in method
+	 * @throws WrongRatingQuestionCountExistingException
+	 */
+	public void createCommon() throws UiTextException, WrongRatingQuestionCountExistingException {
 		
+		//Create RatingQuestions and check if enough in method are created.
 		createRatingQuestions();
+		//Throws Exception if not
+		rqService.checkEnoughRatingQuestions(false);
+		
+		//Create UiTexts and check if enough in method are created.
 		createUiText();
+		//Throws Exception if not
+		uiTextService.checkEnoughUiTexts(false);
+	}
+
+	/**
+	 * Checks whether application is fully initialized for production system.
+	 * Needed are enough RatingQuestions and initialized UiTexts.
+	 * @return boolean
+	 */
+	public boolean isProdDataAlreadyCreated() {
+		
+		boolean result = true;
+				
+		try {
+			uiTextService.checkEnoughUiTexts(true);
+			rqService.checkEnoughRatingQuestions(true);
+		} catch (UiTextException | WrongRatingQuestionCountExistingException e) {
+			result = false;
+		}
+		
+		return result;
 	}
 
 	private void createRatingQuestions() {
@@ -92,7 +124,7 @@ public class DataCreationService {
 		rqService.saveAll(rqList);		
 	}
 
-	private void createUiText() throws UiTextException {
+	private void createUiText() {
 		
 		// ~~~~~~~~~~~~~~~~ Preparing texts ~~~~~~~~~~~~~~~~
 		uiTextService.initializeUiText();
@@ -134,11 +166,6 @@ public class DataCreationService {
 				"Ende",
 				"Die Teennight sagt danke! Dein Feedback hilft uns sehr. Du bist jetzt im Lostopf fürs Closing."
 			);
-		
-		// ~~~~~~~~~~~~~~~~ Checking all texts ~~~~~~~~~~~~~~~~
-		if(! uiTextService.isFullyInitialized()) {
-			throw new UiTextException("Es wurden nicht für jedes UiTextField ein Element initialisiert oder der zugehörige Text fehlt.");
-		}
 	}
 	
 	private String priceGameStatement() {
@@ -187,11 +214,4 @@ public class DataCreationService {
 		}
 	}
 
-	public boolean enoughRatingQuestionsExisting(int neededQuestionCount) {
-		return rqService.enoughRatingQuestionsExisting(neededQuestionCount);
-	}
-	
-	public boolean isDataAlreadyCreated() {
-		return rqService.loadByGender(Gender.MALE).size() == 0 ? false : true;
-	}
 }

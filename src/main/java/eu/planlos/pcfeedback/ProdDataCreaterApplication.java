@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
+import eu.planlos.pcfeedback.exceptions.UiTextException;
+import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
 import eu.planlos.pcfeedback.service.DataCreationService;
 
 @Component
@@ -22,9 +24,9 @@ public class ProdDataCreaterApplication implements ApplicationRunner {
 	private DataCreationService dcs;
 	
 	@Override
-	public void run(ApplicationArguments args) throws Exception {
+	public void run(ApplicationArguments args) throws UiTextException, WrongRatingQuestionCountExistingException {
 		
-		if(! dcs.isDataAlreadyCreated()) {
+		if(! dcs.isProdDataAlreadyCreated()) {
 			LOG.debug("No db init necessary. Already rating questions existing");
 			return;
 		}
@@ -36,7 +38,7 @@ public class ProdDataCreaterApplication implements ApplicationRunner {
 
 	//TODO MONGO Transactional working?
 	@Transactional
-	private void initDB() throws Exception {
+	private void initDB() throws UiTextException, WrongRatingQuestionCountExistingException {
 		dcs.createCommon();
 	}
 }

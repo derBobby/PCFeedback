@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
+import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
@@ -40,16 +41,6 @@ public class RatingQuestionService {
 	 */
 	public List<RatingQuestion> loadByGender(Gender gender) {
 		return rqRepository.findByGender(gender);
-	}
-	
-	/**
-	 * Checks if sufficient rating questions exist
-	 * @param neededQuestionCount number of needed questions
-	 * @returns true if enough questions are available, otherwise false
-	 */
-	public boolean enoughRatingQuestionsExisting(int neededQuestionCount) {
-		LOG.debug("Checking question count: '{} <= {}'?", neededQuestionCount, rqRepository.countByGender(Gender.MALE));
-		return neededQuestionCount <= rqRepository.countByGender(Gender.MALE) ? true : false;
 	}
 	
 	/**
@@ -238,5 +229,19 @@ public class RatingQuestionService {
 			rq.setVotesTwo(0);
 		}
 		rqRepository.saveAll(rqList);
+	}
+	
+	/**
+	 * Checks if sufficient rating questions exist
+	 * @param proactive is true if method is called proactively and ERROR output is not necessary.
+	 * @throws WrongRatingQuestionCountExistingException 
+	 */
+	public void checkEnoughRatingQuestions(boolean proactive) throws WrongRatingQuestionCountExistingException {
+		if(rqRepository.countByGender(Gender.MALE) != totalQuestionCount) {
+			if(!proactive) {
+				LOG.error("# ~~~~~~~~ Not correct count of rating questions available! ~~~~~~~~ #");
+			}
+			throw new WrongRatingQuestionCountExistingException();
+		}
 	}
 }
