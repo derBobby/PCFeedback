@@ -237,7 +237,6 @@ public class RatingQuestionService {
 	 * @throws WrongRatingQuestionCountExistingException 
 	 */
 	public void checkEnoughRatingQuestions(boolean proactive) throws WrongRatingQuestionCountExistingException {
-		int existingCount = rqRepository.countByGender(Gender.MALE);
 		if(rqRepository.countByGender(Gender.MALE) < totalQuestionCount) {
 			if(!proactive) {
 				LOG.error("# ~~~~~~~~ Not correct count of rating questions available! ~~~~~~~~ #");
