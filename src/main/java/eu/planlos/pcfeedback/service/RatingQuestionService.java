@@ -77,6 +77,9 @@ public class RatingQuestionService {
 			//If more questions are available chose random ones
 			if(loadedQuestions.size() > neededQuestionCount) {
 
+				LOG.debug("Shuffle rating questions in list");
+				Collections.shuffle(loadedQuestions);
+				
 				LOG.debug("More than required count was loaded, get random ratingQuestions of that list");
 				List<RatingQuestion> shortenedList = loadedQuestions.subList(0, totalQuestionCount-givenQuestions.size());
 				givenQuestions.addAll(shortenedList);
@@ -91,9 +94,6 @@ public class RatingQuestionService {
 				lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender, lowestVotedCount);		
 			}
 		}
-
-		LOG.debug("Shuffle rating questions in list");
-		Collections.shuffle(givenQuestions);
 	}
 
 	private int getLowestCountRatingQuestionIsVoted(Gender gender) throws RatingQuestionsNotExistentException {
