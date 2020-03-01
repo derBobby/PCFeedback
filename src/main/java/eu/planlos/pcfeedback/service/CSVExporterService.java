@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import eu.planlos.pcfeedback.model.FreeText;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingObject;
@@ -26,11 +27,15 @@ public class CSVExporterService {
 	
 	@Autowired
 	private ParticipantService pService;
+	
+	@Autowired
+	private FreeTextService ftService;
 		
 	private static final Logger LOG = LoggerFactory.getLogger(CSVExporterService.class);
 
 	private static final String[] FILE_RATINGQUESTION_HEADER = { "Geschlecht","A Bezeichnung","A Stimmen","B Stimmen","B Bezeichnung" };
 	private static final String[] FILE_PARTICIPANT_HEADER = { "Vorname","Nachname","Geschlecht","Teilnahmezeitpuntk" };
+	private static final String[] FILE_FREETEXT_HEADER = { "M/W","Text" };
 	
 	public void writeParticipantsCSV(PrintWriter writer) {
 		
@@ -99,6 +104,36 @@ public class CSVExporterService {
 		}
 	}
 	
+	public void writeFreeTextCSV(PrintWriter writer) {
+
+		List<FreeText> ftList = ftService.findAll();
+
+		CSVFormat csvFile = CSVFormat.EXCEL.withHeader(FILE_FREETEXT_HEADER).withAutoFlush(true).withDelimiter(';');
+		CSVPrinter csvPrinter = null;
+
+		try {
+			csvPrinter = new CSVPrinter(new BufferedWriter(writer), csvFile);
+
+			// --- Print Participants ---
+			LOG.debug("Write free texts");
+			for (FreeText freeText : ftList) {
+				csvPrinter.printRecord(createFreeTextRecord(freeText));
+				csvPrinter.flush();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				writer.flush();
+				writer.close();
+				csvPrinter.close();
+			} catch (IOException e) {
+				LOG.error("Error while flushing/closing fileWriter/csvPrinter !!!");
+			}
+		}		
+	}
+	
 	private List<Object> createRatingQuestionRecord(RatingQuestion ratingQuestion) {
 
 		Gender gender = ratingQuestion.getGender();
@@ -150,5 +185,20 @@ public class CSVExporterService {
 
 		return participantRecord;
 	}
+	
+	private List<Object> createFreeTextRecord(FreeText freeText) {
 
+		Gender gender = freeText.getGender();
+		String text = freeText.getText();
+
+		List<Object> participantRecord = new ArrayList<>();
+		participantRecord.add(gender.toString());
+		participantRecord.add(text);
+
+		LOG.debug(
+				"Creating record for free text: idFreeText={}",
+				freeText.getIdFreeText());
+
+		return participantRecord;
+	}
 }

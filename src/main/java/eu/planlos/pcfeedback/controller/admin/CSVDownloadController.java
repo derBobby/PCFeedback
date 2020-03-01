@@ -23,7 +23,7 @@ public class CSVDownloadController {
 	@ResponseBody
 	public void participantsCSV(HttpServletResponse response) throws IOException {
 		
-	    response.setHeader("Content-Disposition", "attachment; filename=Teilnehmer.csv");
+	    response.setHeader("Content-Disposition", "attachment; filename=Teilnehmerliste.csv");
 	    response.setContentType("text/csv");
 	    	    
 	    expService.writeParticipantsCSV(response.getWriter());
@@ -33,7 +33,7 @@ public class CSVDownloadController {
 	@ResponseBody
 	public void feedbackCSV(HttpServletResponse response) throws IOException {
 		
-	    response.setHeader("Content-Disposition", "attachment; filename=Feedback.csv");
+	    response.setHeader("Content-Disposition", "attachment; filename=Feedback_MW.csv");
 	    response.setContentType("text/csv");
 	    	    
 	    expService.writeRatingQuestionCSV(response.getWriter(), null);
@@ -57,5 +57,15 @@ public class CSVDownloadController {
 	    response.setContentType("text/csv");
 	    	    
 	    expService.writeRatingQuestionCSV(response.getWriter(), Gender.FEMALE);
+	}	
+	
+	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_FREETEXT)
+	@ResponseBody
+	public void feedbackFreeTextCSV(HttpServletResponse response) throws IOException {
+		
+	    response.setHeader("Content-Disposition", "attachment; filename=Feedback_Freitext.csv");
+	    response.setContentType("text/csv");
+	    	    
+	    expService.writeFreeTextCSV(response.getWriter());
 	}	
 }
