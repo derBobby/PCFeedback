@@ -159,7 +159,11 @@ public class ParticipantService implements EnvironmentAware {
 		return allParticipants;
 	}
 
+	/**
+	 * Deletes all Participant objects from DB
+	 */
 	public void resetDB() {
+		LOG.debug("RESET: Participant");
 		participantRepo.deleteAll();		
 	}
 

@@ -66,7 +66,7 @@ public class RatingQuestionService {
 			List<RatingQuestion> loadedQuestions = rqRepository.findByGenderAndCountVoted(gender, lowestVotedCount);
 			loadedQuestions.removeAll(givenQuestions);
 			
-			// If exact amount is found
+			// If exact count is found
 			if(loadedQuestions.size() == neededQuestionCount) {
 
 				LOG.debug("Required count was loaded, add to result set and stop");
@@ -228,6 +228,7 @@ public class RatingQuestionService {
 			rq.setVotesOne(0);
 			rq.setVotesTwo(0);
 		}
+		LOG.debug("RESET: RatingQuestion");
 		rqRepository.saveAll(rqList);
 	}
 	

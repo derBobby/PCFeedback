@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
+import eu.planlos.pcfeedback.model.FreeText;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
@@ -85,12 +86,13 @@ public class ModelFillerService implements EnvironmentAware {
 		}
 	}
 
-	public void fillResults(Model model, List<Participant> randomParticipantList, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
+	public void fillResults(Model model, List<Participant> randomParticipantList, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale, List<FreeText> freeTextList) {
 		model.addAttribute("randomParticipantList", randomParticipantList);
 		model.addAttribute("participantList", participantList);
 		model.addAttribute("rqListMale", rqListMale);
 		model.addAttribute("rqListFemale", rqListFemale);
-
+		model.addAttribute("freeTextList", freeTextList);
+		
 		model.addAttribute("URL_ADMIN_CSVPARTICIPANTS", ApplicationPathHelper.URL_ADMIN_CSVPARTICIPANTS);
 		model.addAttribute("URL_ADMIN_CSVFEEDBACK", ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK);
 		model.addAttribute("URL_ADMIN_CSVFEEDBACK_M", ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_M);

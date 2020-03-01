@@ -13,9 +13,9 @@
 						<form th:action="@{${URL_FEEDBACK_SUBMIT}}" method="post">
 											
 							<div class="form-group">
-								<textarea class="form-control" id="freeText" th:text="${freeText}" name="freeText" cols="40" rows="5"></textarea>
+								<textarea class="form-control" id="freeText" th:text="${freeText}" name="freeText" cols="40" rows="5" th:attr="maxlength=''+${freeTextMaxLength}+''"></textarea>
+								<span class="hint" id="textarea_message"></span>
 							</div>						
-													
 							<div class="form-group mb-0">
 								<div>
 									<button type="submit" id="submit" class="btn btn-success">
@@ -33,4 +33,19 @@
 		</main>
 	    <footer th:replace="template :: footer"></footer>		
 	</body>
+		<script type="text/javascript">
+			$('textarea#freeText').on(
+					'keyup',
+					function() {
+						var maxlen = $(this).attr('maxlength');
+		
+						var length = $(this).val().length;
+						if (length > (maxlen - 100)) {
+							$('#textarea_message').text(
+									'Maximal ' + maxlen + ' möglich!')
+						} else {
+							$('#textarea_message').text('');
+						}
+					});
+		</script>
 </html>

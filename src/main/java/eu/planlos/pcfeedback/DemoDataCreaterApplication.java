@@ -37,6 +37,8 @@ public class DemoDataCreaterApplication implements ApplicationRunner {
 	@Transactional
 	private void initDB() throws Exception {
 		dcService.createCommon();
+		dcService.createFreeText(Gender.MALE, 5);
+		dcService.createFreeText(Gender.FEMALE, 5);
 		dcService.createParticipations(Gender.MALE, 4);
 		dcService.createParticipations(Gender.FEMALE, 2);
 	}

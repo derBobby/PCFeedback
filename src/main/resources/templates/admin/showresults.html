@@ -81,7 +81,6 @@
 							<h4 class="text-center mb-0" th:inline="text">Teilnehmer</h4>
           				</div>
 						<div class="card-body">
-
 							<div class="table-responsive">
 								<table class="table text-nowrap table-bordered table-hover table-striped m-0 text-left table-sm">
 									<tr>
@@ -113,7 +112,6 @@
 									</tr>
 								</table>
 							</div>
-						
           				</div>
          			</div>
        			</div>
@@ -128,7 +126,6 @@
 							<h4 class="text-center mb-0" th:inline="text">Antworten Jungs</h4>
           				</div>
 						<div class="card-body">
-
 							<div class="table-responsive">
 								<table class="table text-nowrap table-responsive table-bordered table-hover table-striped m-0 text-left table-sm">
 									<tr>
@@ -149,7 +146,6 @@
 									</tr>
 								</table>
 							</div>
-						
           				</div>
          			</div>
        			</div>
@@ -164,28 +160,53 @@
 							<h4 class="text-center mb-0" th:inline="text">Antworten Mädels</h4>
           				</div>
 						<div class="card-body">
-
-						<div class="table-responsive">
-							<table class="table text-nowrap table-responsive table-bordered table-hover table-striped m-0 text-left table-sm">
-								<tr>
-									<th class="text-center">ID<br/>Frage</th>
-									<th class="text-center">Summe<br/>Stimmen</th>
-									<th>Objekt 1</th>
-									<th class="text-center">Stimmen<br/>1</th>
-									<th class="text-center">Stimmen<br/>2</th>
-									<th>Objekt 2</th>
-								</tr>
-								<tr th:each="ratingQuestion : ${rqListFemale}" th:object="${ratingQuestion}">
-									<td class="text-center" th:text="*{idRatingQuestion}"></td>
-									<td class="text-center" th:text="*{countVoted}"></td>
-									<td style="font-weight: bold;" th:text="*{objectOne.getName()}"></td>
-									<td class="text-center" th:text="*{votesOne}"></td>
-									<td class="text-center" th:text="*{votesTwo}"></td>
-									<td style="font-weight: bold;" th:text="*{objectTwo.getName()}"></td>
-								</tr>
-							</table>
-						</div>
-						
+							<div class="table-responsive">
+								<table class="table text-nowrap table-responsive table-bordered table-hover table-striped m-0 text-left table-sm">
+									<tr>
+										<th class="text-center">ID<br/>Frage</th>
+										<th class="text-center">Summe<br/>Stimmen</th>
+										<th>Objekt 1</th>
+										<th class="text-center">Stimmen<br/>1</th>
+										<th class="text-center">Stimmen<br/>2</th>
+										<th>Objekt 2</th>
+									</tr>
+									<tr th:each="ratingQuestion : ${rqListFemale}" th:object="${ratingQuestion}">
+										<td class="text-center" th:text="*{idRatingQuestion}"></td>
+										<td class="text-center" th:text="*{countVoted}"></td>
+										<td style="font-weight: bold;" th:text="*{objectOne.getName()}"></td>
+										<td class="text-center" th:text="*{votesOne}"></td>
+										<td class="text-center" th:text="*{votesTwo}"></td>
+										<td style="font-weight: bold;" th:text="*{objectTwo.getName()}"></td>
+									</tr>
+								</table>
+							</div>
+          				</div>
+         			</div>
+       			</div>
+			</div>
+			
+			<!-- ~~~~~~~~~~~~~~~ Free text ~~~~~~~~~~~~~~~ -->
+			
+       		<div class="row justify-content-center">
+        		<div class="col-12 border-dark p-3 mb-3">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="text-center mb-0" th:inline="text">Freitext Feedback</h4>
+          				</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table text-nowrap table-bordered table-hover table-striped m-0 text-left table-sm">
+										<th class="text-center">ID<br/>Feedback</th>
+										<th class="text-center">m/w</th>
+										<th class="">Text</th>
+									</tr>
+									<tr th:each="freeText : ${freeTextList}" th:object="${freeText}">
+										<td class="text-center" th:text="*{idFreeText}"></td>
+										<td class="text-center" th:text="*{gender.toString()}"></td>
+										<td th:utext="*{#strings.replace( #strings.escapeXml(text),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}"></td>
+									</tr>
+								</table>
+							</div>
           				</div>
          			</div>
        			</div>

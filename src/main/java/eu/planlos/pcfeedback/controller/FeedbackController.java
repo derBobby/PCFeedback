@@ -44,6 +44,8 @@ public class FeedbackController {
 	
 	private static final String ERROR_TEMPLATE = "feedback_error";
 	
+	private static final int FREETEXTMAXLENGTH = 2000;
+	
 	@Autowired
 	private ModelFillerService mfs;
 	
@@ -137,7 +139,7 @@ public class FeedbackController {
 			}
 			
 		}
-	
+		model.addAttribute("freeTextMaxLength", FREETEXTMAXLENGTH);
 		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_FREETEXT);
 		mfs.fillGlobal(model);		
 		return resource;

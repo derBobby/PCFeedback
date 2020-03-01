@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
+import eu.planlos.pcfeedback.model.FreeText;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
@@ -29,6 +31,9 @@ public class ResultsController {
 	
 	@Autowired
 	private RatingQuestionService rqService;
+
+	@Autowired
+	private FreeTextService ftService;
 	
 	@Autowired
 	private ModelFillerService mfs;
@@ -44,12 +49,15 @@ public class ResultsController {
 		
 		LOG.debug("Loading rating questions for male participants");
 		List<RatingQuestion> rqListMale = rqService.loadByGender(Gender.MALE);
-		
+
 		LOG.debug("Loading rating questions for female participants");
 		List<RatingQuestion> rqListFemale = rqService.loadByGender(Gender.FEMALE);
 		
+		LOG.debug("Loading rating questions for female participants");
+		List<FreeText> freeTextList = ftService.findAll();
+		
 		mfs.fillGlobal(model);
-		mfs.fillResults(model, randomParticipantList, participantList, rqListMale, rqListFemale);
+		mfs.fillResults(model, randomParticipantList, participantList, rqListMale, rqListFemale, freeTextList);
 		
 		return ApplicationPathHelper.RES_ADMIN_SHOWFEEDBACK;
 	}

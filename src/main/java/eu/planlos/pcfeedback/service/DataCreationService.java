@@ -39,6 +39,9 @@ public class DataCreationService {
 	@Autowired
 	private ParticipationResultService prs;
 	
+	@Autowired
+	private FreeTextService fts;
+	
 	/**
 	 * Method creates data for all the stages and throws Exception if not enough UiTexts or RatingQuestions are created
 	 * @throws UiTextException if not enough UiTexts are created in method
@@ -214,4 +217,18 @@ public class DataCreationService {
 		}
 	}
 
+	/**
+	 * Creates given count of free text submissions in DB
+	 * @param gender the gender to use for the free text elements
+	 * @param count the count of free text elements to create
+	 */
+	public void createFreeText(Gender gender, int count) {
+
+		int localCount = count;
+		
+		while(localCount != 0) {
+			localCount--;			
+			fts.saveFreeText(((Long) System.currentTimeMillis()).toString(), gender);
+		}
+	}
 }
