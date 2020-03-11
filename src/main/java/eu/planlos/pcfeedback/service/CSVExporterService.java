@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import eu.planlos.pcfeedback.model.FreeText;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 
@@ -37,9 +38,9 @@ public class CSVExporterService {
 	private static final String[] FILE_PARTICIPANT_HEADER = { "Vorname","Nachname","Geschlecht","Teilnahmezeitpuntk" };
 	private static final String[] FILE_FREETEXT_HEADER = { "M/W","Text" };
 	
-	public void writeParticipantsCSV(PrintWriter writer) {
+	public void writeParticipantsCSV(Project project, PrintWriter writer) {
 		
-		List<Participant> pList = pService.getAllParticipants();
+		List<Participant> pList = pService.getAllParticipantsForProject(project);
 
 		CSVFormat csvFile = CSVFormat.EXCEL.withHeader(FILE_PARTICIPANT_HEADER).withAutoFlush(true).withDelimiter(';');
 		CSVPrinter csvPrinter = null;
@@ -67,15 +68,15 @@ public class CSVExporterService {
 		}
 	}
 
-	public void writeRatingQuestionCSV(PrintWriter writer, Gender gender) {
+	public void writeRatingQuestionCSV(PrintWriter writer, Project project, Gender gender) {
 
 		List<RatingQuestion> rqList = new ArrayList<>();
 		
 		if(gender == null) {
-			rqList.addAll(rqService.loadByGender(Gender.MALE));
-			rqList.addAll(rqService.loadByGender(Gender.FEMALE));
+			rqList.addAll(rqService.loadByProjectAndGender(project, Gender.MALE));
+			rqList.addAll(rqService.loadByProjectAndGender(project, Gender.FEMALE));
 		} else {
-			rqList.addAll(rqService.loadByGender(gender));
+			rqList.addAll(rqService.loadByProjectAndGender(project, gender));
 		}
 				
 		CSVFormat csvFile = CSVFormat.EXCEL.withHeader(FILE_RATINGQUESTION_HEADER).withAutoFlush(true).withDelimiter(';');
@@ -104,9 +105,9 @@ public class CSVExporterService {
 		}
 	}
 	
-	public void writeFreeTextCSV(PrintWriter writer) {
+	public void writeFreeTextCSV(PrintWriter writer, Project project) {
 
-		List<FreeText> ftList = ftService.findAll();
+		List<FreeText> ftList = ftService.findAllByProject(project);
 
 		CSVFormat csvFile = CSVFormat.EXCEL.withHeader(FILE_FREETEXT_HEADER).withAutoFlush(true).withDelimiter(';');
 		CSVPrinter csvPrinter = null;

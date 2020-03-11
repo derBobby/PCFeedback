@@ -20,6 +20,7 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
@@ -41,9 +42,11 @@ public class FeedbackStartController {
 	 * @return
 	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
-	public String feedbackStart(Model model) {
+	public String feedbackStart(HttpSession session, Model model) {
 
-		Participant participant = participantService.createParticipantForForm();
+		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
+		
+		Participant participant = participantService.createParticipantForForm(project);
 		
 		model.addAttribute(participant);
 		
@@ -66,6 +69,15 @@ public class FeedbackStartController {
 	@PostMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
 	public String feedbackStartSubmit(HttpSession session, @Valid Participant participant, BindingResult bindingResult, Model model) {
 
+		// Check if user is trying to exploit feedback projects
+		Project sessionProject = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
+		Project participantProject = participant.getProject();
+		if(! participantProject.equals(sessionProject)) {
+			LOG.error("Session project ({}) is not equal to submitted participants project ({})", sessionProject.getName(), participantProject.getName());
+			//TODO handle error
+		}
+		
+		// validate model input
 		if (bindingResult.hasErrors()) {
 			LOG.debug("Input from form not valid");
 			

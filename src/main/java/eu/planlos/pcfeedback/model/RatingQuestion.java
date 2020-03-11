@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(
@@ -45,6 +46,11 @@ public class RatingQuestion implements Serializable {
 	
 	@Column(name="countVoted", nullable=false)
 	private int countVoted;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull
+	@JoinColumn(name="project", nullable=false)
+	private Project project;
 	
 	/*
 	 * Connection
@@ -124,7 +130,18 @@ public class RatingQuestion implements Serializable {
 	public void setObjectTwo(RatingObject objectTwo) {
 		this.objectTwo = objectTwo;
 	}
-	
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
+
+	/*
+	 * METHODS
+	 */
 	@Override
 	public String toString() {
 		return objectOne.getName() + "/" + objectTwo.getName() + "/" + gender;

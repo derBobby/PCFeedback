@@ -27,6 +27,7 @@ import eu.planlos.pcfeedback.model.FeedbackContainer;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.ParticipationResult;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.FeedbackValidationService;
@@ -78,6 +79,7 @@ public class FeedbackController {
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_QUESTION)
 	public String feedback(Model model, HttpSession session) {
 		
+		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
 		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
 		
 		if(participant == null) {
@@ -91,7 +93,7 @@ public class FeedbackController {
 		Gender gender = participant.getGender();
 		
 		try {
-			ratingQuestionService.addRatingQuestionsForGenderToList(ratingQuestionList, gender);
+			ratingQuestionService.addRatingQuestionsForProjectAndGenderToList(ratingQuestionList, project, gender);
 			
 		} catch (RatingQuestionsNotExistentException e) {
 			//TODO Can this happen?
@@ -112,6 +114,7 @@ public class FeedbackController {
 		
 		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
 		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
+		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
 		
 		try {
 			validationService.isValidFeedback(feedbackMap);
@@ -123,7 +126,7 @@ public class FeedbackController {
 			try {
 				
 				List<RatingQuestion> ratingQuestionList = new ArrayList<>();
-				ratingQuestionList.addAll(ratingQuestionService.reloadForInvalidFeedback(participant.getGender(), feedbackMap));
+				ratingQuestionList.addAll(ratingQuestionService.reloadForInvalidFeedback(project, participant.getGender(), feedbackMap));
 				model.addAttribute("ratingQuestionList", ratingQuestionList);
 			
 				model.addAttribute("feedbackError", e.getMessage());
@@ -156,8 +159,9 @@ public class FeedbackController {
 	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_FREETEXT_SUBMIT, method = RequestMethod.POST)
 	public String freeTextSubmit(@RequestHeader("User-Agent") String userAgentText, @RequestParam String freeText,  HttpSession session, Model model) {
-		
+
 		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
+		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
 		FeedbackContainer fbContainer = (FeedbackContainer) session.getAttribute(SessionAttributeHelper.FEEDBACK);
 		Map<Long, Integer> feedbackMap = fbContainer.getFeedbackMap();
 				
@@ -168,14 +172,14 @@ public class FeedbackController {
 			//Save participant first, might not complete
 			participantService.save(participant);
 			ratingQuestionService.saveFeedback(feedbackMap);
-			freeTextService.saveFreeText(freeText, participant.getGender());			
+			freeTextService.createFreeText(project, freeText, participant.getGender());			
 			
 			//Save the result for later plausibilisation/correction
 			ParticipationResult pr = new ParticipationResult(participant, feedbackMap);
 			participationResultService.saveParticipationResult(pr);
 			
 			//Save user agent for later analysis
-			userAgentService.saveUserAgent(userAgentText, participant.getGender());
+			userAgentService.saveUserAgent(project, userAgentText, participant.getGender());
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			LOG.error("This should not happen, because session is destroyed on submitting feedback");

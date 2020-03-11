@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.model.Gender;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UserAgent;
 import eu.planlos.pcfeedback.repository.UserAgentRepository;
 
@@ -19,18 +20,12 @@ public class UserAgentService {
 	@Autowired
 	private UserAgentRepository uaRepo;
 	
-	public void saveUserAgent(String text, Gender gender) {
-		
-		UserAgent ua = new UserAgent();
-		ua.setText(text);
-		ua.setGender(gender);
-		
-		uaRepo.save(ua);
+	public void saveUserAgent(Project project, String text, Gender gender) {
+		uaRepo.save(new UserAgent(project, text, gender));
 	}
 	
-	public List<UserAgent> findAll() {
-		
-		return (List<UserAgent>) uaRepo.findAll();
+	public List<UserAgent> findAllForProject(Project project) {
+		return (List<UserAgent>) uaRepo.findAllByProject(project);
 	}
 
 	/**

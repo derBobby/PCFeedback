@@ -29,14 +29,14 @@ public class ApplicationPathHelper {
 	/*
 	 * PUBLIC
 	 */
-	public static final String URL_HOME 						= URL_AREA_PUBLIC;
-	public static final String URL_PRICEGAME 					= URL_AREA_PUBLIC + "gewinnspielhinweise";
+	public static final String URL_CHOSEPROJECT					= URL_AREA_PUBLIC;
+	public static final String URL_PROJECTHOME 						= URL_AREA_PUBLIC + "project" + URL_DELIMETER;
 	public static final String URL_FEEDBACK_START 				= URL_AREA_PUBLIC + "feedbackstart";
-	public static final String URL_FEEDBACK_RESTART 			= URL_AREA_PUBLIC + "feedbackrestart";
 	public static final String URL_FEEDBACK_FREETEXT_SUBMIT 	= URL_AREA_PUBLIC + "feedbacksubmit";
 	public static final String URL_FEEDBACK_QUESTION		 	= URL_AREA_PUBLIC + "feedbackquestion";
 	public static final String URL_FEEDBACK_SUBMIT				= URL_AREA_PUBLIC + "feedbackfreetext";
 	public static final String URL_FEEDBACK_END		 			= URL_AREA_PUBLIC + "feedbackend";
+	public static final String URL_PRICEGAME 					= URL_AREA_PUBLIC + "gewinnspielhinweise";
 	public static final String RES_HOME 						= "home";
 	public static final String RES_PRICEGAME 					= "pricegame";
 	public static final String RES_FEEDBACK_START 				= "feedbackstart";

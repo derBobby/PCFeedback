@@ -15,6 +15,7 @@ import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.FreeText;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
@@ -39,22 +40,22 @@ public class ResultsController {
 	private ModelFillerService mfs;
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK, method = RequestMethod.GET)
-	public String showResults(Model model) throws RatingQuestionsNotExistentException {
+	public String showResults(Project project, Model model) throws RatingQuestionsNotExistentException {
 
 		LOG.debug("Loading random participants");
-		List<Participant> randomParticipantList = pService.getRandomWinnerParticipants();
+		List<Participant> randomParticipantList = pService.getRandomWinnerParticipantsForProject(project);
 		
 		LOG.debug("Loading participants");
-		List<Participant> participantList = pService.getAllParticipants();
+		List<Participant> participantList = pService.getAllParticipantsForProject(project);
 		
 		LOG.debug("Loading rating questions for male participants");
-		List<RatingQuestion> rqListMale = rqService.loadByGender(Gender.MALE);
+		List<RatingQuestion> rqListMale = rqService.loadByProjectAndGender(project, Gender.MALE);
 
 		LOG.debug("Loading rating questions for female participants");
-		List<RatingQuestion> rqListFemale = rqService.loadByGender(Gender.FEMALE);
+		List<RatingQuestion> rqListFemale = rqService.loadByProjectAndGender(project, Gender.FEMALE);
 		
 		LOG.debug("Loading rating questions for female participants");
-		List<FreeText> freeTextList = ftService.findAll();
+		List<FreeText> freeTextList = ftService.findAllByProject(project);
 		
 		mfs.fillGlobal(model);
 		mfs.fillResults(model, randomParticipantList, participantList, rqListMale, rqListFemale, freeTextList);

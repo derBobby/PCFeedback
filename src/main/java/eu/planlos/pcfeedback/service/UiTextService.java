@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.UiTextException;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UiText;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.repository.UiTextRepository;
@@ -23,8 +24,8 @@ public class UiTextService {
 	@Autowired
 	private UiTextRepository uiTextRepo;
 	
-	public void createText(UiTextKey uiTextKey, String description, String text) {
-		UiText uiText = new UiText(uiTextKey, description, text);
+	public void createText(Project project, UiTextKey uiTextKey, String description, String text) {
+		UiText uiText = new UiText(project, uiTextKey, description, text);
 		uiTextRepo.save(uiText);
 	}
 
@@ -33,13 +34,13 @@ public class UiTextService {
 		return uit.getText();
 	}
 	
-	public void initializeUiText() {
+	public void initializeUiText(Project project) {
 		
 		List<UiText> uiTextList = new ArrayList<>();
 
 		List<UiTextKey> fieldList = Arrays.asList(UiTextKey.values());
 		for(UiTextKey uiTextKey : fieldList) {
-			uiTextList.add(new UiText(uiTextKey));
+			uiTextList.add(new UiText(project, uiTextKey));
 		}
 		
 		uiTextRepo.saveAll(uiTextList);
@@ -65,8 +66,8 @@ public class UiTextService {
 	 * @param proactive is true if method is called proactively and ERROR output is not necessary.
 	 * @throws UiTextException 
 	 */
-	public void checkEnoughUiTexts(boolean proactive) throws UiTextException {
-		if(uiTextRepo.countByTextIsNull() > 0) {
+	public void checkEnoughUiTexts(Project project, boolean proactive) throws UiTextException {
+		if(uiTextRepo.countByProjectAndTextIsNull(project) > 0) {
 			if(!proactive) {
 				LOG.error("# ~~~~~~~~ Not enough rating questions initialized! ~~~~~~~~ #");
 			}

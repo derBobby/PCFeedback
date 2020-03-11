@@ -19,6 +19,7 @@ import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.repository.ParticipantRepository;
 
 @Service
@@ -73,17 +74,19 @@ public class ParticipantService implements EnvironmentAware {
 
 	public boolean exists(Participant participant) throws ParticipantAlreadyExistingException {
 		
-		if (participantRepo.existsByFirstnameAndName(participant.getFirstname(), participant.getName())) {
+		Project project = participant.getProject();
+		
+		if (participantRepo.existsByProjectAndFirstnameAndName(project, participant.getFirstname(), participant.getName())) {
 			LOG.error("Participant exists by firstname and name");
 			throw new ParticipantAlreadyExistingException("Vor- / Nachname bereits vergeben!");
 		}
 
-		if (needMail && participantRepo.existsByEmail(participant.getEmail())) {
+		if (needMail && participantRepo.existsByProjectAndEmail(project, participant.getEmail())) {
 			LOG.error("Participant exists by email");
 			throw new ParticipantAlreadyExistingException("E-Mail bereits vergeben!");
 		}
 
-		if (needMobile && participantRepo.existsByMobile(participant.getMobile())) {
+		if (needMobile && participantRepo.existsByProjectAndMobile(project, participant.getMobile())) {
 			LOG.error("Participant exists by mobile");
 			throw new ParticipantAlreadyExistingException("Handynummer bereits vergeben!");
 		}
@@ -103,8 +106,8 @@ public class ParticipantService implements EnvironmentAware {
 	}
 	
 	
-	public List<Participant> getAllParticipants() {
-		return (List<Participant>) participantRepo.findAll();
+	public List<Participant> getAllParticipantsForProject(Project project) {
+		return (List<Participant>) participantRepo.findAllByProject(project);
 	}
 	
 	/**
@@ -112,7 +115,7 @@ public class ParticipantService implements EnvironmentAware {
 	 * For DEV sample data is created, for non-DEV an empty participant is created
 	 * @return Participant dependent on active profile
 	 */
-	public Participant createParticipantForForm() {
+	public Participant createParticipantForForm(Project project) {
 		
 		Participant participant;
 		
@@ -120,10 +123,10 @@ public class ParticipantService implements EnvironmentAware {
 		if(profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
 			
 			String text = ((Long) System.currentTimeMillis()).toString();
-			participant = new Participant(text, text, text +"@example.com", text, Gender.MALE, false, false);
+			participant = new Participant(project, text, text, text +"@example.com", text, Gender.MALE, false, false);
 
 		} else {
-			participant = new Participant();
+			participant = new Participant(project);
 		}
 
 		return participant;
@@ -134,10 +137,10 @@ public class ParticipantService implements EnvironmentAware {
 	 * For DEV sample data is created, for non-DEV an empty participant is created
 	 * @return Participant dependent on active profile
 	 */
-	public Participant createParticipantForDB(Gender gender) {
+	public Participant createParticipantForDB(Project project, Gender gender) {
 		
 		String text = ((Long) System.currentTimeMillis()).toString();
-		return new Participant(text, text, text +"@example.com", text, gender, false, false);
+		return new Participant(project, text, text, text +"@example.com", text, gender, false, false);
 	}
 
 	@Override
@@ -145,9 +148,9 @@ public class ParticipantService implements EnvironmentAware {
 		this.environment = environment;		
 	}
 
-	public List<Participant> getRandomWinnerParticipants() {
+	public List<Participant> getRandomWinnerParticipantsForProject(Project project) {
 
-		List<Participant> allParticipants = getAllParticipants();
+		List<Participant> allParticipants = getAllParticipantsForProject(project);
 		
 		Collections.shuffle(allParticipants);
 		
