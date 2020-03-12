@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -38,6 +39,7 @@ public class FeedbackStartController {
 
 	/**
 	 * Shows form to enter participant details like name etc.
+	 * 
 	 * @param model
 	 * @return
 	 */
@@ -45,21 +47,22 @@ public class FeedbackStartController {
 	public String feedbackStart(HttpSession session, Model model) {
 
 		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
-		
+
 		Participant participant = participantService.createParticipantForForm(project);
-		
+		LOG.debug("Adding new participant to form: project={}", project.getName());
 		model.addAttribute(participant);
-		
-		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_START);
+
+		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
 		mfs.fillGlobal(model);
 		return ApplicationPathHelper.RES_FEEDBACK_START;
 	}
-	
+
 	/**
-	 * Checks submitted participant details for validity.
-	 * If successfull writed these into session and redirects to feedpack page
-	 * @param session stores participant details
-	 * @param participant details provided by form
+	 * Checks submitted participant details for validity. If successfull writed
+	 * these into session and redirects to feedpack page
+	 * 
+	 * @param session       stores participant details
+	 * @param participant   details provided by form
 	 * @param bindingResult object to validate inputs
 	 * @param model
 	 * @return template to load / redirect
@@ -67,52 +70,47 @@ public class FeedbackStartController {
 	 * @throws IOException
 	 */
 	@PostMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
-	public String feedbackStartSubmit(HttpSession session, @Valid Participant participant, BindingResult bindingResult, Model model) {
+	public String feedbackStartSubmit(HttpSession session,
+			@ModelAttribute("participant") @Valid Participant participant, BindingResult bindingResult, Model model) {
 
-		// Check if user is trying to exploit feedback projects
 		Project sessionProject = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
-		Project participantProject = participant.getProject();
-		if(! participantProject.equals(sessionProject)) {
-			LOG.error("Session project ({}) is not equal to submitted participants project ({})", sessionProject.getName(), participantProject.getName());
-			//TODO handle error
-		}
-		
+
 		// validate model input
 		if (bindingResult.hasErrors()) {
 			LOG.debug("Input from form not valid");
-			
+
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
-			if(genderFieldError != null) {
+			if (genderFieldError != null) {
 				LOG.debug("Gender is missing");
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
-			
-			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_START);
+
+			mfs.fillUiText(model, sessionProject, UiTextKey.MSG_FEEDBACK_START);
 			mfs.fillGlobal(model);
 			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}
-		
+
 		LOG.debug("Form input is valid");
 
 		try {
-			
+
 			LOG.debug("Checking if participant exists: {}", participant.toString());
 			participantService.exists(participant);
-			
+
 			LOG.debug("Adding participant to session");
 			session.setAttribute(SessionAttributeHelper.PARTICIPANT, participant);
-			
+
 			LOG.debug("Proceeding to feedback site");
 			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_QUESTION;
-			
+
 		} catch (ParticipantAlreadyExistingException e) {
-			
+
 			LOG.error("Participant exists already, returning to form");
-			
+
 			model.addAttribute("PARTICIPANT_EXISTS", true);
-			
-			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_START);
-			mfs.fillGlobal(model);			
+
+			mfs.fillUiText(model, sessionProject, UiTextKey.MSG_FEEDBACK_START);
+			mfs.fillGlobal(model);
 			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}
 	}

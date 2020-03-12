@@ -3,16 +3,27 @@ package eu.planlos.pcfeedback.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-@Entity
+@Entity@Table(
+		uniqueConstraints={
+				@UniqueConstraint(columnNames = {"project", "uiTextKey"}),
+	})
 public class UiText {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
+	private Long idTextKey; 
+	
+	@Column(unique=false, nullable=false)
 	private UiTextKey uiTextKey;
 	
 	@Column(unique = false)

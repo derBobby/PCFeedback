@@ -16,7 +16,7 @@ import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ProjectService;
 
 @Controller
-public class HomeController {
+public class ProjectHomeController {
 
 	@Autowired
 	private ModelFillerService mfs;
@@ -39,7 +39,7 @@ public class HomeController {
 			Project project = ps.findProject(projectName);
 			session.setAttribute(SessionAttributeHelper.PROJECT, project);
 			
-			mfs.fillUiText(model, UiTextKey.MSG_HOME);
+			mfs.fillUiText(model, project, UiTextKey.MSG_HOME);
 			mfs.fillGlobal(model);
 			result = ApplicationPathHelper.RES_HOME;
 		}

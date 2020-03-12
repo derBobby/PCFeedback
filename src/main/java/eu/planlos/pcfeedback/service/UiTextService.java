@@ -24,13 +24,18 @@ public class UiTextService {
 	@Autowired
 	private UiTextRepository uiTextRepo;
 	
-	public void createText(Project project, UiTextKey uiTextKey, String description, String text) {
-		UiText uiText = new UiText(project, uiTextKey, description, text);
+	public void updateText(Project project, UiTextKey uiTextKey, String description, String text) {
+		
+		UiText uiText = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
+		uiText.setDescription(description);
+		uiText.setText(text);
+		LOG.debug("Updating UiText for: project={}, uiTextKey={}", project.getName(), uiTextKey.name());
 		uiTextRepo.save(uiText);
 	}
 
-	public String getText(UiTextKey uiTextKey) {
-		UiText uit = uiTextRepo.findById(uiTextKey).get();
+	public String getText(Project project, UiTextKey uiTextKey) {
+		LOG.debug("Searching UiText for: project={}, uiTextKey={}", project.getName(), uiTextKey.name());
+		UiText uit = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
 		return uit.getText();
 	}
 	

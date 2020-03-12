@@ -124,13 +124,13 @@ public class DataCreationService {
 		
 		// ~~~~~~~~~~~~~~~~ General texts ~~~~~~~~~~~~~~~~
 		
-		uiTextService.createText(
+		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_HOME,
 				"Begrüßung",
 				"Gib uns Feedback und hilf uns die Teennight noch besser zu machen. Unter den Teilnehmern verlosen wir zwei Freiplätze für die Teennight 2020!"
 			);
-		uiTextService.createText(
+		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_PRICEGAME,
 				"Gewinnspielhinweise",
@@ -139,19 +139,19 @@ public class DataCreationService {
 		
 		// ~~~~~~~~~~~~~~~~ Feedback texts ~~~~~~~~~~~~~~~~
 		
-		uiTextService.createText(
+		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_FEEDBACK_START,
 				"Formular",
 				"Nach der Teennight werden deine Daten gelöscht!"
 			);
-		uiTextService.createText(
+		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_FEEDBACK_QUESTION,
 				"Fragestellung",
 				"Was ist dir während der Teennight <u>wichtiger</u>?"
 			);
-		uiTextService.createText(
+		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_FEEDBACK_FREETEXT,
 				"Freitext",
@@ -161,7 +161,7 @@ public class DataCreationService {
 						"- das wäre mal eine Idee für die Teennight<br>" + 
 						"- das habe ich mit Gott erlebt auf der Teennight<br>"
 			);
-		uiTextService.createText(
+		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_FEEDBACK_END,
 				"Ende",

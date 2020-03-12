@@ -21,6 +21,7 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.NoFeedbackException;
+import eu.planlos.pcfeedback.exceptions.NoParticipantException;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.FeedbackContainer;
@@ -102,7 +103,7 @@ public class FeedbackController {
 				
 		model.addAttribute("ratingQuestionList", ratingQuestionList);
 
-		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_QUESTION);
+		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_QUESTION);
 		mfs.fillGlobal(model);
 		return ApplicationPathHelper.RES_FEEDBACK_QUESTION;
 	}
@@ -132,7 +133,7 @@ public class FeedbackController {
 				model.addAttribute("feedbackError", e.getMessage());
 				model.addAttribute("chosenList", feedbackMap);
 				
-				mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_QUESTION);
+				mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_QUESTION);
 				
 				resource = ApplicationPathHelper.RES_FEEDBACK_QUESTION;
 				
@@ -143,7 +144,7 @@ public class FeedbackController {
 			
 		}
 		model.addAttribute("freeTextMaxLength", FREETEXTMAXLENGTH);
-		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_FREETEXT);
+		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_FREETEXT);
 		mfs.fillGlobal(model);		
 		return resource;
 	}

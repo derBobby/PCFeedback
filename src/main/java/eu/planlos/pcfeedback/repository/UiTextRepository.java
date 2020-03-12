@@ -11,4 +11,5 @@ import eu.planlos.pcfeedback.model.UiTextKey;
 public interface UiTextRepository extends CrudRepository<UiText, UiTextKey> {
 
 	public int countByProjectAndTextIsNull(Project project);
+	public UiText findByProjectAndUiTextKey(Project project, UiTextKey uiTextKey);
 }

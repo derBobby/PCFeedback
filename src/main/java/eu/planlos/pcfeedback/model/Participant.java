@@ -70,6 +70,9 @@ public class Participant implements Serializable {
 	private Project project;
 	
 	private static final String TIME_ZONE = "Europe/Berlin";
+
+	public Participant() {
+	}
 	
 	public Participant(Project project) {
 		setParticipationDate();

@@ -35,22 +35,24 @@ public class RequestResponseProjectFilter implements Filter {
 
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
+		
 		HttpSession session = req.getSession();
 		Project sessionProject = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
-				
+		
+		// Check if session has project
 		if(sessionProject == null) {
-			LOG.error("No project chosen, redirecting do start page");
+			LOG.error("No project saved in session -> redirecting do start page");
 			res.sendRedirect(ApplicationPathHelper.URL_CHOSEPROJECT);
 			
 		} else {
 			
 			String sessionProjectName = sessionProject.getName();
 			if(! ps.exists(sessionProjectName)) {
-				LOG.error("Wrong project chosen, sending 400");
+				LOG.error("Wrong project saved om sessopm -> sending 400");
 				res.sendError(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
 				
 			} else {
-				LOG.error("Correct project chosen");
+				LOG.debug("Valid project saved in session: project={}", sessionProjectName);
 			}
 		}
 

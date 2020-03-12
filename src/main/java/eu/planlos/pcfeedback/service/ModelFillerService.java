@@ -16,6 +16,7 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 import eu.planlos.pcfeedback.model.FreeText;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
 
@@ -122,7 +123,7 @@ public class ModelFillerService implements EnvironmentAware {
 		this.environment = environment;
 	}
 
-	public void fillUiText(Model model, UiTextKey uiTextKey) {
-		model.addAttribute(uiTextKey.toString(), ums.getText(uiTextKey));
+	public void fillUiText(Model model, Project project, UiTextKey uiTextKey) {
+		model.addAttribute(uiTextKey.toString(), ums.getText(project, uiTextKey));
 	}
 }

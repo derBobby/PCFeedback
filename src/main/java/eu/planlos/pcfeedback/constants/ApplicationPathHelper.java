@@ -14,8 +14,8 @@ public class ApplicationPathHelper {
 	/*
 	 * EXTERNAL
 	 */
-	public static final String URL_IMPRESSUM 					= "https://teennight.de/Impressum";
-	public static final String URL_DATENSCHUTZ 					= "https://teennight.de/Datenschutz";
+	public static final String URL_IMPRESSUM 					= "https://www.swdec.de/impressum/";
+	public static final String URL_DATENSCHUTZ 					= "https://www.swdec.de/datenschutz/";
 	
 	
 	

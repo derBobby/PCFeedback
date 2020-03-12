@@ -11,7 +11,9 @@
 						<p class="" th:utext="${MSG_FEEDBACK_START}"></p>
 						
 						<form th:action="@{${URL_FEEDBACK_START}}" th:object="${participant}" method="post" onsubmit="setGender()">
-							
+
+					        <input id="project" name="project" th:field="*{project.idProject}" type="hidden" />
+
 							<div class="form-group">
 								<input th:field="*{firstname}" class="form-control" placeholder="Vorname" required="required" />
 								<span th:errors="*{firstname}" class="text-warning"></span>

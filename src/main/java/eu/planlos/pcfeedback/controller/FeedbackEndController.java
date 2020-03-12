@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 
@@ -34,6 +35,7 @@ public class FeedbackEndController {
 	public String end(HttpSession session, Model model) {
 
 		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
+		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
 		
 		if(participant == null) {
 			LOG.debug("User tried to access feedback end without entering participation info");
@@ -42,7 +44,7 @@ public class FeedbackEndController {
 		
 		session.setAttribute(SessionAttributeHelper.PARTICIPANT, null);
 		
-		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_END);
+		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_END);
 		mfs.fillGlobal(model);
 		return ApplicationPathHelper.RES_FEEDBACK_END;
 	}
