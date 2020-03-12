@@ -74,7 +74,11 @@ public class FeedbackStartController {
 			@ModelAttribute("participant") @Valid Participant participant, BindingResult bindingResult, Model model) {
 
 		Project sessionProject = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
-
+		Project participantProject= participant.getProject();
+		if(! sessionProject.getIdProject().equals(participantProject.getIdProject())) {
+			//TODO what to do when project id switched?
+		}
+		
 		// validate model input
 		if (bindingResult.hasErrors()) {
 			LOG.debug("Input from form not valid");
