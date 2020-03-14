@@ -33,6 +33,9 @@ public class FreeText {
 	@JoinColumn(name="project", nullable=false)
 	private Project project;
 
+	public FreeText() {
+	}
+
 	public FreeText(Project project, String text, Gender gender) {
 		this.project = project;
 		this.text = text;

@@ -51,6 +51,13 @@ public class Project implements Serializable {
 		this.name = name;
 	}
 	
+	public Project(String name, boolean running, Date startDate, Date endDate) {
+		this.name = name;
+		this.running = running;
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
+	
 	public Long getIdProject() {
 		return idProject;
 	}

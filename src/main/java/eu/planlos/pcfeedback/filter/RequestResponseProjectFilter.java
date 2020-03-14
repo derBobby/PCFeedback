@@ -42,7 +42,7 @@ public class RequestResponseProjectFilter implements Filter {
 		// Check if session has project
 		if(sessionProject == null) {
 			LOG.error("No project saved in session -> redirecting do start page");
-			res.sendRedirect(ApplicationPathHelper.URL_CHOSEPROJECT);
+			res.sendRedirect(ApplicationPathHelper.URL_HOME);
 			
 		} else {
 			

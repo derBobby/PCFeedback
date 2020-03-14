@@ -1,6 +1,8 @@
 package eu.planlos.pcfeedback.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,12 +57,31 @@ public class DataCreationService {
 	private FreeTextService fts;
 	
 	@PostConstruct
-	private void createSampleData() throws WrongRatingQuestionCountExistingException, UiTextException,
+	private void initialize() throws WrongRatingQuestionCountExistingException, UiTextException,
 			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
 		
 		LOG.debug("Initializing database");
+		createSampleData("Demo-Projekt");
+		createSampleData("Demo-Projekt 1");
+		createSampleData("Demo-Projekt 2");
+		createSampleData("Demo-Projekt 3");
+		createSampleData("Demo-Projekt 4");
+		createSampleData("Demo-Projekt 5");
+		createSampleData("Demo-Projekt 6");
+		LOG.debug("Initializing database ... DONE");		
+	}
 
-		Project project = new Project("Demo-Projekt");
+	private void createSampleData(String projectName) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
+
+		Calendar cal = Calendar.getInstance();
+		
+		cal.set(2001, 1, 1, 1, 1, 1);
+		Date startDate = cal.getTime();
+		
+		cal.set(2002, 2, 2, 2, 2, 2);
+		Date endDate = cal.getTime();
+		
+		Project project = new Project(projectName, true, startDate, endDate);
 		projectService.save(project);
 		
 		//Create RatingQuestions and check if enough in method are created.
@@ -80,8 +101,6 @@ public class DataCreationService {
 		createParticipations(project, Gender.MALE, 10);
 		createParticipations(project, Gender.FEMALE, 10);
 		
-		LOG.debug("Initializing database ... DONE");
-
 	}
 
 	private void createRatingQuestions(Project project) {
@@ -126,7 +145,7 @@ public class DataCreationService {
 		
 		uiTextService.updateText(
 				project,
-				UiTextKey.MSG_HOME,
+				UiTextKey.MSG_PROJECTHOME,
 				"Begrüßung",
 				"Gib uns Feedback und hilf uns die Teennight noch besser zu machen. Unter den Teilnehmern verlosen wir zwei Freiplätze für die Teennight 2020!"
 			);

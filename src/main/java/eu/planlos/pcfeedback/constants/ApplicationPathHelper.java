@@ -29,8 +29,8 @@ public class ApplicationPathHelper {
 	/*
 	 * PUBLIC
 	 */
-	public static final String URL_CHOSEPROJECT					= URL_AREA_PUBLIC;
-	public static final String URL_PROJECTHOME 						= URL_AREA_PUBLIC + "project" + URL_DELIMETER;
+	public static final String URL_HOME 						= URL_AREA_PUBLIC;
+	public static final String URL_PROJECTHOME 					= URL_AREA_PUBLIC + "project" + URL_DELIMETER;
 	public static final String URL_FEEDBACK_START 				= URL_AREA_PUBLIC + "feedbackstart";
 	public static final String URL_FEEDBACK_FREETEXT_SUBMIT 	= URL_AREA_PUBLIC + "feedbacksubmit";
 	public static final String URL_FEEDBACK_QUESTION		 	= URL_AREA_PUBLIC + "feedbackquestion";
@@ -38,6 +38,7 @@ public class ApplicationPathHelper {
 	public static final String URL_FEEDBACK_END		 			= URL_AREA_PUBLIC + "feedbackend";
 	public static final String URL_PRICEGAME 					= URL_AREA_PUBLIC + "gewinnspielhinweise";
 	public static final String RES_HOME 						= "home";
+	public static final String RES_PROJECTHOME 					= "projecthome";
 	public static final String RES_PRICEGAME 					= "pricegame";
 	public static final String RES_FEEDBACK_START 				= "feedbackstart";
 	public static final String RES_FEEDBACK_QUESTION 			= "feedbackquestion";
@@ -64,8 +65,9 @@ public class ApplicationPathHelper {
 	 * ADMINISTRATION
 	 */
 	public static final String URL_ADMIN_RESET					= URL_AREA_ADMIN + "resetdb";
-	public static final String URL_ADMIN_SHOWFEEDBACK			= URL_AREA_ADMIN + "showresults";
-	public static final String URL_ADMIN_SHOWUSERAGENTS			= URL_AREA_ADMIN + "showuseragents";
+	public static final String URL_ADMIN_PROJECTS				= URL_AREA_ADMIN + "projects";
+	public static final String URL_ADMIN_SHOWFEEDBACK			= URL_AREA_ADMIN + "showresults" + URL_DELIMETER;
+	public static final String URL_ADMIN_SHOWUSERAGENTS			= URL_AREA_ADMIN + "showuseragents" + URL_DELIMETER;
 	public static final String URL_ADMIN_EDITPARTICIPANT		= URL_AREA_ADMIN + "editparticipant" + URL_DELIMETER;
 	public static final String URL_ADMIN_DELETEPARTICIPANT		= URL_AREA_ADMIN + "deleteparticipant" + URL_DELIMETER;
 	public static final String URL_ADMIN_EDITUITEXT				= URL_AREA_ADMIN + "edituitext" + URL_DELIMETER;
@@ -76,6 +78,7 @@ public class ApplicationPathHelper {
 	public static final String URL_ADMIN_CSVFEEDBACK_W			= URL_AREA_ADMIN + "csvfeedbackw" + URL_DELIMETER;
 	public static final String URL_ADMIN_CSVFEEDBACK_FREETEXT	= URL_AREA_ADMIN + "csvfeedbackfreetext" + URL_DELIMETER;
 
+	public static final String RES_ADMIN_PROJECTS				= "admin/projects";
 	public static final String RES_ADMIN_SHOWFEEDBACK			= "admin/showresults";
 	public static final String RES_ADMIN_SHOWUSERAGENTS			= "admin/showuseragents";
 	public static final String RES_ADMIN_EDITPARTICIPANT		= "admin/editparticipant";

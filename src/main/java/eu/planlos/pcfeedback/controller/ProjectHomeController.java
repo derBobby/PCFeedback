@@ -32,16 +32,16 @@ public class ProjectHomeController {
 	@RequestMapping(ApplicationPathHelper.URL_PROJECTHOME + "{projectName}")
 	public String projectHome(HttpSession session, Model model, @PathVariable("projectName") String projectName) {
 
-		String result = "redirect:" + ApplicationPathHelper.URL_CHOSEPROJECT;
+		String result = "redirect:" + ApplicationPathHelper.URL_PROJECTHOME;
 		
 		if(ps.exists(projectName)) {
 			
 			Project project = ps.findProject(projectName);
 			session.setAttribute(SessionAttributeHelper.PROJECT, project);
 			
-			mfs.fillUiText(model, project, UiTextKey.MSG_HOME);
+			mfs.fillUiText(model, project, UiTextKey.MSG_PROJECTHOME);
 			mfs.fillGlobal(model);
-			result = ApplicationPathHelper.RES_HOME;
+			result = ApplicationPathHelper.RES_PROJECTHOME;
 		}
 		
 		return result;
