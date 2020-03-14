@@ -55,13 +55,18 @@ public class UiTextService {
 		return (List<UiText>) uiTextRepo.findAllByProject(project);
 	}
 
-	public void updateText(UiText uiText) throws UiTextException {
-		Optional<UiText> optionalDdbUiText = uiTextRepo.findById(uiText.getUiTextKey());
+	/**
+	 * Updates the text of given UiText, identified by idUiText.
+	 * @param uiText 
+	 * @throws UiTextException
+	 */
+	public void updateText(Long idUiText, String text) throws UiTextException {
+		Optional<UiText> optionalDdbUiText = uiTextRepo.findByIdUiText(idUiText);
 		if(! optionalDdbUiText.isPresent()) {
-			throw new UiTextException("Konnte Text nicht speichern, weil das Element " + uiText.getUiTextKey().toString() + " nicht existiert");
+			throw new UiTextException(String.format("Konnte Text nicht speichern, weil kein UiText mit id=%s gefunden wurde", idUiText));
 		}
 		UiText dbUiText = optionalDdbUiText.get();
-		dbUiText.setText(uiText.getText());
+		dbUiText.setText(text);
 		uiTextRepo.save(dbUiText);
 	}
 	

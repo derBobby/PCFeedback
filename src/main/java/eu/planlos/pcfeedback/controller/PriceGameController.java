@@ -12,16 +12,12 @@ import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.ModelFillerService;
-import eu.planlos.pcfeedback.service.ProjectService;
 
 @Controller
 public class PriceGameController {
 
 	@Autowired
 	private ModelFillerService mfs;
-
-	@Autowired
-	private ProjectService ps;
 	
 	/**
 	 * Provides the price game site

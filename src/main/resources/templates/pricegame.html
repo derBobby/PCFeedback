@@ -5,7 +5,7 @@
 		<nav th:replace="template :: nav"></nav>
 	    <main class="container pt-3">
    	        <div class="card mb-3">
-	            <div class="card-header text-center"><h3 class="mb-0">Gewinnspielhinweise</h3></div>
+	            <div class="card-header text-center"><h3 class="mb-0" th:inline="text">Gewinnspielhinweise für Umfrage "[[${projectName}]]"</h3></div>
 	            <div class="card-block p-3">
 					<div class="col-lg-12 text-left"  >
 						<div th:remove="tag" th:utext="${MSG_PRICEGAME}"></div>

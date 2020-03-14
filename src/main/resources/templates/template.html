@@ -65,8 +65,8 @@
 
 		<footer th:fragment="footer">
 			<div class="container text-center text-muted">
-				<p>derBobby © 2020</p>
 				<p><a target="_blank" th:href="@{${URL_IMPRESSUM}}">Impressum</a> | <a target="_blank" th:href="@{${URL_DATENSCHUTZ}}">Datenschutz</a><div sec:authorize="isAnonymous()" th:remove="tag"> | <a th:href="@{${URL_LOGIN_FORM}}">Login</a></div></p>
+				<p>derBobby © 2020</p>
 			</div>
 			
 			<div th:if="${isDevProfile}" class="container text-center text-muted">

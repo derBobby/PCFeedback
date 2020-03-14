@@ -16,6 +16,7 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.UiTextException;
 import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UiText;
+import eu.planlos.pcfeedback.model.UiTextContainer;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ProjectService;
 import eu.planlos.pcfeedback.service.UiTextService;
@@ -36,16 +37,7 @@ public class UiTextController {
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITUITEXT + "{projectName}", method = RequestMethod.GET)
 	public String showUiText(@PathVariable(name = "projectName") String projectName, Model model) {
-<<<<<<< HEAD
-=======
-		
-		Project project = ps.findProject(projectName);
-		if(project == null) {
-			//TODO implement
-			return "FUCK";
-		}
->>>>>>> branch 'multipleProjects' of https://github.com/derBobby/PCFeedback.git
-		
+
 		Project project = ps.findProject(projectName);
 		if(project == null) {
 			//TODO implement
@@ -60,11 +52,11 @@ public class UiTextController {
 	}
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITUITEXT, method = RequestMethod.POST)
-	public String submitEdit(@ModelAttribute UiText uiText, Model model) throws UiTextException {
+	public String submitEdit(@ModelAttribute UiTextContainer uiTextContainer, Model model) throws UiTextException {
 
 		try {
-			uts.updateText(uiText);
-			return "redirect:" + ApplicationPathHelper.URL_ADMIN_EDITUITEXT;
+			uts.updateText(uiTextContainer.getIdUiText(), uiTextContainer.getText());
+			return "redirect:" + ApplicationPathHelper.URL_ADMIN_EDITUITEXT + uiTextContainer.getProjectName();
 		} catch (UiTextException e) {
 			LOG.error(e.getMessage());
 			throw e;

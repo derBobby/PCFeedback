@@ -44,7 +44,7 @@ public class FeedbackStartController {
 	 * @return
 	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
-	public String feedbackStart(HttpSession session, Model model) {
+	public String participantForm(HttpSession session, Model model) {
 
 		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
 
@@ -70,7 +70,7 @@ public class FeedbackStartController {
 	 * @throws IOException
 	 */
 	@PostMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
-	public String feedbackStartSubmit(HttpSession session,
+	public String participantSubmit(HttpSession session,
 			@ModelAttribute("participant") @Valid Participant participant, BindingResult bindingResult, Model model) {
 
 		Project sessionProject = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
