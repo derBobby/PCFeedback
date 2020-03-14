@@ -36,6 +36,15 @@ public class UiTextController {
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITUITEXT + "{projectName}", method = RequestMethod.GET)
 	public String showUiText(@PathVariable(name = "projectName") String projectName, Model model) {
+<<<<<<< HEAD
+=======
+		
+		Project project = ps.findProject(projectName);
+		if(project == null) {
+			//TODO implement
+			return "FUCK";
+		}
+>>>>>>> branch 'multipleProjects' of https://github.com/derBobby/PCFeedback.git
 		
 		Project project = ps.findProject(projectName);
 		if(project == null) {
