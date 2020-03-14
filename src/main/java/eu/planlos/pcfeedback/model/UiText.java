@@ -21,7 +21,7 @@ public class UiText {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
-	private Long idTextKey; 
+	private Long idUiText; 
 	
 	@Column(unique=false, nullable=false)
 	private UiTextKey uiTextKey;
@@ -84,5 +84,13 @@ public class UiText {
 
 	public void setProject(Project project) {
 		this.project = project;
+	}
+
+	public Long getIdUiText() {
+		return idUiText;
+	}
+
+	public void setIdUiText(Long idUiText) {
+		this.idUiText = idUiText;
 	}
 }

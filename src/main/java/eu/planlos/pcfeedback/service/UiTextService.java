@@ -51,8 +51,8 @@ public class UiTextService {
 		uiTextRepo.saveAll(uiTextList);
 	}	
 
-	public List<UiText> getAllUiText() {
-		return (List<UiText>) uiTextRepo.findAll();
+	public List<UiText> getUiTextForProject(Project project) {
+		return (List<UiText>) uiTextRepo.findAllByProject(project);
 	}
 
 	public void updateText(UiText uiText) throws UiTextException {

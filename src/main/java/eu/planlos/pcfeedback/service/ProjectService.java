@@ -1,5 +1,7 @@
 package eu.planlos.pcfeedback.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,10 @@ public class ProjectService {
 
 	public Project findProject(String projectName) {
 		return projectRepo.findByName(projectName);
+	}
+
+	public List<Project> findAll() {
+		return (List<Project>) projectRepo.findAll();
 	}
 
 	public void resetDB() {

@@ -18,35 +18,66 @@
   		
   					<!-- EXPLANATION CARD -->
 			        <div class="col-md-6 border-dark p-3 mb-3">
-	        			<!--  FOR EACH UiText a card -->
-						<div class="card text-white bg-info h-100">
-							<div class="card-header">
+						<div class="card text-white bg-info"> <!-- Notwendig wenn nicht collapsible: h-100 -->
+							<div class="card-header collapsed" data-toggle="collapse" data-target="#collapseAnpassung" aria-expanded="true" aria-controls="collapseOne">
 								<h5 class="mb-0" th:inline="text">
-									HTML-Tags
+									Anpassungen
+									<button type="button" class="ml-3 btn btn-outline-secondary btn-sm active float-right" th:id="chevronAnpassung">
+										<i class="fa fa-chevron-down float-right"></i>
+									</button>
+									<script type="text/javascript" th:inline="javascript">
+										/*<![CDATA[*/
+											
+										$("#chevronAnpassung").popover({
+											trigger : 'hover',
+											placement : 'bottom',
+											content : '"Anpassung" aufklappen',
+										})
+									</script>
 								</h5>
 							</div>
-							<div class="card-body">
-								<p>Die Texte hier können mit einem Editor angepasst werden. Aktuell ist ein zurücksetzen auf "Standard" noch nicht möglich.</p>
+							<div class="card-body collapse" id="collapseAnpassung">
+								<p>Die Texte hier können mit einem Editor angepasst werden. Dazu einfach auf den Schraubenschlüssel klicken.
+								<p>Aktuell ist ein zurücksetzen auf "Standard" noch nicht möglich.</p>
 	          				</div>
 	         			</div>
 					</div>
 
 					<!-- EDITABLE TEXT CARDS -->
+        			<!--  FOR EACH UiText a card -->
 					<div class="col-md-6 border-dark p-3 mb-3" th:each="uiText : ${uiTextList}" th:object="${uiText}">
 
 	        			<!--  CARD -->
-						<div class="card h-100">
-							<div class="card-header">
+						<div class="card">
+							<div class="card-header collapsed" data-toggle="collapse" aria-expanded="true" th:attr="data-target='#collapse'+*{idUiText}, aria-controls='collapse'+*{idUiText}">
 								<h5 class="mb-0" th:inline="text">
 									[[*{description.toString()}]]
-										<button type="button" class="btn btn-outline-secondary btn-sm active float-right" data-toggle="modal" 
+									
+									<button type="button" class="ml-3 btn btn-outline-secondary btn-sm active float-right" th:id="'chevron'+*{idUiText}">
+											<i class="fa fa-chevron-down"></i>
+									</button>
+									<button type="button" class="btn btn-outline-secondary btn-sm active float-right" data-toggle="modal" 
 											th:id="*{uiTextKey.toString()}" 
 											th:attr="data-target='#' + *{uiTextKey.toString()} + '_Modal'">
 											<i class="fas fa-wrench"></i>
-										</button>
+									</button>
+									<script type="text/javascript" th:inline="javascript">
+										/*<![CDATA[*/
+										
+										$([['#chevron'+*{idUiText}]]).popover({
+											trigger : 'hover',
+											placement : 'bottom',
+											content : '[[*{description.toString()}]] Aufklappen',
+										})
+										$([['#'+*{uiTextKey.toString()}]]).popover({
+											trigger : 'hover',
+											placement : 'bottom',
+											content : '[[*{description.toString()}]] Editieren',
+										})
+									</script>
 								</h5>
 							</div>
-							<div class="card-body">
+							<div class="card-body collapse" th:id="'collapse'+*{idUiText}">
 								<p th:utext="*{text}"></p>
 	          				</div>
 	         			</div>
@@ -87,6 +118,7 @@
 					<!-- END OF EDITABLE TEXT CARDS -->
 				</div>
 			</div>
+			
 		</main>
 	    <footer th:replace="template :: footer"></footer>
 	</body>

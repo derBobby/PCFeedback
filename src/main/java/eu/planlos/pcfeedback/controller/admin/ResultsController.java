@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -20,6 +21,7 @@ import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
+import eu.planlos.pcfeedback.service.ProjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 
 @Controller
@@ -37,11 +39,20 @@ public class ResultsController {
 	private FreeTextService ftService;
 	
 	@Autowired
+	private ProjectService prService;
+	
+	@Autowired
 	private ModelFillerService mfs;
 	
-	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK, method = RequestMethod.GET)
-	public String showResults(Project project, Model model) throws RatingQuestionsNotExistentException {
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + "{projectName}", method = RequestMethod.GET)
+	public String showResults(@PathVariable(name = "projectName") String projectName, Model model) throws RatingQuestionsNotExistentException {
 
+		Project project = prService.findProject(projectName);
+		if(project == null) {
+			//TODO real handling 
+			return "FUCK";
+		}
+		
 		LOG.debug("Loading random participants");
 		List<Participant> randomParticipantList = pService.getRandomWinnerParticipantsForProject(project);
 		

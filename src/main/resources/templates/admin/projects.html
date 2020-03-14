@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-3">
+			<div class="jumbotron">
+				<div class="container">
+					<h1 class="display-4">Projektübersicht</h1>
+					<p class="lead">Hier sind alle verfügbaren Projekte aufgelistet.</p> 
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div  class="col-md-4 border-dark p-3 mb-3" th:each="project : ${projectList}" th:object="${project}">
+					<div class="card mb-3">
+						<div class="card-header text-center">
+							<h3 class="mb-0" th:text="*{name}"></h3>
+						</div>
+						<div class="card-block p-3">
+							<table>
+								<tr>
+									<th>Start:</th>
+									<td class="pl-3" th:text="*{#dates.format(startDate, 'dd.MM.yyyy - HH:mm:ss')+' Uhr'}"></td>
+								</tr>
+								<tr>
+									<th>Ende:</th>
+									<td class="pl-3" th:text="*{#dates.format(endDate, 'dd.MM.yyyy - HH:mm:ss')+' Uhr'}"' Uhr'></td>
+								</tr>
+								<tr>
+									<th>Aktiv:</th>
+									<td class="pl-3" th:text="*{running ? 'Ja' : 'Nein'}"></td>
+								</tr>
+							</table>
+						</div>
+						<div class="card-footer text-center">
+							<a th:href="@{${URL_ADMIN_EDITUITEXT}+*{name}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'edituitext'">
+								<i class="fas fa-quote-right"></i>
+							</a>
+							<a th:href="@{${URL_PROJECTHOME}+*{name}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'projecthome'">
+								<i class="fas fa-home"></i>
+							</a>
+							<a th:href="@{${URL_ADMIN_SHOWFEEDBACK}+*{name}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showfeedback'">
+								<i class="fas fa-users"></i>
+							</a>
+							<a th:href="@{${URL_ADMIN_SHOWUSERAGENTS}+*{name}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showuseragents'">
+								<i class="fas fa-user-tie"></i>
+							</a>
+							<script type="text/javascript" th:inline="javascript">
+								/*<![CDATA[*/
+									
+								$([['#'+*{idProject}+edituitext]]).popover({
+									trigger : 'hover',
+									placement : 'bottom',
+									content : 'Texte für Umfrage [[*{name}]] bearbeiten',
+								})
+
+								$([['#'+*{idProject}+projecthome]]).popover({
+									trigger : 'hover',
+									placement : 'bottom',
+									content : 'Zur Umfrage [[*{name}]]',
+								})
+
+								$([['#'+*{idProject}+showfeedback]]).popover({
+									trigger : 'hover',
+									placement : 'bottom',
+									content : 'Zu den Ergebnissen der Umfrage [[*{name}]]',
+								})
+
+								$([['#'+*{idProject}+showuseragents]]).popover({
+									trigger : 'hover',
+									placement : 'bottom',
+									content : 'Zu den UserAgents der Umfrage [[*{name}]]',
+								})
+							</script>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	    <footer th:replace="template :: footer"></footer>		
+	</body>
+</html>

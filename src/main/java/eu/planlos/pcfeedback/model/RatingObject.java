@@ -15,7 +15,6 @@ import javax.persistence.UniqueConstraint;
 @Table(
 		uniqueConstraints={
 			@UniqueConstraint(columnNames = {"idRatingObject"}),
-			@UniqueConstraint(columnNames = {"name"}),
 })
 public class RatingObject implements Serializable {
 	private static final long serialVersionUID = 1L;
