@@ -11,8 +11,11 @@
 						<p class="" th:utext="${MSG_FEEDBACK_END}"></p>
 						<p class="lead"><b>Bitte beachte, dass jeder nur einmal teilnehmen darf!</b></p>
 						<div class="pt-3">
-							<a th:href="@{${URL_HOME}}" class="btn btn-primary" role="button">
-								Zurück auf Los!<br /><i class="fas fa-home"></i>
+							<a th:href="@{${URL_PROJECTHOME}+${projectName}}" class="btn btn-primary" role="button">
+								Nächster Teilnehmer<br /><i class="fas fa-redo"></i>
+							</a>
+							<a th:href="@{${URL_HOME}}" class="btn btn-secondary" role="button">
+								Feedback  Übersicht<br /><i class="fas fa-home"></i>
 							</a>
 						</div>
 					</div>

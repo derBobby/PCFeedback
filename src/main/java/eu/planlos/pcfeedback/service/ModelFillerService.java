@@ -48,6 +48,7 @@ public class ModelFillerService implements EnvironmentAware {
 		
 		LOG.debug("Preparing model for global area");
 		model.addAttribute("URL_HOME", ApplicationPathHelper.URL_HOME);
+		model.addAttribute("URL_PROJECTHOME", ApplicationPathHelper.URL_PROJECTHOME); //TODO where necessary?
 		model.addAttribute("URL_IMPRESSUM", ApplicationPathHelper.URL_IMPRESSUM);
 		model.addAttribute("URL_DATENSCHUTZ", ApplicationPathHelper.URL_DATENSCHUTZ);
 		model.addAttribute("URL_PRICEGAME", ApplicationPathHelper.URL_PRICEGAME);
@@ -126,5 +127,6 @@ public class ModelFillerService implements EnvironmentAware {
 
 	public void fillUiText(Model model, Project project, UiTextKey uiTextKey) {
 		model.addAttribute(uiTextKey.toString(), ums.getText(project, uiTextKey));
+		model.addAttribute("projectName", project.getName());
 	}
 }

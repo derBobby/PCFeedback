@@ -41,8 +41,12 @@ public class FeedbackEndController {
 			LOG.debug("User tried to access feedback end without entering participation info");
 			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_START;
 		}
-		
+
+		//TODO where else to set these?
+		session.setAttribute(SessionAttributeHelper.FEEDBACK, null);
+		session.setAttribute(SessionAttributeHelper.FREETEXT, null);
 		session.setAttribute(SessionAttributeHelper.PARTICIPANT, null);
+		session.setAttribute(SessionAttributeHelper.PROJECT, null);
 		
 		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_END);
 		mfs.fillGlobal(model);
