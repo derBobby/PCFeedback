@@ -129,4 +129,16 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute(uiTextKey.toString(), ums.getText(project, uiTextKey));
 		model.addAttribute("projectName", project.getName());
 	}
+
+	/**
+	 * Fills Model for Project Details page
+	 * @param model Model to fill
+	 * @param urlSubmit URL which shall form be submitted to
+	 * @param buttonText Text to display on Button
+	 */
+	public void fillProjectDetails(Model model, Project project, String buttonText) {
+		model.addAttribute("project", project);
+		model.addAttribute("urlSubmit", ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS);
+		model.addAttribute("buttonText", buttonText);
+	}
 }

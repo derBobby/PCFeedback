@@ -5,8 +5,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
 import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.repository.ProjectRepository;
 
@@ -18,8 +20,13 @@ public class ProjectService {
 	@Autowired
 	private ProjectRepository projectRepo;
 
-	public void save(Project project) {
-		projectRepo.save(project);
+	//TODO Test this
+	public void save(Project project) throws ProjectAlreadyExistingException {
+		try {
+			projectRepo.save(project);
+		} catch (DataIntegrityViolationException e) {
+			throw new ProjectAlreadyExistingException();
+		}
 	}
 
 	public boolean exists(String projectName) {

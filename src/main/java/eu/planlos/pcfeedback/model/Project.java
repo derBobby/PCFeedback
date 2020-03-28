@@ -14,6 +14,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 @Table(
 		uniqueConstraints={
@@ -36,12 +38,15 @@ public class Project implements Serializable {
 	private boolean running;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private Date saveDate;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private Date startDate;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private Date endDate;
 
 	public Project() {
@@ -105,4 +110,9 @@ public class Project implements Serializable {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+	
+	/*
+	 * FUNCTIONS
+	 */
+
 }

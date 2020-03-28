@@ -66,6 +66,7 @@ public class ApplicationPathHelper {
 	 */
 	public static final String URL_ADMIN_RESET					= URL_AREA_ADMIN + "resetdb";
 	public static final String URL_ADMIN_PROJECTS				= URL_AREA_ADMIN + "projects";
+	public static final String URL_ADMIN_PROJECTDETAILS			= URL_AREA_ADMIN + "projectdetails";
 	public static final String URL_ADMIN_SHOWFEEDBACK			= URL_AREA_ADMIN + "showresults" + URL_DELIMETER;
 	public static final String URL_ADMIN_SHOWUSERAGENTS			= URL_AREA_ADMIN + "showuseragents" + URL_DELIMETER;
 	public static final String URL_ADMIN_EDITPARTICIPANT		= URL_AREA_ADMIN + "editparticipant" + URL_DELIMETER;
@@ -79,6 +80,7 @@ public class ApplicationPathHelper {
 	public static final String URL_ADMIN_CSVFEEDBACK_FREETEXT	= URL_AREA_ADMIN + "csvfeedbackfreetext" + URL_DELIMETER;
 
 	public static final String RES_ADMIN_PROJECTS				= "admin/projects";
+	public static final String RES_ADMIN_PROJECTDETAILS			= "admin/projectdetails";
 	public static final String RES_ADMIN_SHOWFEEDBACK			= "admin/showresults";
 	public static final String RES_ADMIN_SHOWUSERAGENTS			= "admin/showuseragents";
 	public static final String RES_ADMIN_EDITPARTICIPANT		= "admin/editparticipant";

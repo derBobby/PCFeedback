@@ -7,7 +7,10 @@
 			<div class="jumbotron">
 				<div class="container">
 					<h1 class="display-4">Projektübersicht</h1>
-					<p class="lead">Hier sind alle verfügbaren Projekte aufgelistet.</p> 
+					<p class="lead">Hier sind alle verfügbaren Projekte aufgelistet.</p>
+					<a th:href="@{${URL_ADMIN_ADDPROJECTS}}" class="btn btn-primary" role="button" th:id="*{idProject}">
+						<i class="fas fa-plus"></i>&nbsp;&nbsp;Projekt hinzufügen
+					</a>
 				</div>
 			</div>
 			<div class="row justify-content-center">

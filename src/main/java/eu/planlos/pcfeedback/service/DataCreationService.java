@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
+import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.exceptions.UiTextException;
 import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
@@ -58,7 +59,7 @@ public class DataCreationService {
 	
 	@PostConstruct
 	private void initialize() throws WrongRatingQuestionCountExistingException, UiTextException,
-			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
+			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException {
 		
 		LOG.debug("Initializing database");
 		createSampleData("Demo-Projekt");
@@ -71,7 +72,7 @@ public class DataCreationService {
 		LOG.debug("Initializing database ... DONE");		
 	}
 
-	private void createSampleData(String projectName) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
+	private void createSampleData(String projectName) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException {
 
 		Calendar cal = Calendar.getInstance();
 		
