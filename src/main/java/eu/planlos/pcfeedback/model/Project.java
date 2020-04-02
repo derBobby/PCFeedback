@@ -112,7 +112,10 @@ public class Project implements Serializable {
 	}
 	
 	/*
-	 * FUNCTIONS
-	 */
+	 * Functions
+	 */	
+	public String toString() {
+		return String.format("idProject=%s, name=%s", idProject, name);
+	}
 
 }
