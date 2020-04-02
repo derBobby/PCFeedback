@@ -1,6 +1,7 @@
 package eu.planlos.pcfeedback.filter;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
@@ -37,26 +37,32 @@ public class RequestResponseProjectFilter implements Filter {
 		HttpServletResponse res = (HttpServletResponse) response;
 		
 		HttpSession session = req.getSession();
-		Project sessionProject = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
+		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
+		
+		/** TODO remove DEBUG **/
+		Enumeration<String> attrs = session.getAttributeNames();
+		while(attrs.hasMoreElements()) {
+			String e = attrs.nextElement();
+			System.err.println(e);
+			Object o = session.getAttribute(e);
+			System.err.println(o.hashCode());
+		}
+		/** remove DEBUG **/
 		
 		// Check if session has project
-		if(sessionProject == null) {
+		if(project == null) {
 			LOG.error("No project saved in session -> redirecting do start page");
 			res.sendRedirect(ApplicationPathHelper.URL_HOME);
-			
 		} else {
-			
-			String sessionProjectName = sessionProject.getName();
-			if(! ps.exists(sessionProjectName)) {
-				LOG.error("Wrong project saved om sessopm -> sending 400");
-				res.sendError(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
-				
+			String projectName = project.getName();
+			if(! ps.exists(projectName)) {
+				LOG.error("Project name='{}' saved in session does not exist -> sending 400", projectName);
+				//TODO uncomment res.sendError(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase());
+				chain.doFilter(request, response); //TODO REMOVE
 			} else {
-				LOG.debug("Valid project saved in session: project={}", sessionProjectName);
+				LOG.debug("Valid project saved in session: project={}", projectName);
+				chain.doFilter(request, response);
 			}
 		}
-
-		chain.doFilter(request, response);
 	}
-
 }

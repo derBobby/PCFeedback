@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.controller;
+package eu.planlos.pcfeedback.controller.feedback;
 
 import javax.servlet.http.HttpSession;
 
@@ -32,7 +32,7 @@ public class ProjectHomeController {
 	@RequestMapping(ApplicationPathHelper.URL_PROJECTHOME + "{projectName}")
 	public String projectHome(HttpSession session, Model model, @PathVariable("projectName") String projectName) {
 
-		String result = "redirect:" + ApplicationPathHelper.URL_PROJECTHOME;
+		String result = "redirect:" + ApplicationPathHelper.URL_HOME;
 		
 		if(ps.exists(projectName)) {
 			

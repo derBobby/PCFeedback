@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.controller;
+package eu.planlos.pcfeedback.controller.feedback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.NoFeedbackException;
-import eu.planlos.pcfeedback.exceptions.NoParticipantException;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.FeedbackContainer;
@@ -40,6 +40,7 @@ import eu.planlos.pcfeedback.service.RatingQuestionService;
 import eu.planlos.pcfeedback.service.UserAgentService;
 
 @Controller
+@SessionAttributes(names = {SessionAttributeHelper.PARTICIPANT, SessionAttributeHelper.PROJECT, SessionAttributeHelper.FEEDBACK})
 public class FeedbackController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FeedbackController.class);
@@ -69,19 +70,19 @@ public class FeedbackController {
 	@Autowired
 	private ParticipationResultService participationResultService;
 	
-	
-	//TODO describe what it does
 	/**
-	 * User is redirected to this controller after successfully writing participant info to session 
+	 * User is redirected to this controller after successfully writing participant info to session.
+	 * 
 	 * @param model
-	 * @param session provides participant details
+	 * @param project
+	 * @param participant
+	 * @param session
 	 * @return template to load
 	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_QUESTION)
-	public String feedback(Model model, HttpSession session) {
-		
-		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
-		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
+	public String feedback(Model model,
+			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
+			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant) {
 		
 		if(participant == null) {
 			LOG.debug("User tried to access feedback without entering participant details");
@@ -90,15 +91,16 @@ public class FeedbackController {
 		
 		LOG.debug("Participant: {}", participant.toString());
 		
-		List<RatingQuestion> ratingQuestionList = new ArrayList<>();
 		Gender gender = participant.getGender();
-		
+		List<RatingQuestion> ratingQuestionList = new ArrayList<>();		
 		try {
 			ratingQuestionService.addRatingQuestionsForProjectAndGenderToList(ratingQuestionList, project, gender);
 			
 		} catch (RatingQuestionsNotExistentException e) {
-			//TODO Can this happen?
+			LOG.error("Fataler Fehler: Konnte Liste von RatingQuestion nicht laden.");
+			LOG.error("project={}, gender={}", project.getName(), gender.name());
 			e.printStackTrace();
+			e.getCause();
 		} 
 				
 		model.addAttribute("ratingQuestionList", ratingQuestionList);
@@ -108,14 +110,25 @@ public class FeedbackController {
 		return ApplicationPathHelper.RES_FEEDBACK_QUESTION;
 	}
 	
+	/**
+	 * 
+	 * @param model
+	 * @param session
+	 * @param fbc
+	 * @param project
+	 * @param participant
+	 * @return
+	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
-	public String feedbackSubmit(@ModelAttribute FeedbackContainer fbc, HttpSession session, Model model) {
+	public String feedbackSubmit(Model model,
+			HttpSession session,
+			@ModelAttribute FeedbackContainer fbc,
+			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
+			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant) {
 
 		String resource = ApplicationPathHelper.RES_FEEDBACK_FREETEXT;
 		
 		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
-		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
-		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
 		
 		try {
 			validationService.isValidFeedback(feedbackMap);
@@ -151,19 +164,22 @@ public class FeedbackController {
 	
 	/**
 	 * Method which saves all results. Takes participant and feedback from session
-	 * @param userAgentText Is automatically read from http header. Used to store Browser statistics 
-	 * @param fbc Feedback container provided by form
-	 * @param session stores participant
 	 * @param model
-	 * @return template to load
-	 * @throws NoParticipantException
+	 * @param userAgentText
+	 * @param freeText
+	 * @param project
+	 * @param participant
+	 * @param fbContainer
+	 * @return
 	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_FREETEXT_SUBMIT, method = RequestMethod.POST)
-	public String freeTextSubmit(@RequestHeader("User-Agent") String userAgentText, @RequestParam String freeText,  HttpSession session, Model model) {
+	public String freeTextSubmit(Model model,
+			@RequestHeader("User-Agent") String userAgentText,
+			@RequestParam String freeText,
+			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
+			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant,
+			@ModelAttribute(SessionAttributeHelper.FEEDBACK) FeedbackContainer fbContainer) {
 
-		Participant participant = (Participant) session.getAttribute(SessionAttributeHelper.PARTICIPANT);
-		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
-		FeedbackContainer fbContainer = (FeedbackContainer) session.getAttribute(SessionAttributeHelper.FEEDBACK);
 		Map<Long, Integer> feedbackMap = fbContainer.getFeedbackMap();
 				
 		String resource = "redirect:" + ApplicationPathHelper.URL_FEEDBACK_END;

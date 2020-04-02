@@ -1,8 +1,5 @@
-package eu.planlos.pcfeedback.controller;
+package eu.planlos.pcfeedback.controller.feedback;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -16,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
@@ -27,6 +25,7 @@ import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 
 @Controller
+@SessionAttributes(names = {"participant", "project"})
 public class FeedbackStartController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FeedbackStartController.class);
@@ -41,14 +40,18 @@ public class FeedbackStartController {
 	 * Shows form to enter participant details like name etc.
 	 * 
 	 * @param model
+	 * @param session
+	 * @param project
 	 * @return
 	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
-	public String participantForm(HttpSession session, Model model) {
+	public String participantForm(Model model,
+			HttpSession session,
+			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project) {
 
-		Project project = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
-
+		// Filter validates not null
 		Participant participant = participantService.createParticipantForForm(project);
+		
 		LOG.debug("Adding new participant to form: project={}", project.getName());
 		model.addAttribute(participant);
 
@@ -58,27 +61,23 @@ public class FeedbackStartController {
 	}
 
 	/**
-	 * Checks submitted participant details for validity. If successfull writed
-	 * these into session and redirects to feedpack page
+	 * Checks submitted participant for validity.
+	 * If successful writes him into session and redirects to feedpack page
 	 * 
-	 * @param session       stores participant details
-	 * @param participant   details provided by form
-	 * @param bindingResult object to validate inputs
 	 * @param model
-	 * @return template to load / redirect
-	 * @throws ServletException
-	 * @throws IOException
+	 * @param session
+	 * @param bindingResult
+	 * @param project
+	 * @param participant
+	 * @return
 	 */
 	@PostMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
-	public String participantSubmit(HttpSession session,
-			@ModelAttribute("participant") @Valid Participant participant, BindingResult bindingResult, Model model) {
+	public String participantSubmit(Model model,
+			HttpSession session,
+			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
+			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) @Valid Participant participant,
+			BindingResult bindingResult) {
 
-		Project sessionProject = (Project) session.getAttribute(SessionAttributeHelper.PROJECT);
-		Project participantProject= participant.getProject();
-		if(! sessionProject.getIdProject().equals(participantProject.getIdProject())) {
-			//TODO what to do when project id switched?
-		}
-		
 		// validate model input
 		if (bindingResult.hasErrors()) {
 			LOG.debug("Input from form not valid");
@@ -89,7 +88,7 @@ public class FeedbackStartController {
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
 
-			mfs.fillUiText(model, sessionProject, UiTextKey.MSG_FEEDBACK_START);
+			mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
 			mfs.fillGlobal(model);
 			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}
@@ -102,8 +101,13 @@ public class FeedbackStartController {
 			participantService.exists(participant);
 
 			LOG.debug("Adding participant to session");
+			Object o1 = session.getAttribute(SessionAttributeHelper.PROJECT);
+			System.err.println(o1.hashCode());
 			session.setAttribute(SessionAttributeHelper.PARTICIPANT, participant);
-
+			Object o2 = session.getAttribute(SessionAttributeHelper.PROJECT);
+			System.err.println(o1.hashCode());
+			System.err.println(o2.hashCode());
+			
 			LOG.debug("Proceeding to feedback site");
 			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_QUESTION;
 
@@ -113,7 +117,7 @@ public class FeedbackStartController {
 
 			model.addAttribute("PARTICIPANT_EXISTS", true);
 
-			mfs.fillUiText(model, sessionProject, UiTextKey.MSG_FEEDBACK_START);
+			mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
 			mfs.fillGlobal(model);
 			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}

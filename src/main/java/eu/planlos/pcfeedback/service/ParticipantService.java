@@ -113,6 +113,8 @@ public class ParticipantService implements EnvironmentAware {
 	/**
 	 * Method creates participant dependent on the active profiles.
 	 * For DEV sample data is created, for non-DEV an empty participant is created
+	 *
+	 * @param project
 	 * @return Participant dependent on active profile
 	 */
 	public Participant createParticipantForForm(Project project) {
@@ -123,7 +125,7 @@ public class ParticipantService implements EnvironmentAware {
 		if(profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
 			
 			String text = ((Long) System.currentTimeMillis()).toString();
-			participant = new Participant(project, text, text, text +"@example.com", text, Gender.MALE, false, false);
+			participant = new Participant(project, text, text, text +"@example.com", text, Gender.MALE, true, true);
 
 		} else {
 			participant = new Participant(project);

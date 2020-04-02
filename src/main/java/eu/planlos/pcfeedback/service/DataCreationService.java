@@ -63,12 +63,12 @@ public class DataCreationService {
 		
 		LOG.debug("Initializing database");
 		createSampleData("Demo-Projekt");
-		createSampleData("Demo-Projekt 1");
-		createSampleData("Demo-Projekt 2");
-		createSampleData("Demo-Projekt 3");
-		createSampleData("Demo-Projekt 4");
-		createSampleData("Demo-Projekt 5");
-		createSampleData("Demo-Projekt 6");
+//		createSampleData("Demo-Projekt 1");
+//		createSampleData("Demo-Projekt 2");
+//		createSampleData("Demo-Projekt 3");
+//		createSampleData("Demo-Projekt 4");
+//		createSampleData("Demo-Projekt 5");
+//		createSampleData("Demo-Projekt 6");
 		LOG.debug("Initializing database ... DONE");		
 	}
 
@@ -97,10 +97,10 @@ public class DataCreationService {
 		//Throws Exception if not
 		uiTextService.checkEnoughUiTexts(project, false);
 		
-		createFreeText(project, Gender.MALE, 10);
-		createFreeText(project, Gender.FEMALE, 10);
-		createParticipations(project, Gender.MALE, 10);
-		createParticipations(project, Gender.FEMALE, 10);
+//		createFreeText(project, Gender.MALE, 10);
+//		createFreeText(project, Gender.FEMALE, 10);
+//		createParticipations(project, Gender.MALE, 10);
+//		createParticipations(project, Gender.FEMALE, 10);
 		
 	}
 

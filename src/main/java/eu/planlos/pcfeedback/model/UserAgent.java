@@ -32,6 +32,9 @@ public class UserAgent {
 	@JoinColumn(name = "project", nullable = false)
 	private Project project;
 
+	public UserAgent() {
+	}
+	
 	public UserAgent(Project project, String text, Gender gender) {
 		this.project = project;
 		this.text = text;

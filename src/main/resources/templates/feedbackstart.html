@@ -10,7 +10,7 @@
 					<div class="col-lg-12 text-center">
 						<p class="" th:utext="${MSG_FEEDBACK_START}"></p>
 						
-						<form th:action="@{${URL_FEEDBACK_START}}" th:object="${participant}" method="post" onsubmit="setGender()">
+						<form th:action="@{${URL_FEEDBACK_START}}" th:field="${participant}" th:object="${participant}" method="post" onsubmit="setGender()">
 
 					        <input id="project" name="project" th:field="*{project.idProject}" type="hidden" />
 
