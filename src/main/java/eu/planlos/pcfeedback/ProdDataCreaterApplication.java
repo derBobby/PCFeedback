@@ -26,7 +26,7 @@ public class ProdDataCreaterApplication implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws UiTextException, WrongRatingQuestionCountExistingException {
 		
-		if(! dcs.isProdDataAlreadyCreated()) {
+		if(dcs.isProdDataAlreadyCreated()) {
 			LOG.debug("No db init necessary. Already rating questions existing");
 			return;
 		}
