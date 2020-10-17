@@ -78,7 +78,7 @@ public class ProjectController {
 
 		try {
 
-			LOG.debug("Trying to save project: id={} | name={}", project.getIdProject(), project.getName());
+			LOG.debug("Trying to save project: id={} | name={}", project.getIdProject(), project.getProjectName());
 			ps.save(project);
 
 			LOG.debug("Proceeding to projects page");

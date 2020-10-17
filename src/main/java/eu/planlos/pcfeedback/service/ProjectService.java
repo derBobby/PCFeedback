@@ -30,12 +30,12 @@ public class ProjectService {
 	}
 
 	public boolean exists(String projectName) {
-		Project project = projectRepo.findByName(projectName);
+		Project project = projectRepo.findByProjectName(projectName);
 		return project != null ? true : false;
 	}
 
 	public Project findProject(String projectName) {
-		return projectRepo.findByName(projectName);
+		return projectRepo.findByProjectName(projectName);
 	}
 
 	public List<Project> findAll() {

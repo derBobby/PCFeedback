@@ -84,6 +84,8 @@ public class FeedbackController {
 			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
 			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant) {
 		
+		
+		//TODO ParticipantFilter?
 		if(participant == null) {
 			LOG.debug("User tried to access feedback without entering participant details");
 			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_START;
@@ -98,7 +100,7 @@ public class FeedbackController {
 			
 		} catch (RatingQuestionsNotExistentException e) {
 			LOG.error("Fataler Fehler: Konnte Liste von RatingQuestion nicht laden.");
-			LOG.error("project={}, gender={}", project.getName(), gender.name());
+			LOG.error("project={}, gender={}", project.getProjectName(), gender.name());
 			e.printStackTrace();
 			e.getCause();
 		} 
@@ -189,7 +191,7 @@ public class FeedbackController {
 			//Save participant first, might not complete
 			participantService.save(participant);
 			ratingQuestionService.saveFeedback(feedbackMap);
-			freeTextService.createFreeText(project, freeText, participant.getGender());			
+			freeTextService.createAndSaveFreeText(project, freeText, participant.getGender());			
 			
 			//Save the result for later plausibilisation/correction
 			ParticipationResult pr = new ParticipationResult(participant, feedbackMap);

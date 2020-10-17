@@ -20,7 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(
 		uniqueConstraints={
 			@UniqueConstraint(columnNames = {"idProject"}),
-			@UniqueConstraint(columnNames = {"name"}),
+			@UniqueConstraint(columnNames = {"projectName"}),
 })
 public class Project implements Serializable {
 	private static final long serialVersionUID = -8958091265283715683L;
@@ -32,7 +32,7 @@ public class Project implements Serializable {
 	
 	@Column(unique=true, nullable=false)
 	@NotBlank
-	private String name;
+	private String projectName;
 	
 	@Column(nullable=false)
 	private boolean running;
@@ -52,12 +52,12 @@ public class Project implements Serializable {
 	public Project() {
 	}
 	
-	public Project(String name) {
-		this.name = name;
+	public Project(String projectName) {
+		this.projectName = projectName;
 	}
 	
-	public Project(String name, boolean running, Date startDate, Date endDate) {
-		this.name = name;
+	public Project(String projectName, boolean running, Date startDate, Date endDate) {
+		this.projectName = projectName;
 		this.running = running;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -71,12 +71,12 @@ public class Project implements Serializable {
 		this.idProject = idProject;
 	}
 
-	public String getName() {
-		return name;
+	public String getProjectName() {
+		return projectName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 
 	public boolean isRunning() {
@@ -115,7 +115,7 @@ public class Project implements Serializable {
 	 * Functions
 	 */	
 	public String toString() {
-		return String.format("idProject=%s, name=%s", idProject, name);
+		return String.format("idProject=%s, name=%s", idProject, projectName);
 	}
 
 }

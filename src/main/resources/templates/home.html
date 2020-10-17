@@ -14,7 +14,7 @@
 				<div class="col-md-4 border-dark p-3 mb-3" th:each="project : ${projectList}" th:object="${project}">
 					<div class="card mb-3">
 						<div class="card-header text-center">
-							<h3 class="mb-0" th:text="*{name}"></h3>
+							<h3 class="mb-0" th:text="*{projectName}"></h3>
 						</div>
 						<div class="card-block p-3">
 							<table>
@@ -33,7 +33,7 @@
 							</table>
 						</div>
 						<div class="card-footer text-center">
-							<a th:href="@{${URL_PROJECTHOME}+*{name}}" class="btn btn-primary" role="button" th:id="*{idProject}">
+							<a th:href="@{${URL_PROJECTHOME}+*{projectName}}" class="btn btn-primary" role="button" th:id="*{idProject}">
 								<i class="fas fa-play"></i>
 							</a>
 							<script type="text/javascript" th:inline="javascript">
@@ -41,7 +41,7 @@
 								$([['#'+*{idProject}]]).popover({
 									trigger : 'hover',
 									placement : 'bottom',
-									content : 'Zur Umfrage [[*{name}]]',
+									content : 'Zur Umfrage [[*{projectName}]]',
 								})
 							</script>
 						</div>

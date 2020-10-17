@@ -29,12 +29,12 @@ public class UiTextService {
 		UiText uiText = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
 		uiText.setDescription(description);
 		uiText.setText(text);
-		LOG.debug("Updating UiText for: project={}, uiTextKey={}", project.getName(), uiTextKey.name());
+		LOG.debug("Updating UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
 		uiTextRepo.save(uiText);
 	}
 
 	public String getText(Project project, UiTextKey uiTextKey) {
-		LOG.debug("Searching UiText for: project={}, uiTextKey={}", project.getName(), uiTextKey.name());
+		LOG.debug("Searching UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
 		UiText uit = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
 		return uit.getText();
 	}

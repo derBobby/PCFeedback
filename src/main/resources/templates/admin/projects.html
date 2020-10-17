@@ -17,7 +17,7 @@
 				<div  class="col-md-4 border-dark p-3 mb-3" th:each="project : ${projectList}" th:object="${project}">
 					<div class="card mb-3">
 						<div class="card-header text-center">
-							<h3 class="mb-0" th:text="*{name}"></h3>
+							<h3 class="mb-0" th:text="*{projectName}"></h3>
 						</div>
 						<div class="card-block p-3">
 							<table>
@@ -36,16 +36,16 @@
 							</table>
 						</div>
 						<div class="card-footer text-center">
-							<a th:href="@{${URL_ADMIN_EDITUITEXT}+*{name}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'edituitext'">
+							<a th:href="@{${URL_ADMIN_EDITUITEXT}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'edituitext'">
 								<i class="fas fa-quote-right"></i>
 							</a>
-							<a th:href="@{${URL_PROJECTHOME}+*{name}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'projecthome'">
+							<a th:href="@{${URL_PROJECTHOME}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'projecthome'">
 								<i class="fas fa-home"></i>
 							</a>
-							<a th:href="@{${URL_ADMIN_SHOWFEEDBACK}+*{name}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showfeedback'">
+							<a th:href="@{${URL_ADMIN_SHOWFEEDBACK}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showfeedback'">
 								<i class="fas fa-users"></i>
 							</a>
-							<a th:href="@{${URL_ADMIN_SHOWUSERAGENTS}+*{name}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showuseragents'">
+							<a th:href="@{${URL_ADMIN_SHOWUSERAGENTS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showuseragents'">
 								<i class="fas fa-user-tie"></i>
 							</a>
 							<script type="text/javascript" th:inline="javascript">
@@ -54,25 +54,25 @@
 								$([['#'+*{idProject}+edituitext]]).popover({
 									trigger : 'hover',
 									placement : 'bottom',
-									content : 'Texte für Umfrage [[*{name}]] bearbeiten',
+									content : 'Texte für Umfrage [[*{projectName}]] bearbeiten',
 								})
 
 								$([['#'+*{idProject}+projecthome]]).popover({
 									trigger : 'hover',
 									placement : 'bottom',
-									content : 'Zur Umfrage [[*{name}]]',
+									content : 'Zur Umfrage [[*{projectName}]]',
 								})
 
 								$([['#'+*{idProject}+showfeedback]]).popover({
 									trigger : 'hover',
 									placement : 'bottom',
-									content : 'Zu den Ergebnissen der Umfrage [[*{name}]]',
+									content : 'Zu den Ergebnissen der Umfrage [[*{projectName}]]',
 								})
 
 								$([['#'+*{idProject}+showuseragents]]).popover({
 									trigger : 'hover',
 									placement : 'bottom',
-									content : 'Zu den UserAgents der Umfrage [[*{name}]]',
+									content : 'Zu den UserAgents der Umfrage [[*{projectName}]]',
 								})
 							</script>
 						</div>

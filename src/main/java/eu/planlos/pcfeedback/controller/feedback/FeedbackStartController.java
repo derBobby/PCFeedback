@@ -37,7 +37,7 @@ public class FeedbackStartController {
 	private ParticipantService participantService;
 
 	/**
-	 * Shows form to enter participant details like name etc.
+	 * Creates form for participant with empty participant object
 	 * 
 	 * @param model
 	 * @param session
@@ -52,7 +52,7 @@ public class FeedbackStartController {
 		// Filter validates not null
 		Participant participant = participantService.createParticipantForForm(project);
 		
-		LOG.debug("Adding new participant to form: project={}", project.getName());
+		LOG.debug("Adding new participant to form: project={}", project.getProjectName());
 		model.addAttribute(participant);
 
 		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
@@ -101,13 +101,8 @@ public class FeedbackStartController {
 			participantService.exists(participant);
 
 			LOG.debug("Adding participant to session");
-			Object o1 = session.getAttribute(SessionAttributeHelper.PROJECT);
-			System.err.println(o1.hashCode());
 			session.setAttribute(SessionAttributeHelper.PARTICIPANT, participant);
-			Object o2 = session.getAttribute(SessionAttributeHelper.PROJECT);
-			System.err.println(o1.hashCode());
-			System.err.println(o2.hashCode());
-			
+
 			LOG.debug("Proceeding to feedback site");
 			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_QUESTION;
 

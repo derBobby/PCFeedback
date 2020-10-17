@@ -97,10 +97,10 @@ public class DataCreationService {
 		//Throws Exception if not
 		uiTextService.checkEnoughUiTexts(project, false);
 		
-		createFreeText(project, Gender.MALE, 10);
-		createFreeText(project, Gender.FEMALE, 10);
-		createParticipations(project, Gender.MALE, 10);
-		createParticipations(project, Gender.FEMALE, 10);
+//		createFreeText(project, Gender.MALE, 10);
+//		createFreeText(project, Gender.FEMALE, 10);
+//		createParticipations(project, Gender.MALE, 10);
+//		createParticipations(project, Gender.FEMALE, 10);
 		
 	}
 
@@ -246,7 +246,7 @@ public class DataCreationService {
 		
 		while(localCount != 0) {
 			localCount--;			
-			fts.createFreeText(project, ((Long) System.currentTimeMillis()).toString(), gender);
+			fts.createAndSaveFreeText(project, ((Long) System.currentTimeMillis()).toString(), gender);
 		}
 	}
 }

@@ -15,6 +15,7 @@ public class FeedbackValidationService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FeedbackValidationService.class);
 
+	//TODO move to project config
 	@Value("${eu.planlos.pcfeedback.question-count}")
 	public int neededQuestionCount;
 	
@@ -34,13 +35,14 @@ public class FeedbackValidationService {
 				
 				Integer voteFor = feedbackMap.get(idRatingQuestion);
 	
+				//feedback has needed question count but wrong answers
 				if(voteFor == null || (voteFor != RatingQuestionService.OBJECT_ONE && voteFor != RatingQuestionService.OBJECT_TWO)) {
 					LOG.error("Feedback invalid. voteFor={}", voteFor);
 					throw new InvalidFeedbackException("Fehler im Feedback, bitte noch mal versuchen.");
 				}
 			}
-			
-		//feedback has needed question count but wrong answers
+	
+		//feedback has NOT needed question count
 		} else {
 			LOG.error("Feedback invalid: questions given/needed={} / {}", givenQuestionCount, neededQuestionCount);
 			throw new InvalidFeedbackException(String.format("Es wurden nicht alle Fragen beantwortet (%s/%s)", givenQuestionCount, neededQuestionCount));

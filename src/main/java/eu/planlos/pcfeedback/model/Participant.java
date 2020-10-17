@@ -195,7 +195,7 @@ public class Participant implements Serializable {
 	 * Functions
 	 */	
 	public String toString() {
-		return String.format("idParticipant=%s, project=%s, firstname=%s, name=%s, gender=%s", idParticipant, project.getName(), firstname, name, gender.toString());
+		return String.format("idParticipant=%s, project=%s, firstname=%s, name=%s, gender=%s", idParticipant, project.getProjectName(), firstname, name, gender.toString());
 	}
 	
     @Override

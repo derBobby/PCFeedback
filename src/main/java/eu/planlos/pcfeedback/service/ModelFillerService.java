@@ -83,6 +83,7 @@ public class ModelFillerService implements EnvironmentAware {
 			LOG.debug("Preparing model for DEV profile.");
 			model.addAttribute("isDevProfile", true);
 		}
+		
 		if (profiles.contains(ApplicationProfileHelper.REV_PROFILE)) {
 			LOG.debug("Preparing model for REV profile.");
 			model.addAttribute("isRevProfile", true);
@@ -127,7 +128,7 @@ public class ModelFillerService implements EnvironmentAware {
 
 	public void fillUiText(Model model, Project project, UiTextKey uiTextKey) {
 		model.addAttribute(uiTextKey.toString(), ums.getText(project, uiTextKey));
-		model.addAttribute("projectName", project.getName());
+		model.addAttribute("projectName", project.getProjectName());
 	}
 
 	/**

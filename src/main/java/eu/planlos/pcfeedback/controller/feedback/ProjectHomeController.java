@@ -25,12 +25,14 @@ public class ProjectHomeController {
 	private ProjectService ps;
 	
 	/**
-	 * Provides to index page
+	 * Sets chosen project in session and load project home page</br>
+	 * Kind of <b>Step 0</b> in the feedback process.
+	 * 
 	 * @param model
 	 * @return home template to load
 	 */
 	@RequestMapping(ApplicationPathHelper.URL_PROJECTHOME + "{projectName}")
-	public String projectHome(HttpSession session, Model model, @PathVariable("projectName") String projectName) {
+	public String chooseProject(HttpSession session, Model model, @PathVariable("projectName") String projectName) {
 
 		String result = "redirect:" + ApplicationPathHelper.URL_HOME;
 		

@@ -75,7 +75,10 @@
 			</div>
 			
 			<div th:if="${isDevProfile}" class="container text-center text-muted">
+				</br>
 				<p th:text="'SESSION: ' + ${#session.getId()}"></p>
+				<p th:text="'PROJECT: ' + ${#session.getAttribute('project')}"></p>
+				</br>
 				<p th:text="'NAME: ' + ${#authentication.name}"></p>
 				<p th:text="'PRINCIPAL: ' + ${#authentication.principal}"></p>
 				<p th:text="'CREDENTIALS: ' + ${#authentication.credentials}"></p>			

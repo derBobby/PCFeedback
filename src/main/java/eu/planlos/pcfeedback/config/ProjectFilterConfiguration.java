@@ -11,6 +11,9 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.filter.RequestResponseProjectFilter;
 import eu.planlos.pcfeedback.service.ProjectService;
 
+/**
+ * Class configures for which Controllers / URLs the {@link RequestResponseProjectFilter} will be enabled.
+ */
 @Configuration
 public class ProjectFilterConfiguration {
 

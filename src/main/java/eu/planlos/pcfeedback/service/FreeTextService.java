@@ -20,7 +20,7 @@ public class FreeTextService {
 	@Autowired
 	private FreeTextRepository ftRepo;
 	
-	public void createFreeText(Project project, String text, Gender gender) {
+	public void createAndSaveFreeText(Project project, String text, Gender gender) {
 		
 		LOG.debug("Saving free text with length={}", text.length());
 		ftRepo.save(new FreeText(project, text, gender));
