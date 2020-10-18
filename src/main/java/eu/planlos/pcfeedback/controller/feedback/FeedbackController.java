@@ -29,6 +29,7 @@ import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.ParticipationResult;
 import eu.planlos.pcfeedback.model.Project;
+import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.FeedbackValidationService;
@@ -36,6 +37,7 @@ import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
+import eu.planlos.pcfeedback.service.RatingObjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 import eu.planlos.pcfeedback.service.UserAgentService;
 
@@ -69,6 +71,12 @@ public class FeedbackController {
 	
 	@Autowired
 	private ParticipationResultService participationResultService;
+
+	@Autowired
+	private RatingQuestionService rqs;
+	
+	@Autowired
+	private RatingObjectService ros;
 	
 	/**
 	 * User is redirected to this controller after successfully writing participant info to session.
@@ -188,6 +196,8 @@ public class FeedbackController {
 		
 		try {
 			
+			finalValidation(project, participant, feedbackMap);
+			
 			//Save participant first, might not complete
 			participantService.save(participant);
 			ratingQuestionService.saveFeedback(feedbackMap);
@@ -204,6 +214,10 @@ public class FeedbackController {
 			LOG.error("This should not happen, because session is destroyed on submitting feedback");
 			resource = ERROR_TEMPLATE;
 			
+		} catch (InvalidFeedbackException e) {
+			LOG.error("Project is not in all objects the same: project, participant, etc.");
+			resource = ERROR_TEMPLATE;
+			
 		} finally {
 			if(resource.equals(ERROR_TEMPLATE)) {
 				mfs.fillGlobal(model);
@@ -211,5 +225,25 @@ public class FeedbackController {
 		}
 		
 		return resource;
+	}
+
+	private void finalValidation(Project project, Participant participant, Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
+
+		Long project1 = project.getIdProject();
+		Long project2 = participant.getProject().getIdProject();
+		
+		if(project1 != project2) {
+			throw new InvalidFeedbackException("Projekt in folgenden Objekten nicht identisch: Projekt, Teilnehmer.");
+		}
+
+		Long idRatingObject = feedbackMap.keySet().iterator().next();
+		RatingObject ratingObject = ros.findByIdRatingObject(idRatingObject);
+		
+		RatingQuestion ratingQuestion = rqs.findByRatingObject(ratingObject);
+		Long project3 = ratingQuestion.getProject().getIdProject();
+		
+		if(project1 != project3) {
+			throw new InvalidFeedbackException("Projekt in folgenden Objekten nicht identisch: Projekt, Frage.");
+		}		
 	}
 }

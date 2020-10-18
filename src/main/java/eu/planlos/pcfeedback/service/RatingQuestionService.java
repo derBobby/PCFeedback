@@ -248,4 +248,9 @@ public class RatingQuestionService {
 			throw new WrongRatingQuestionCountExistingException();
 		}
 	}
+
+
+	public RatingQuestion findByRatingObject(RatingObject ratingObject) {
+		return rqRepository.findByObjectOne(ratingObject);
+	}
 }

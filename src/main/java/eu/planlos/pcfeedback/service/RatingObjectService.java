@@ -17,4 +17,8 @@ public class RatingObjectService {
 	public List<RatingObject> saveAll(List<RatingObject> ratingObjectList) {
 		return (List<RatingObject>) ratingObjectRepository.saveAll(ratingObjectList);
 	}
+	
+	public RatingObject findByIdRatingObject(Long idRatingObject) {
+		return ratingObjectRepository.findById(idRatingObject).get();
+	}
 }

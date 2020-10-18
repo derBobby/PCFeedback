@@ -97,10 +97,10 @@ public class DataCreationService {
 		//Throws Exception if not
 		uiTextService.checkEnoughUiTexts(project, false);
 		
-//		createFreeText(project, Gender.MALE, 10);
-//		createFreeText(project, Gender.FEMALE, 10);
-//		createParticipations(project, Gender.MALE, 10);
-//		createParticipations(project, Gender.FEMALE, 10);
+		createFreeText(project, Gender.MALE, 10);
+		createFreeText(project, Gender.FEMALE, 10);
+		createParticipations(project, Gender.MALE, 10);
+		createParticipations(project, Gender.FEMALE, 10);
 		
 	}
 
