@@ -24,10 +24,9 @@ public class UiTextService {
 	@Autowired
 	private UiTextRepository uiTextRepo;
 	
-	public void updateText(Project project, UiTextKey uiTextKey, String description, String text) {
+	public void updateText(Project project, UiTextKey uiTextKey, String text) {
 		
 		UiText uiText = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
-		uiText.setDescription(description);
 		uiText.setText(text);
 		LOG.debug("Updating UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
 		uiTextRepo.save(uiText);

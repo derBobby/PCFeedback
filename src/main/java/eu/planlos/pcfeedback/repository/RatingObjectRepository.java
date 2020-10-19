@@ -7,4 +7,6 @@ import eu.planlos.pcfeedback.model.RatingObject;
 
 @Repository
 public interface RatingObjectRepository extends CrudRepository<RatingObject, Long>{
+
+	RatingObject findByIdRatingObject(Long idRatingObject);
 }

@@ -66,5 +66,5 @@ public interface RatingQuestionRepository extends CrudRepository<RatingQuestion,
 	
 	public int countByProjectAndGender(Project project, Gender male);
 	
-	public RatingQuestion findByObjectOne(RatingObject ratingObject);
+	public RatingQuestion findByIdRatingQuestion(long idRatingQuestion);
 }

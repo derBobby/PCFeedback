@@ -19,14 +19,18 @@ import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
 import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ProjectService;
+import eu.planlos.pcfeedback.service.UiTextService;
 
 @Controller
 public class ProjectController {
 
 	private static Logger LOG = LoggerFactory.getLogger(ProjectController.class);
-	
+
 	@Autowired
 	private ProjectService ps;
+	
+	@Autowired
+	private UiTextService uts;
 	
 	@Autowired
 	private ModelFillerService mfs;
@@ -80,7 +84,8 @@ public class ProjectController {
 
 			LOG.debug("Trying to save project: id={} | name={}", project.getIdProject(), project.getProjectName());
 			ps.save(project);
-
+			uts.initializeUiText(project);
+			
 			LOG.debug("Proceeding to projects page");
 			
 			return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;

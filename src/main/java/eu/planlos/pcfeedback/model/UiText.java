@@ -25,10 +25,9 @@ public class UiText {
 	
 	@Column(unique=false, nullable=false)
 	private UiTextKey uiTextKey;
-	
-	@Column(unique = false)
+
 	private String description;
-	
+		
 	@Column(unique = false, columnDefinition="LONGTEXT")
 	private String text;
 	
@@ -37,20 +36,21 @@ public class UiText {
 	@JoinColumn(name="project", nullable=false)
 	private Project project;
 
+
 	public UiText() {
 	}
 	
-	public UiText(Project project, UiTextKey uiTextKey, String description, String text) {
+	public UiText(Project project, UiTextKey uiTextKey, String text) {
 		this.project = project;
 		this.uiTextKey = uiTextKey;
-		this.description = description;
+		this.description = uiTextKey.getDescription();
 		this.text = text;
 	}
 	
 	public UiText(Project project, UiTextKey uiTextKey) {
 		this.project = project;
 		this.uiTextKey = uiTextKey;
-		this.description = null;
+		this.description = uiTextKey.getDescription();
 		this.text = null;
 	}
 	
@@ -60,14 +60,6 @@ public class UiText {
 
 	public void setUiTextKey(UiTextKey uiTextKey) {
 		this.uiTextKey = uiTextKey;
-	}
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public String getText() {
@@ -92,5 +84,13 @@ public class UiText {
 
 	public void setIdUiText(Long idUiText) {
 		this.idUiText = idUiText;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

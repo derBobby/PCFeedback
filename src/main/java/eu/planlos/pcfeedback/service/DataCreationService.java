@@ -147,13 +147,11 @@ public class DataCreationService {
 		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_PROJECTHOME,
-				"Begrüßung",
 				"Gib uns Feedback und hilf uns die Teennight noch besser zu machen. Unter den Teilnehmern verlosen wir zwei Freiplätze für die Teennight 2020!"
 			);
 		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_PRICEGAME,
-				"Gewinnspielhinweise",
 				priceGameStatement()
 			);
 		
@@ -162,19 +160,16 @@ public class DataCreationService {
 		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_FEEDBACK_START,
-				"Formular",
 				"Nach der Teennight werden deine Daten gelöscht!"
 			);
 		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_FEEDBACK_QUESTION,
-				"Fragestellung",
 				"Was ist dir während der Teennight <u>wichtiger</u>?"
 			);
 		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_FEEDBACK_FREETEXT,
-				"Freitext",
 				"HIER IST PLATZ FÜR ALLES WAS DU SAGEN WILLST:<br>" +
 						"- das feier ich an der Teennight<br>" +
 						"- das könntet ihr noch besser machen<br>" +
@@ -184,7 +179,6 @@ public class DataCreationService {
 		uiTextService.updateText(
 				project,
 				UiTextKey.MSG_FEEDBACK_END,
-				"Ende",
 				"Die Teennight sagt danke! Dein Feedback hilft uns sehr. Du bist jetzt im Lostopf fürs Closing."
 			);
 	}

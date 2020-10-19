@@ -38,15 +38,15 @@ public class Project implements Serializable {
 	private boolean running;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+	@DateTimeFormat(pattern="dd.MM.yyyy hh:mm")
 	private Date saveDate;
 
+	@DateTimeFormat(pattern="dd.MM.yyyy hh:mm")
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private Date startDate;
 
+	@DateTimeFormat(pattern="dd.MM.yyyy hh:mm")
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private Date endDate;
 
 	public Project() {

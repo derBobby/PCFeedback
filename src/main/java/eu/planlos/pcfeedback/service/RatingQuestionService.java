@@ -249,8 +249,7 @@ public class RatingQuestionService {
 		}
 	}
 
-
-	public RatingQuestion findByRatingObject(RatingObject ratingObject) {
-		return rqRepository.findByObjectOne(ratingObject);
+	public RatingQuestion findByIdRatingQuestion(long idRatingQuestion) {
+		return rqRepository.findByIdRatingQuestion(idRatingQuestion);
 	}
 }

@@ -229,18 +229,17 @@ public class FeedbackController {
 
 	private void finalValidation(Project project, Participant participant, Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
 
-		Long project1 = project.getIdProject();
-		Long project2 = participant.getProject().getIdProject();
+		long project1 = project.getIdProject();
+		long project2 = participant.getProject().getIdProject();
 		
 		if(project1 != project2) {
 			throw new InvalidFeedbackException("Projekt in folgenden Objekten nicht identisch: Projekt, Teilnehmer.");
 		}
 
-		Long idRatingObject = feedbackMap.keySet().iterator().next();
-		RatingObject ratingObject = ros.findByIdRatingObject(idRatingObject);
+		long idRatingQuestion = feedbackMap.keySet().iterator().next();
+		RatingQuestion ratingQuestion = rqs.findByIdRatingQuestion(idRatingQuestion);
 		
-		RatingQuestion ratingQuestion = rqs.findByRatingObject(ratingObject);
-		Long project3 = ratingQuestion.getProject().getIdProject();
+		long project3 = ratingQuestion.getProject().getIdProject();
 		
 		if(project1 != project3) {
 			throw new InvalidFeedbackException("Projekt in folgenden Objekten nicht identisch: Projekt, Frage.");
