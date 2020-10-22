@@ -61,7 +61,7 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS)
-	public String submitProject(Model model, @ModelAttribute("participant") @Valid Project project, BindingResult bindingResult) {
+	public String submitProject(Model model, @ModelAttribute("project") @Valid Project project, BindingResult bindingResult) {
 		
 		String buttonText = "Hinzufügen";
 		if(project.getIdProject() != null) {
