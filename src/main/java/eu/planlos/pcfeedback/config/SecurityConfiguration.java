@@ -91,7 +91,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			 */
 			.and().logout()
 				.logoutUrl(ApplicationPathHelper.URL_LOGOUT)
-				.logoutSuccessUrl(ApplicationPathHelper.URL_PROJECTHOME)
+				.logoutSuccessUrl(ApplicationPathHelper.URL_HOME)
 				.invalidateHttpSession(true)
 				.clearAuthentication(true)
 				

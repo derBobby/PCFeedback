@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -41,9 +42,6 @@ public class ProjectController {
 		List<Project> projectList = ps.findAll();
 		model.addAttribute("projectList", projectList);
 
-		model.addAttribute("URL_ADMIN_SHOWFEEDBACK", ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK);
-		model.addAttribute("URL_PROJECTHOME", ApplicationPathHelper.URL_PROJECTHOME);
-		model.addAttribute("URL_ADMIN_ADDPROJECTS", ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS);
 		mfs.fillGlobal(model);
 		
 		return ApplicationPathHelper.RES_ADMIN_PROJECTS;
@@ -54,6 +52,17 @@ public class ProjectController {
 		
 		Project project = new Project();
 
+		mfs.fillProjectDetails(model, project, "Hinzufügen");
+		mfs.fillGlobal(model);
+
+		return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;
+	}	
+	
+	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS + "/{projectName}")
+	public String editProject(Model model, @PathVariable("projectName") String projectName) {
+		
+		Project project = ps.findProject(projectName);
+		
 		mfs.fillProjectDetails(model, project, "Hinzufügen");
 		mfs.fillGlobal(model);
 
@@ -84,7 +93,10 @@ public class ProjectController {
 
 			LOG.debug("Trying to save project: id={} | name={}", project.getIdProject(), project.getProjectName());
 			ps.save(project);
-			uts.initializeUiText(project);
+			
+			if(project.getIdProject() == null) {
+				uts.initializeUiText(project);
+			}
 			
 			LOG.debug("Proceeding to projects page");
 			

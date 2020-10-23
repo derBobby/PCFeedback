@@ -64,15 +64,14 @@ public class ModelFillerService implements EnvironmentAware {
 		LOG.debug("Preparing model for anonymous area");
 		model.addAttribute("URL_LOGIN_FORM", ApplicationPathHelper.URL_LOGIN_FORM);
 		model.addAttribute("URL_LOGIN", ApplicationPathHelper.URL_LOGIN);
-
+		
 		LOG.debug("Preparing model for administration area");
+		model.addAttribute("URL_ADMIN_PROJECTDETAILS", ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS);
 		model.addAttribute("URL_ADMIN_PROJECTS", ApplicationPathHelper.URL_ADMIN_PROJECTS);
 		model.addAttribute("URL_ADMIN_SHOWFEEDBACK", ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK); //TODO notwendig?
 		model.addAttribute("URL_ADMIN_EDITUITEXT", ApplicationPathHelper.URL_ADMIN_EDITUITEXT); //TODO notwendig?
 		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS); //TODO notwendig?
 		model.addAttribute("URL_LOGOUT", ApplicationPathHelper.URL_LOGOUT);
-
-		
 		
 		/*
 		 * URLs for DEV profile

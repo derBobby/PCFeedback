@@ -8,7 +8,7 @@
 				<div class="container">
 					<h1 class="display-4">Projektübersicht</h1>
 					<p class="lead">Hier sind alle verfügbaren Projekte aufgelistet.</p>
-					<a th:href="@{${URL_ADMIN_ADDPROJECTS}}" class="btn btn-primary" role="button" th:id="*{idProject}">
+					<a th:href="@{${URL_ADMIN_PROJECTDETAILS}}" class="btn btn-primary" role="button" th:id="*{idProject}">
 						<i class="fas fa-plus"></i>&nbsp;&nbsp;Projekt hinzufügen
 					</a>
 				</div>
@@ -36,7 +36,10 @@
 							</table>
 						</div>
 						<div class="card-footer text-center">
-							<a th:href="@{${URL_ADMIN_EDITUITEXT}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'edituitext'">
+							<a th:href="@{${URL_ADMIN_PROJECTDETAILS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'edituitext'">
+								<i class="fas fa-wrench"></i>
+							</a>
+							<a th:href="@{${URL_ADMIN_EDITUITEXT}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'editproject'">
 								<i class="fas fa-quote-right"></i>
 							</a>
 							<a th:href="@{${URL_PROJECTHOME}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'projecthome'">
