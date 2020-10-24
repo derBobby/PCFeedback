@@ -29,7 +29,6 @@ import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.ParticipationResult;
 import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.FeedbackValidationService;
@@ -37,7 +36,6 @@ import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
-import eu.planlos.pcfeedback.service.RatingObjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 import eu.planlos.pcfeedback.service.UserAgentService;
 
@@ -74,9 +72,6 @@ public class FeedbackController {
 
 	@Autowired
 	private RatingQuestionService rqs;
-	
-	@Autowired
-	private RatingObjectService ros;
 	
 	/**
 	 * User is redirected to this controller after successfully writing participant info to session.

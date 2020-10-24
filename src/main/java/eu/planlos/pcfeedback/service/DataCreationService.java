@@ -81,8 +81,10 @@ public class DataCreationService {
 		
 		cal.set(2002, 2, 2, 2, 2, 2);
 		Date endDate = cal.getTime();
+
+		List<RatingObject> roList = createRatingObjects();
 		
-		Project project = new Project(projectName, true, startDate, endDate);
+		Project project = new Project(projectName, roList, true, startDate, endDate);
 		projectService.save(project);
 		
 		//Create RatingQuestions and check if enough in method are created.
@@ -104,8 +106,7 @@ public class DataCreationService {
 		
 	}
 
-	private void createRatingQuestions(Project project) {
-
+	private List<RatingObject> createRatingObjects() {
 		// ~~~~~~~~~~~~ RO ~~~~~~~~~~~~
 		
 		List<RatingObject> roList = new ArrayList<>();
@@ -126,12 +127,19 @@ public class DataCreationService {
 		roService.saveAll(roList);
 		
 		LOG.debug("Demo data created: rating objects");
+		
+		return roList;
+	}
+
+	private void createRatingQuestions(Project project) throws ProjectAlreadyExistingException {
 
 		// ~~~~~~~~~~~~ RQ ~~~~~~~~~~~~
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
-		rqList.addAll(rqService.create(project, roList));
-		rqService.saveAll(rqList);		
+		rqList.addAll(rqService.create(project));
+		project.setRunning(true);
+		rqService.saveAll(rqList);
+		projectService.save(project);
 		
 		LOG.debug("Demo data created: rating questions");	
 	}

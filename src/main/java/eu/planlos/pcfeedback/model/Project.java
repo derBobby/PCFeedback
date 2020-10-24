@@ -2,20 +2,19 @@ package eu.planlos.pcfeedback.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Entity
 @Table(
@@ -46,14 +45,22 @@ public class Project implements Serializable {
 	@DateTimeFormat(pattern = "dd.MM.yyyy HH:mm")
 	private Date endDate;
 
+	@OneToMany
+	private List<RatingObject> ratingObjectList;
+
 	public Project() {
 	}
-	
+
 	public Project(String projectName) {
 		this.projectName = projectName;
 	}
+
+	public Project(List<RatingObject> roList) {
+		this.ratingObjectList = roList;
+	}
 	
-	public Project(String projectName, boolean running, Date startDate, Date endDate) {
+	public Project(String projectName, List<RatingObject> ratingObjectList, boolean running, Date startDate, Date endDate) {
+		this.ratingObjectList = ratingObjectList;
 		this.projectName = projectName;
 		this.running = running;
 		this.startDate = startDate;
@@ -113,6 +120,14 @@ public class Project implements Serializable {
 	 */	
 	public String toString() {
 		return String.format("idProject=%s, name=%s", idProject, projectName);
+	}
+
+	public List<RatingObject> getRatingObjectList() {
+		return this.ratingObjectList;
+	}
+
+	public void setRatingObjectList(List<RatingObject> ratingObjectList) {
+		this.ratingObjectList = ratingObjectList;
 	}
 
 }

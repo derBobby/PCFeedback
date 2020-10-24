@@ -1,5 +1,6 @@
 package eu.planlos.pcfeedback.controller.admin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
 import eu.planlos.pcfeedback.model.Project;
+import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ProjectService;
 import eu.planlos.pcfeedback.service.UiTextService;
@@ -50,7 +52,11 @@ public class ProjectController {
 	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS)
 	public String addProject(Model model) {
 		
-		Project project = new Project();
+		List<RatingObject> roList = new ArrayList<>();
+		roList.add(new RatingObject("Wertungsobjekt 1"));
+		roList.add(new RatingObject("Wertungsobjekt 2"));
+		roList.add(new RatingObject("Wertungsobjekt 3"));
+		Project project = new Project(roList);
 
 		mfs.fillProjectDetails(model, project, "Hinzufügen");
 		mfs.fillGlobal(model);

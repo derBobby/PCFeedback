@@ -156,10 +156,10 @@ public class RatingQuestionService {
 		rqRepository.saveAll(rqList);
 	}
 	
-	public List<RatingQuestion> create(Project project, List<RatingObject> roList) {
+	public List<RatingQuestion> create(Project project) {
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
-		
+		List<RatingObject> roList = project.getRatingObjectList();
 		for (RatingObject roOne : roList) {
 					
 			for (RatingObject roTwo : roList) {
