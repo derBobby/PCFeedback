@@ -69,7 +69,7 @@ public class RatingObject implements Serializable {
             return false;
         }
         RatingObject ro = (RatingObject) o;
-        return this.idRatingObject == ro.getIdRatingObject();
+        return this.name.equals(ro.getName());
     }
 
     @Override

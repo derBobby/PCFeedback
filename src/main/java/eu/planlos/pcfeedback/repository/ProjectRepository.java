@@ -11,4 +11,5 @@ import eu.planlos.pcfeedback.model.Project;
 public interface ProjectRepository extends CrudRepository<Project, Long>{
 	public Project findByProjectName(String projectName);
 	public List<Project> findAll();
+	public Project findByIdProject(Long idProject);
 }

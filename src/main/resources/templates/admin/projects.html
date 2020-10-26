@@ -57,7 +57,13 @@
 								$([['#'+*{idProject}+edituitext]]).popover({
 									trigger : 'hover',
 									placement : 'bottom',
-									content : 'Texte für Umfrage [[*{projectName}]] bearbeiten',
+									content : 'Projekt [[*{projectName}]] und Bewertungsobjekte bearbeiten',
+								})
+									
+								$([['#'+*{idProject}+editproject]]).popover({
+									trigger : 'hover',
+									placement : 'bottom',
+									content : 'Beschreibungstexte für [[*{projectName}]] bearbeiten',
 								})
 
 								$([['#'+*{idProject}+projecthome]]).popover({
@@ -69,13 +75,13 @@
 								$([['#'+*{idProject}+showfeedback]]).popover({
 									trigger : 'hover',
 									placement : 'bottom',
-									content : 'Zu den Ergebnissen der Umfrage [[*{projectName}]]',
+									content : 'Zu den Ergebnissen von [[*{projectName}]]',
 								})
 
 								$([['#'+*{idProject}+showuseragents]]).popover({
 									trigger : 'hover',
 									placement : 'bottom',
-									content : 'Zu den UserAgents der Umfrage [[*{projectName}]]',
+									content : 'Zu den UserAgents von [[*{projectName}]]',
 								})
 							</script>
 						</div>

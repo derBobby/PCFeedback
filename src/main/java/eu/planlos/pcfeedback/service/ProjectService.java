@@ -25,7 +25,7 @@ public class ProjectService {
 		try {
 			projectRepo.save(project);
 		} catch (DataIntegrityViolationException e) {
-			throw new ProjectAlreadyExistingException();
+			throw new ProjectAlreadyExistingException(String.format("Projekt mit Namen {} existiert bereits", project.getProjectName()));
 		}
 	}
 
@@ -46,5 +46,9 @@ public class ProjectService {
 		LOG.debug("RESET: Project");
 		projectRepo.deleteAll();
 		return;
+	}
+
+	public Project findProject(Long idProject) {
+		return projectRepo.findByIdProject(idProject);
 	}
 }

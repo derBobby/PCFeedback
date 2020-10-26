@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.exceptions.DuplicateRatingObjectException;
 import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
 import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ProjectService;
+import eu.planlos.pcfeedback.service.RatingObjectService;
 import eu.planlos.pcfeedback.service.UiTextService;
 
 @Controller
@@ -37,6 +39,9 @@ public class ProjectController {
 	
 	@Autowired
 	private ModelFillerService mfs;
+
+	@Autowired
+	private RatingObjectService ros;
 	
 	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTS)
 	public String projects(Model model) {
@@ -58,7 +63,7 @@ public class ProjectController {
 		roList.add(new RatingObject("Wertungsobjekt 3"));
 		Project project = new Project(roList);
 
-		mfs.fillProjectDetails(model, project, "Hinzufügen");
+		mfs.fillProjectDetails(model, project);
 		mfs.fillGlobal(model);
 
 		return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;
@@ -69,25 +74,20 @@ public class ProjectController {
 		
 		Project project = ps.findProject(projectName);
 		
-		mfs.fillProjectDetails(model, project, "Hinzufügen");
+		mfs.fillProjectDetails(model, project);
 		mfs.fillGlobal(model);
 
 		return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS)
-	public String submitProject(Model model, @ModelAttribute("project") @Valid Project project, BindingResult bindingResult) {
-		
-		String buttonText = "Hinzufügen";
-		if(project.getIdProject() != null) {
-			buttonText = "Speichern";
-		}
+	public String submitProject(Model model, @ModelAttribute("project") @Valid Project uiProject, BindingResult bindingResult) {
 		
 		// validate model input
 		if (bindingResult.hasErrors()) {
 			LOG.debug("Input from form not valid");
 
-			mfs.fillProjectDetails(model, project, buttonText);
+			mfs.fillProjectDetails(model, uiProject);
 			mfs.fillGlobal(model);
 			
 			return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;
@@ -97,22 +97,34 @@ public class ProjectController {
 
 		try {
 
-			LOG.debug("Trying to save project: id={} | name={}", project.getIdProject(), project.getProjectName());
-			ps.save(project);
-			
-			if(project.getIdProject() == null) {
-				uts.initializeUiText(project);
+			boolean isNewProject = false;
+			if(uiProject.getIdProject() == null) {
+				isNewProject = true;
 			}
+			
+			LOG.debug("Trying to save project: id={} | name={}", uiProject.getIdProject(), uiProject.getProjectName());
+			
+			ros.validateUniqueAndSaveList(uiProject.getRatingObjectList());
+
+			ps.save(uiProject);
+
+			if(isNewProject) {
+				LOG.debug("Adding UiTexts for new Project");
+				uts.initializeUiText(uiProject);
+			}
+			
 			
 			LOG.debug("Proceeding to projects page");
 			
 			return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
 
-		} catch (ProjectAlreadyExistingException e) {
+		} catch (ProjectAlreadyExistingException | DuplicateRatingObjectException e) {
 
-			LOG.error("Project exists already, returning to form");
+			LOG.error(e.getMessage());
 			
-			mfs.fillProjectDetails(model, project, buttonText);
+			model.addAttribute("globalError", e.getMessage());
+			
+			mfs.fillProjectDetails(model, uiProject);
 			mfs.fillGlobal(model);
 			
 			return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;

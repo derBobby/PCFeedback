@@ -71,17 +71,60 @@
 							    });
 							</script>
 
+							<h4 class="mt-4">Bewertungsobjekte</h4>
+
 							<div th:remove="tag" th:each="ratingObject, iterStat : *{ratingObjectList}" th:object="${ratingObject}">
-								<div class="form-group">								   
+								
+								<div class="input-group mb-3">	
+									<div class="input-group-prepend">
+										<span class="input-group-text" th:id="'basic-addon'+${iterStat.index}" th:text="${iterStat.count}"></span>
+									</div>															   
 									<input type="text"
-										th:field="${project.ratingObjectList[__${iterStat.index}__].name}" class="form-control" required="required" />
+										th:field="${project.ratingObjectList[__${iterStat.index}__].name}" class="form-control" required="required"
+										th:attr="aria-describedby='basic-addon'+${iterStat.index}" />
 									<span th:errors="${project.ratingObjectList[__${iterStat.index}__].name}" class="text-warning"></span>
-								</div>		
+								</div>
+																
 							</div>
+							
+							<div id="buttonMarker"></div>
+							
+							<div>
+								<p class="text-error" th:text="${globalError}"></p>
+							</div>
+							
 							<div class="form-group mb-0">
-								<div>
-									<button type="submit" id="submit" class="btn btn-primary" th:inline="text">
-										[[${buttonText}]]<br /><i class="fas fa-save"></i>
+								<div class="form-group">
+									<button type="button" id="addRatingObject" class="btn btn-secondary">
+										Bewertungsobjekt<br /><i class="fas fa-plus"></i>
+									</button>
+									
+									<script th:inline="javascript">
+									
+										var ratingObjectNumber = [[${#lists.size(project.ratingObjectList)}]];
+										var ratingObjectIndex = [[${#lists.size(project.ratingObjectList)}]];
+									
+										$(document).ready(function(){
+											$("#addRatingObject").click(function(){
+												ratingObjectNumber += 1;
+												$("#buttonMarker").before(""
+													+ "<div class='input-group mb-3'>"	
+													+ "	<div class='input-group-prepend'>"
+													+ "		<span class='input-group-text' id='basic-addon" + ratingObjectIndex + "'>" + ratingObjectNumber + "</span>"
+													+ "	</div>"
+													+ "	<input type='text'"
+													+ "		id='ratingObjectList" + ratingObjectIndex + ".name'"
+													+ "		name='ratingObjectList[" + ratingObjectIndex + "].name'"
+													+ "		value='Wertungsobjekt'" + ratingObjectNumber
+													+ "		class='form-control' required='required'"
+													+ "		aria-describedby='basic-addon" +  ratingObjectIndex + "' />"
+													+ "</div>");
+												ratingObjectIndex += 1;
+												});
+											});
+									</script>
+									<button type="submit" id="submit" class="btn btn-primary">
+										Speichern<br /><i class="fas fa-save"></i>
 									</button>
 								</div>
 							</div>

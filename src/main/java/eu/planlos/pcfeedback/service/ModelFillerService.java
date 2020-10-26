@@ -136,9 +136,8 @@ public class ModelFillerService implements EnvironmentAware {
 	 * @param urlSubmit URL which shall form be submitted to
 	 * @param buttonText Text to display on Button
 	 */
-	public void fillProjectDetails(Model model, Project project, String buttonText) {
+	public void fillProjectDetails(Model model, Project project) {
 		model.addAttribute("project", project);
 		model.addAttribute("urlSubmit", ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS);
-		model.addAttribute("buttonText", buttonText);
 	}
 }

@@ -106,6 +106,7 @@ public class FeedbackController {
 			LOG.error("project={}, gender={}", project.getProjectName(), gender.name());
 			e.printStackTrace();
 			e.getCause();
+			//TODO What happens here?
 		} 
 				
 		model.addAttribute("ratingQuestionList", ratingQuestionList);

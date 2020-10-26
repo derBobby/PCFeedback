@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import eu.planlos.pcfeedback.exceptions.DuplicateRatingObjectException;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
@@ -59,7 +60,7 @@ public class DataCreationService {
 	
 	@PostConstruct
 	private void initialize() throws WrongRatingQuestionCountExistingException, UiTextException,
-			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException {
+			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 		
 		LOG.debug("Initializing database");
 		createSampleData("Demo-Projekt");
@@ -72,7 +73,7 @@ public class DataCreationService {
 		LOG.debug("Initializing database ... DONE");		
 	}
 
-	private void createSampleData(String projectName) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException {
+	private void createSampleData(String projectName) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 
 		Calendar cal = Calendar.getInstance();
 		
@@ -106,7 +107,7 @@ public class DataCreationService {
 		
 	}
 
-	private List<RatingObject> createRatingObjects() {
+	private List<RatingObject> createRatingObjects() throws DuplicateRatingObjectException {
 		// ~~~~~~~~~~~~ RO ~~~~~~~~~~~~
 		
 		List<RatingObject> roList = new ArrayList<>();
@@ -124,7 +125,9 @@ public class DataCreationService {
 		roList.add(new RatingObject("gutes Essen / guter Megabrunch"));
 		roList.add(new RatingObject("neue Leute kennenlernen"));
 		roList.add(new RatingObject("gute Zeit mit meinen Teenkreis Mitarbeitern haben"));		
-		roService.saveAll(roList);
+
+		roService.validateUniqueAndSaveList(roList);
+
 		
 		LOG.debug("Demo data created: rating objects");
 		
