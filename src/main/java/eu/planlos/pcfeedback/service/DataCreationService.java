@@ -63,17 +63,17 @@ public class DataCreationService {
 			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 		
 		LOG.debug("Initializing database");
-		createSampleData("Demo-Projekt");
-		createSampleData("Demo-Projekt 1");
-		createSampleData("Demo-Projekt 2");
-		createSampleData("Demo-Projekt 3");
-		createSampleData("Demo-Projekt 4");
-		createSampleData("Demo-Projekt 5");
-		createSampleData("Demo-Projekt 6");
+		createSampleData("Demo-Projekt", true);
+		createSampleData("Demo-Projekt 1", false);
+		createSampleData("Demo-Projekt 2", true);
+		createSampleData("Demo-Projekt 3", true);
+		createSampleData("Demo-Projekt 4", true);
+		createSampleData("Demo-Projekt 5", false);
+		createSampleData("Demo-Projekt 6", false);
 		LOG.debug("Initializing database ... DONE");		
 	}
 
-	private void createSampleData(String projectName) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
+	private void createSampleData(String projectName, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 
 		Calendar cal = Calendar.getInstance();
 		
@@ -85,26 +85,29 @@ public class DataCreationService {
 
 		List<RatingObject> roList = createRatingObjects();
 		
-		Project project = new Project(projectName, roList, true, startDate, endDate);
+		Project project = new Project(projectName, roList, false, startDate, endDate);
 		projectService.save(project);
-		
-		//Create RatingQuestions and check if enough in method are created.
-		createRatingQuestions(project);		
-		
-		//Throws Exception if not
-		rqService.checkEnoughRatingQuestions(project, false);
-		
+
 		//Create UiTexts and check if enough in method are created.
 		createUiText(project);
-		
+
 		//Throws Exception if not
 		uiTextService.checkEnoughUiTexts(project, false);
+
+		if(! active) {
+			return;
+		}
+
+		//Create RatingQuestions and check if enough in method are created.
+		createRatingQuestions(project);		
+
+		//Throws Exception if not
+		rqService.checkEnoughRatingQuestions(project, false);
 		
 		createFreeText(project, Gender.MALE, 10);
 		createFreeText(project, Gender.FEMALE, 10);
 		createParticipations(project, Gender.MALE, 10);
-		createParticipations(project, Gender.FEMALE, 10);
-		
+		createParticipations(project, Gender.FEMALE, 10);		
 	}
 
 	private List<RatingObject> createRatingObjects() throws DuplicateRatingObjectException {

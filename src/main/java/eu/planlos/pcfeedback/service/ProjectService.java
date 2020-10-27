@@ -51,4 +51,8 @@ public class ProjectService {
 	public Project findProject(Long idProject) {
 		return projectRepo.findByIdProject(idProject);
 	}
+
+	public List<Project> findAllByRunning(boolean running) {
+		return projectRepo.findAllByRunning(running);
+	}
 }

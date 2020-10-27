@@ -1,8 +1,11 @@
 package eu.planlos.pcfeedback.controller.admin;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -21,9 +24,11 @@ import eu.planlos.pcfeedback.exceptions.DuplicateRatingObjectException;
 import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
 import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.RatingObject;
+import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ProjectService;
 import eu.planlos.pcfeedback.service.RatingObjectService;
+import eu.planlos.pcfeedback.service.RatingQuestionService;
 import eu.planlos.pcfeedback.service.UiTextService;
 
 @Controller
@@ -42,6 +47,9 @@ public class ProjectController {
 
 	@Autowired
 	private RatingObjectService ros;
+
+	@Autowired
+	private RatingQuestionService rqService;
 	
 	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTS)
 	public String projects(Model model) {
@@ -129,5 +137,28 @@ public class ProjectController {
 			
 			return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;
 		}
+	}
+	
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_PROJECTRUN + "{projectName}")
+	public String runProject(Model model, ServletResponse response, @PathVariable String projectName) throws ProjectAlreadyExistingException, IOException {
+		
+		HttpServletResponse res = (HttpServletResponse) response;
+
+		Project project = ps.findProject(projectName);
+		if(project == null) {
+			LOG.error("Project name='{}' does not exist -> sending 400", projectName);
+			res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
+			return null;
+		}
+	
+		project.setRunning(true);
+		
+		List<RatingQuestion> rqList = new ArrayList<>();
+		rqList.addAll(rqService.create(project));
+		project.setRunning(true);
+		rqService.saveAll(rqList);
+		ps.save(project);
+		
+		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
 	}
 }

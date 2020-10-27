@@ -8,9 +8,9 @@
 				<div class="card-header text-center"><h3 class="mb-0">Projektdetails</h3></div>
 				<div class="card-block p-3">				
 					<div class="col-lg-12 text-center">
-						<form th:action="@{${urlSubmit}}" th:object="${project}" method="post">
+						<form th:action="@{${URL_ADMIN_PROJECTDETAILS}}" th:object="${project}" method="post">
 
-					        <input id="project" name="project" th:field="*{idProject}" type="hidden" />
+						  <input id="project" name="project" th:field="*{idProject}" type="hidden" />
 			
 							<div class="form-group">
 								<input th:field="*{projectName}" class="form-control" placeholder="Projektname" required="required" />
@@ -47,26 +47,26 @@
 							<script type="text/javascript">
 						
 								$.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
-						            icons: {
-						                time: 'far fa-clock',
-						                date: 'far fa-calendar',
-						                up: 'far fa-arrow-up',
-						                down: 'far fa-arrow-down',
-						                previous: 'far fa-chevron-left',
-						                next: 'far fa-chevron-right',
-						                today: 'far fa-calendar-check-o',
-						                clear: 'far fa-trash',
-						                close: 'far fa-times'
-						            }
+								icons: {
+								    time: 'far fa-clock',
+								    date: 'far fa-calendar',
+								    up: 'far fa-arrow-up',
+								    down: 'far fa-arrow-down',
+								    previous: 'far fa-chevron-left',
+								    next: 'far fa-chevron-right',
+								    today: 'far fa-calendar-check-o',
+								    clear: 'far fa-trash',
+								    close: 'far fa-times'
+								}
 								});
 						
 						
 							    $(function () {
 									$('#datetimepicker1').datetimepicker({
-							            format: 'DD.MM.YYYY HH:mm'
+									format: 'DD.MM.YYYY HH:mm'
 							    	});
 									$('#datetimepicker2').datetimepicker({
-							            format: 'DD.MM.YYYY HH:mm'
+									format: 'DD.MM.YYYY HH:mm'
 									});
 							    });
 							</script>
@@ -95,15 +95,16 @@
 							
 							<div class="form-group mb-0">
 								<div class="form-group">
+								
+									<!-- RATIGNOBJECT PART -->
+								
 									<button type="button" id="addRatingObject" class="btn btn-secondary">
 										Bewertungsobjekt<br /><i class="fas fa-plus"></i>
 									</button>
-									
+					
 									<script th:inline="javascript">
-									
 										var ratingObjectNumber = [[${#lists.size(project.ratingObjectList)}]];
 										var ratingObjectIndex = [[${#lists.size(project.ratingObjectList)}]];
-									
 										$(document).ready(function(){
 											$("#addRatingObject").click(function(){
 												ratingObjectNumber += 1;
@@ -123,6 +124,37 @@
 												});
 											});
 									</script>
+									
+									<!-- MODAL PART -->
+
+									<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#lockAndStartModal">
+										Sperren und Starten<br /><i class="fas fa-play"></i>
+									</button>
+									
+									<div id="lockAndStartModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title">Umfrage starten</h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<p>Möchtest du die Umfrage starten? Die Änderung der Umfrageeigenschaften ist dann nicht mehr möglich.</p>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+													<a th:href="@{${URL_ADMIN_PROJECTRUN + project.projectName}}">
+														<button type="button" class="btn btn-warning">Starten</button>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+		
+									<!-- JUST SAVE PART :-) -->
+		
 									<button type="submit" id="submit" class="btn btn-primary">
 										Speichern<br /><i class="fas fa-save"></i>
 									</button>
@@ -134,6 +166,7 @@
 				<div class="card-footer">&nbsp;</div>
 			</div>
 		</main>
+
 		<footer th:replace="template :: footer"></footer>
 	</body>
 </html>

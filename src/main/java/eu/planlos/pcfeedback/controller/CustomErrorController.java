@@ -75,8 +75,8 @@ public class CustomErrorController implements ErrorController {
         }
         
     	else if(statusCode == HttpStatus.NOT_FOUND.value()) {
-        	errorTitle = "Seite existiert nicht";
-        	LOG.error("Requested site does not exist: {}", requestedSite);
+        	errorTitle = "Ressource existiert nicht";
+        	LOG.error("Requested ressource does not exist. Message: {}", errorMessage);
         }
         
     	else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
