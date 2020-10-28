@@ -1,5 +1,6 @@
 package eu.planlos.pcfeedback.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -52,7 +53,25 @@ public class ProjectService {
 		return projectRepo.findByIdProject(idProject);
 	}
 
-	public List<Project> findAllByRunning(boolean running) {
-		return projectRepo.findAllByRunning(running);
+	public List<Project> getActive() {
+		Date date = new Date();
+		return projectRepo.findAllByRunningAndStartDateLessThanAndEndDateGreaterThan(true, date, date);
+	}
+
+	public boolean isActive(Project project) {
+		
+		if(! project.isRunning()) {
+			return false;
+		}
+		
+		Date now = new Date();
+		if(now.before(project.getStartDate())) {
+			return false;
+		}
+		if(now.after(project.getEndDate())) {
+			return false;
+		}
+			
+		return true;
 	}
 }

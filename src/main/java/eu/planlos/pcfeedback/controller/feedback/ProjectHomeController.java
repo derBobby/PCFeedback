@@ -1,7 +1,6 @@
 package eu.planlos.pcfeedback.controller.feedback;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
-import eu.planlos.pcfeedback.controller.CustomErrorController;
 import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.ModelFillerService;
@@ -50,8 +48,8 @@ public class ProjectHomeController {
 		if(ps.exists(projectName)) {
 			
 			Project project = ps.findProject(projectName);
-			if(!project.isRunning()) {
-				LOG.error("User tried to Start non-running project {}", projectName);
+			if(! ps.isActive(project)) {
+				LOG.error("User tried to Start inactive project {}", projectName);
 				res.sendError(404, String.format("Projekt %s läuft aktuell nicht.", projectName));
 				return null;
 			}

@@ -24,7 +24,7 @@ public class HomeController {
 	@RequestMapping(path = ApplicationPathHelper.URL_HOME)
 	public String home(Model model) {
 		
-		List<Project> pList = ps.findAllByRunning(true);
+		List<Project> pList = ps.getActive();
 		model.addAttribute("projectList", pList);
 		
 		model.addAttribute("URL_PROJECTHOME", ApplicationPathHelper.URL_PROJECTHOME);
