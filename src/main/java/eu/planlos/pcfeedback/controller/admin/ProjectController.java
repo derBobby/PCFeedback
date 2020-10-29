@@ -52,7 +52,7 @@ public class ProjectController {
 	private RatingQuestionService rqService;
 	
 	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTS)
-	public String projects(Model model) {
+	public String listProjects(Model model) {
 		
 		List<Project> projectList = ps.findAll();
 		model.addAttribute("projectList", projectList);
@@ -89,7 +89,16 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS)
-	public String submitProject(Model model, @ModelAttribute("project") @Valid Project uiProject, BindingResult bindingResult) {
+	public String submitProject(Model model, ServletResponse response, @ModelAttribute("project") @Valid Project uiProject, BindingResult bindingResult) throws IOException {
+		
+		HttpServletResponse res = (HttpServletResponse) response;
+		
+		Project dbProject = ps.findProject(uiProject.getIdProject());
+		if(dbProject.isRunning()) {
+			LOG.error("Project name='{}' is active. Edit not allowed -> sending 403", dbProject.getProjectName());
+			res.sendError(403, String.format("Projekt %s ist nicht aktiv. Speichern verboten.", dbProject.getProjectName()));
+			return null;
+		}
 		
 		// validate model input
 		if (bindingResult.hasErrors()) {
