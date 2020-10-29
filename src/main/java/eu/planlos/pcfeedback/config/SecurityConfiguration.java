@@ -81,7 +81,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				//.successHandler(successHandler)
 				
 				// Redirects to given page 
-				.defaultSuccessUrl(ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK, false)
+				.defaultSuccessUrl(ApplicationPathHelper.URL_ADMIN_PROJECTS, false)
 				
 				// Which site to load after login error
 				.failureUrl(ApplicationPathHelper.URL_LOGIN_FORM)

@@ -17,13 +17,18 @@
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/bootstrap4-toggle/css/bootstrap4-toggle.min.css}" />  
 		<link rel="stylesheet" media="screen" th:href="@{/css/custom.css}" />
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/summernote/dist/summernote-bs4.css}">
+		<link rel="stylesheet" media="screen" th:href="@{/webjars/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}">
 
 		<script th:src="@{/webjars/jquery/jquery.js}"></script>
 		<script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
 		<script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
 		<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.js}"></script>
 		<script th:src="@{/webjars/summernote/dist/summernote-bs4.min.js}"></script>
-		<script th:src="@{/webjars/bootstrap4-toggle/js/bootstrap4-toggle.min.js}"></script>	
+		<script th:src="@{/webjars/bootstrap4-toggle/js/bootstrap4-toggle.min.js}"></script>
+		<script th:src="@{/webjars/momentjs/min/moment.min.js}"></script>
+		<script th:src="@{/webjars/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js}"></script>
+
+
 
 		<style th:inline="text">
 			body{
@@ -54,13 +59,7 @@
 				<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 					<!-- TODO Multiple elements are active -->
 					<li class="nav-item active">
-						<a class="nav-link" th:href="@{${URL_ADMIN_EDITUITEXT}}"><i class="fas fa-keyboard"></i> Texte</a>
-					</li>				
-					<li class="nav-item active">
-						<a class="nav-link" th:href="@{${URL_ADMIN_SHOWFEEDBACK}}"><i class="fas fa-users"></i> Ergebnisse</a>
-					</li>
-					<li class="nav-item active">
-						<a class="nav-link" th:href="@{${URL_ADMIN_SHOWUSERAGENTS}}"><i class="fas fa-user-tie"></i> User-Agents</a>
+						<a class="nav-link" th:href="@{${URL_ADMIN_PROJECTS}}"><i class="fas fa-users"></i> Projekte</a>
 					</li>
 					<li class="nav-item active">
 						<a class="nav-link" th:href="@{${URL_LOGOUT}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -71,12 +70,15 @@
 
 		<footer th:fragment="footer">
 			<div class="container text-center text-muted">
+				<p><a target="_blank" th:href="@{${URL_IMPRESSUM}}">Impressum</a> | <a target="_blank" th:href="@{${URL_DATENSCHUTZ}}">Datenschutz</a><div sec:authorize="isAnonymous()" th:remove="tag"> | <a th:href="@{${URL_LOGIN_FORM}}">Login</a></div></p>
 				<p>derBobby © 2020</p>
-				<p><a target="_blank" th:href="@{${URL_IMPRESSUM}}">Impressum</a> | <a target="_blank" th:href="@{${URL_DATENSCHUTZ}}">Datenschutz</a> | <a target="_blank" th:href="@{${URL_PRICEGAME}}">Gewinnspielhinweise</a><div sec:authorize="isAnonymous()" th:remove="tag"> | <a th:href="@{${URL_LOGIN_FORM}}">Login</a></div></p>
 			</div>
 			
 			<div th:if="${isDevProfile}" class="container text-center text-muted">
+				</br>
 				<p th:text="'SESSION: ' + ${#session.getId()}"></p>
+				<p th:text="'PROJECT: ' + ${#session.getAttribute('project')}"></p>
+				</br>
 				<p th:text="'NAME: ' + ${#authentication.name}"></p>
 				<p th:text="'PRINCIPAL: ' + ${#authentication.principal}"></p>
 				<p th:text="'CREDENTIALS: ' + ${#authentication.credentials}"></p>			

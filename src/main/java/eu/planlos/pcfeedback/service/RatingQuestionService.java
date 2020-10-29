@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
 import eu.planlos.pcfeedback.model.Gender;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
@@ -39,8 +40,8 @@ public class RatingQuestionService {
 	 * @param gender
 	 * @return List<RatingQuestion>
 	 */
-	public List<RatingQuestion> loadByGender(Gender gender) {
-		return rqRepository.findByGender(gender);
+	public List<RatingQuestion> loadByProjectAndGender(Project project, Gender gender) {
+		return rqRepository.findByProjectAndGender(project, gender);
 	}
 	
 	/**
@@ -49,21 +50,21 @@ public class RatingQuestionService {
 	 * @return List<RatingQuestion>
 	 * @throws RatingQuestionsNotExistentException
 	 */
-	public void addRatingQuestionsForGenderToList(List<RatingQuestion> givenQuestions, Gender gender) throws RatingQuestionsNotExistentException {
+	public void addRatingQuestionsForProjectAndGenderToList(List<RatingQuestion> givenQuestions, Project project, Gender gender) throws RatingQuestionsNotExistentException {
 
 		int neededQuestionCount = totalQuestionCount - givenQuestions.size();
 		
 		LOG.debug("Needed ratingQuestion count is: {}", neededQuestionCount);
 		
 		LOG.debug("Get the lowest number a ratingQuestion is voted for gender: {}", gender.toString());
-		int lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender);
+		int lowestVotedCount = getLowestCountRatingQuestionIsVoted(project, gender);
 		
 		LOG.debug("Start adding ratingQuestions to result set");
 		while(givenQuestions.size() <= totalQuestionCount) {
 			
 			// Load IDs with minimum count of answers
 			LOG.debug("Load all questions for lowest number voted: {}", lowestVotedCount);
-			List<RatingQuestion> loadedQuestions = rqRepository.findByGenderAndCountVoted(gender, lowestVotedCount);
+			List<RatingQuestion> loadedQuestions = rqRepository.findByProjectAndGenderAndCountVoted(project, gender, lowestVotedCount);
 			loadedQuestions.removeAll(givenQuestions);
 			
 			// If exact count is found
@@ -91,20 +92,20 @@ public class RatingQuestionService {
 				
 				LOG.debug("Lesser than required count was loaded, get new lowest number voted");
 				givenQuestions.addAll(loadedQuestions);
-				lowestVotedCount = getLowestCountRatingQuestionIsVoted(gender, lowestVotedCount);		
+				lowestVotedCount = getLowestCountRatingQuestionIsVoted(project, gender, lowestVotedCount);		
 			}
 		}
 	}
 
-	private int getLowestCountRatingQuestionIsVoted(Gender gender) throws RatingQuestionsNotExistentException {
-		return getLowestCountRatingQuestionIsVoted(gender, -1);
+	private int getLowestCountRatingQuestionIsVoted(Project project, Gender gender) throws RatingQuestionsNotExistentException {
+		return getLowestCountRatingQuestionIsVoted(project, gender, -1);
 	}
 	
-	private int getLowestCountRatingQuestionIsVoted(Gender gender, int chosenCount) throws RatingQuestionsNotExistentException {
+	private int getLowestCountRatingQuestionIsVoted(Project project, Gender gender, int chosenCount) throws RatingQuestionsNotExistentException {
 
 		// Get the count of the least voted question
 		// so the least voted or least+1 voted questions can be loaded
-		RatingQuestion lowestVotedCountQuestion = rqRepository.findFirstByCountVotedGreaterThanAndGenderOrderByCountVotedAsc(chosenCount, gender);
+		RatingQuestion lowestVotedCountQuestion = rqRepository.findFirstByProjectAndCountVotedGreaterThanAndGenderOrderByCountVotedAsc(project, chosenCount, gender);
 		
 		if(lowestVotedCountQuestion == null) {
 			String message = String.format("No rating questions found with more votes than: %s", chosenCount);
@@ -155,10 +156,10 @@ public class RatingQuestionService {
 		rqRepository.saveAll(rqList);
 	}
 	
-	public List<RatingQuestion> create(List<RatingObject> roList) {
+	public List<RatingQuestion> create(Project project) {
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
-		
+		List<RatingObject> roList = project.getRatingObjectList();
 		for (RatingObject roOne : roList) {
 					
 			for (RatingObject roTwo : roList) {
@@ -169,6 +170,7 @@ public class RatingQuestionService {
 				
 				// --- MALE ---
 				RatingQuestion rqMale = new RatingQuestion();
+				rqMale.setProject(project);
 				rqMale.setVotesOne(0);
 				rqMale.setVotesTwo(0);
 				rqMale.setCountVoted(0);
@@ -184,6 +186,7 @@ public class RatingQuestionService {
 
 				// --- FEMALE ---
 				RatingQuestion rqFemale = new RatingQuestion();
+				rqFemale.setProject(project);
 				rqFemale.setVotesOne(0);
 				rqFemale.setVotesTwo(0);
 				rqFemale.setCountVoted(0);
@@ -203,7 +206,7 @@ public class RatingQuestionService {
 	}
 
 	//TODO what happens here, when??
-	public List<RatingQuestion> reloadForInvalidFeedback(Gender gender, Map<Long, Integer> feedbackMap) throws RatingQuestionsNotExistentException {
+	public List<RatingQuestion> reloadForInvalidFeedback(Project project, Gender gender, Map<Long, Integer> feedbackMap) throws RatingQuestionsNotExistentException {
 
 		if(feedbackMap == null) {
 			feedbackMap = new HashMap<>();
@@ -216,7 +219,7 @@ public class RatingQuestionService {
 		rqList.addAll(reloadedList);
 		
 		LOG.debug("Loading additional rating questions");
-		addRatingQuestionsForGenderToList(rqList, gender);
+		addRatingQuestionsForProjectAndGenderToList(rqList, project, gender);
 		
 		return rqList;
 	}
@@ -237,12 +240,16 @@ public class RatingQuestionService {
 	 * @param proactive is true if method is called proactively and ERROR output is not necessary.
 	 * @throws WrongRatingQuestionCountExistingException 
 	 */
-	public void checkEnoughRatingQuestions(boolean proactive) throws WrongRatingQuestionCountExistingException {
-		if(rqRepository.countByGender(Gender.MALE) < totalQuestionCount) {
+	public void checkEnoughRatingQuestions(Project project, boolean proactive) throws WrongRatingQuestionCountExistingException {
+		if(rqRepository.countByProjectAndGender(project, Gender.MALE) < totalQuestionCount) {
 			if(!proactive) {
 				LOG.error("# ~~~~~~~~ Not correct count of rating questions available! ~~~~~~~~ #");
 			}
 			throw new WrongRatingQuestionCountExistingException();
 		}
+	}
+
+	public RatingQuestion findByIdRatingQuestion(long idRatingQuestion) {
+		return rqRepository.findByIdRatingQuestion(idRatingQuestion);
 	}
 }

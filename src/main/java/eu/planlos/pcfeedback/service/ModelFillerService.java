@@ -16,6 +16,7 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 import eu.planlos.pcfeedback.model.FreeText;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
 
@@ -47,6 +48,7 @@ public class ModelFillerService implements EnvironmentAware {
 		
 		LOG.debug("Preparing model for global area");
 		model.addAttribute("URL_HOME", ApplicationPathHelper.URL_HOME);
+		model.addAttribute("URL_PROJECTHOME", ApplicationPathHelper.URL_PROJECTHOME); //TODO where necessary?
 		model.addAttribute("URL_IMPRESSUM", ApplicationPathHelper.URL_IMPRESSUM);
 		model.addAttribute("URL_DATENSCHUTZ", ApplicationPathHelper.URL_DATENSCHUTZ);
 		model.addAttribute("URL_PRICEGAME", ApplicationPathHelper.URL_PRICEGAME);
@@ -62,14 +64,14 @@ public class ModelFillerService implements EnvironmentAware {
 		LOG.debug("Preparing model for anonymous area");
 		model.addAttribute("URL_LOGIN_FORM", ApplicationPathHelper.URL_LOGIN_FORM);
 		model.addAttribute("URL_LOGIN", ApplicationPathHelper.URL_LOGIN);
-
-		LOG.debug("Preparing model for administration area");
-		model.addAttribute("URL_ADMIN_SHOWFEEDBACK", ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK);
-		model.addAttribute("URL_ADMIN_EDITUITEXT", ApplicationPathHelper.URL_ADMIN_EDITUITEXT);
-		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS);
-		model.addAttribute("URL_LOGOUT", ApplicationPathHelper.URL_LOGOUT);
-
 		
+		LOG.debug("Preparing model for administration area");
+		model.addAttribute("URL_ADMIN_PROJECTDETAILS", ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS);
+		model.addAttribute("URL_ADMIN_PROJECTS", ApplicationPathHelper.URL_ADMIN_PROJECTS);
+		model.addAttribute("URL_ADMIN_SHOWFEEDBACK", ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK); //TODO notwendig?
+		model.addAttribute("URL_ADMIN_EDITUITEXT", ApplicationPathHelper.URL_ADMIN_EDITUITEXT); //TODO notwendig?
+		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS); //TODO notwendig?
+		model.addAttribute("URL_LOGOUT", ApplicationPathHelper.URL_LOGOUT);
 		
 		/*
 		 * URLs for DEV profile
@@ -80,6 +82,7 @@ public class ModelFillerService implements EnvironmentAware {
 			LOG.debug("Preparing model for DEV profile.");
 			model.addAttribute("isDevProfile", true);
 		}
+		
 		if (profiles.contains(ApplicationProfileHelper.REV_PROFILE)) {
 			LOG.debug("Preparing model for REV profile.");
 			model.addAttribute("isRevProfile", true);
@@ -122,7 +125,19 @@ public class ModelFillerService implements EnvironmentAware {
 		this.environment = environment;
 	}
 
-	public void fillUiText(Model model, UiTextKey uiTextKey) {
-		model.addAttribute(uiTextKey.toString(), ums.getText(uiTextKey));
+	public void fillUiText(Model model, Project project, UiTextKey uiTextKey) {
+		model.addAttribute(uiTextKey.toString(), ums.getText(project, uiTextKey));
+		model.addAttribute("projectName", project.getProjectName());
+	}
+
+	/**
+	 * Fills Model for Project Details page
+	 * @param model Model to fill
+	 * @param urlSubmit URL which shall form be submitted to
+	 * @param buttonText Text to display on Button
+	 */
+	public void fillProjectDetails(Model model, Project project) {
+		model.addAttribute("project", project);
+		model.addAttribute("URL_ADMIN_PROJECTDETAILS", ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS);
 	}
 }

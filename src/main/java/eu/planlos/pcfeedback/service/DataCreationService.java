@@ -1,20 +1,30 @@
 package eu.planlos.pcfeedback.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import eu.planlos.pcfeedback.exceptions.DuplicateRatingObjectException;
+import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
+import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
+import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.exceptions.UiTextException;
 import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.Participant;
 import eu.planlos.pcfeedback.model.ParticipationResult;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
@@ -23,6 +33,9 @@ import eu.planlos.pcfeedback.model.UiTextKey;
 public class DataCreationService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataCreationService.class);
+
+	@Value("${eu.planlos.pcfeedback.question-count}")
+	private int neededQuestionCount;
 	
 	@Autowired
 	private RatingObjectService roService;
@@ -34,139 +47,152 @@ public class DataCreationService {
 	private UiTextService uiTextService;
 	
 	@Autowired
-	private ParticipantService pService;
+	private ParticipantService participantService;
+
+	@Autowired
+	private ParticipationResultService participationResultService;
 	
 	@Autowired
-	private ParticipationResultService prs;
+	private ProjectService projectService;
 	
 	@Autowired
 	private FreeTextService fts;
 	
-	/**
-	 * Method creates data for all the stages and throws Exception if not enough UiTexts or RatingQuestions are created
-	 * @throws UiTextException if not enough UiTexts are created in method
-	 * @throws WrongRatingQuestionCountExistingException
-	 */
-	public void createCommon() throws UiTextException, WrongRatingQuestionCountExistingException {
+	@PostConstruct
+	private void initialize() throws WrongRatingQuestionCountExistingException, UiTextException,
+			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 		
-		//Create RatingQuestions and check if enough in method are created.
-		createRatingQuestions();
-		//Throws Exception if not
-		rqService.checkEnoughRatingQuestions(false);
+		LOG.debug("Initializing database");
+		createSampleData("Demo-Projekt", true);
+		createSampleData("Demo-Projekt 1", false);
+		createSampleData("Demo-Projekt 2", true);
+		createSampleData("Demo-Projekt 3", true);
+		createSampleData("Demo-Projekt 4", true);
+		createSampleData("Demo-Projekt 5", false);
+		createSampleData("Demo-Projekt 6", false);
+		LOG.debug("Initializing database ... DONE");		
+	}
+
+	private void createSampleData(String projectName, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
+
+		Calendar cal = Calendar.getInstance();
 		
+		cal.set(2001, 1, 1, 1, 1, 1);
+		Date startDate = cal.getTime();
+		
+		cal.set(2002, 2, 2, 2, 2, 2);
+		Date endDate = cal.getTime();
+
+		List<RatingObject> roList = createRatingObjects();
+		
+		Project project = new Project(projectName, roList, false, startDate, endDate);
+		projectService.save(project);
+
 		//Create UiTexts and check if enough in method are created.
-		createUiText();
+		createUiText(project);
+
 		//Throws Exception if not
-		uiTextService.checkEnoughUiTexts(false);
-	}
+		uiTextService.checkEnoughUiTexts(project, false);
 
-	/**
-	 * Checks whether application is fully initialized for production system.
-	 * Needed are enough RatingQuestions and initialized UiTexts.
-	 * @return boolean
-	 */
-	public boolean isProdDataAlreadyCreated() {
-		
-		boolean result = true;
-				
-		try {
-			uiTextService.checkEnoughUiTexts(true);
-			rqService.checkEnoughRatingQuestions(true);
-		} catch (UiTextException | WrongRatingQuestionCountExistingException e) {
-			result = false;
+		if(! active) {
+			return;
 		}
+
+		//Create RatingQuestions and check if enough in method are created.
+		createRatingQuestions(project);		
+
+		//Throws Exception if not
+		rqService.checkEnoughRatingQuestions(project, false);
 		
-		return result;
+		createFreeText(project, Gender.MALE, 10);
+		createFreeText(project, Gender.FEMALE, 10);
+		createParticipations(project, Gender.MALE, 10);
+		createParticipations(project, Gender.FEMALE, 10);		
 	}
 
-	private void createRatingQuestions() {
+	private List<RatingObject> createRatingObjects() throws DuplicateRatingObjectException {
+		// ~~~~~~~~~~~~ RO ~~~~~~~~~~~~
 		
-		RatingObject ro01 = new RatingObject("gute Zeit mit Freunden haben");
-		RatingObject ro02 = new RatingObject("guter Referent im Opening");
-		RatingObject ro03 = new RatingObject("gutes Programm im Opening");
-		RatingObject ro04 = new RatingObject("gute \"Zeitraum\" Leute, die für mich beten oder mir zuhören");
-		RatingObject ro05 = new RatingObject("gute kreative Aktionen die Nacht über");
-		RatingObject ro06 = new RatingObject("gute actionreiche Aktionen die Nacht über");
-		RatingObject ro07 = new RatingObject("neue Aktionen die Nacht über");
-		RatingObject ro08 = new RatingObject("coole Stationsmitarbeiter");
-		RatingObject ro09 = new RatingObject("gute Band");
-		RatingObject ro10 = new RatingObject("gute Seminare");
-		RatingObject ro11 = new RatingObject("gute chillige Aktionen die Nacht über");
-		RatingObject ro12 = new RatingObject("gutes Essen / guter Megabrunch");
-		RatingObject ro13 = new RatingObject("neue Leute kennenlernen");
-		RatingObject ro14 = new RatingObject("gute Zeit mit meinen Teenkreis Mitarbeitern haben");
-
 		List<RatingObject> roList = new ArrayList<>();
-		roList.add(ro01);
-		roList.add(ro02);
-		roList.add(ro03);
-		roList.add(ro04);
-		roList.add(ro05);
-		roList.add(ro06);
-		roList.add(ro07);
-		roList.add(ro08);
-		roList.add(ro09);
-		roList.add(ro10);
-		roList.add(ro11);
-		roList.add(ro12);
-		roList.add(ro13);
-		roList.add(ro14);
-		
-		LOG.debug("Saving rating object sample data");
-		roService.saveAll(roList);
+		roList.add(new RatingObject("gute Zeit mit Freunden haben"));
+		roList.add(new RatingObject("guter Referent im Opening"));
+		roList.add(new RatingObject("gutes Programm im Opening"));
+		roList.add(new RatingObject("gute \"Zeitraum\" Leute, die für mich beten oder mir zuhören"));
+		roList.add(new RatingObject("gute kreative Aktionen die Nacht über"));
+		roList.add(new RatingObject("gute actionreiche Aktionen die Nacht über"));
+		roList.add(new RatingObject("neue Aktionen die Nacht über"));
+		roList.add(new RatingObject("coole Stationsmitarbeiter"));
+		roList.add(new RatingObject("gute Band"));
+		roList.add(new RatingObject("gute Seminare"));
+		roList.add(new RatingObject("gute chillige Aktionen die Nacht über"));
+		roList.add(new RatingObject("gutes Essen / guter Megabrunch"));
+		roList.add(new RatingObject("neue Leute kennenlernen"));
+		roList.add(new RatingObject("gute Zeit mit meinen Teenkreis Mitarbeitern haben"));		
 
-		LOG.debug("Create rating question sample data");
-		List<RatingQuestion> rqList = new ArrayList<>();
-		rqList.addAll(rqService.create(roList));
+		roService.validateUniqueAndSaveList(roList);
 
-		for(RatingQuestion rq : rqList) {
-			rq.setVotesOne(0);
-		}
 		
-		LOG.debug("Saving rating question sample data");
-		rqService.saveAll(rqList);		
+		LOG.debug("Demo data created: rating objects");
+		
+		return roList;
 	}
 
-	private void createUiText() {
+	private void createRatingQuestions(Project project) throws ProjectAlreadyExistingException {
+
+		// ~~~~~~~~~~~~ RQ ~~~~~~~~~~~~
 		
-		// ~~~~~~~~~~~~~~~~ Preparing texts ~~~~~~~~~~~~~~~~
-		uiTextService.initializeUiText();
+		List<RatingQuestion> rqList = new ArrayList<>();
+		rqList.addAll(rqService.create(project));
+		project.setActive(true);
+		rqService.saveAll(rqList);
+		projectService.save(project);
+		
+		LOG.debug("Demo data created: rating questions");	
+	}
+
+	private void createUiText(Project project) {
+		
+		// ~~~~~~~~~~~~~~~~ Preparing empty texts ~~~~~~~~~~~~~~~~
+		
+		uiTextService.initializeUiText(project);
 		
 		// ~~~~~~~~~~~~~~~~ General texts ~~~~~~~~~~~~~~~~
-		uiTextService.createText(
-				UiTextKey.MSG_HOME,
-				"Begrüßung",
+		
+		uiTextService.updateText(
+				project,
+				UiTextKey.MSG_PROJECTHOME,
 				"Gib uns Feedback und hilf uns die Teennight noch besser zu machen. Unter den Teilnehmern verlosen wir zwei Freiplätze für die Teennight 2020!"
 			);
-		uiTextService.createText(
+		uiTextService.updateText(
+				project,
 				UiTextKey.MSG_PRICEGAME,
-				"Gewinnspielhinweise",
 				priceGameStatement()
 			);
 		
 		// ~~~~~~~~~~~~~~~~ Feedback texts ~~~~~~~~~~~~~~~~
-		uiTextService.createText(
+		
+		uiTextService.updateText(
+				project,
 				UiTextKey.MSG_FEEDBACK_START,
-				"Formular",
 				"Nach der Teennight werden deine Daten gelöscht!"
 			);
-		uiTextService.createText(
+		uiTextService.updateText(
+				project,
 				UiTextKey.MSG_FEEDBACK_QUESTION,
-				"Fragestellung",
 				"Was ist dir während der Teennight <u>wichtiger</u>?"
 			);
-		uiTextService.createText(
+		uiTextService.updateText(
+				project,
 				UiTextKey.MSG_FEEDBACK_FREETEXT,
-				"Freitext",
 				"HIER IST PLATZ FÜR ALLES WAS DU SAGEN WILLST:<br>" +
 						"- das feier ich an der Teennight<br>" +
 						"- das könntet ihr noch besser machen<br>" +
 						"- das wäre mal eine Idee für die Teennight<br>" + 
 						"- das habe ich mit Gott erlebt auf der Teennight<br>"
 			);
-		uiTextService.createText(
+		uiTextService.updateText(
+				project,
 				UiTextKey.MSG_FEEDBACK_END,
-				"Ende",
 				"Die Teennight sagt danke! Dein Feedback hilft uns sehr. Du bist jetzt im Lostopf fürs Closing."
 			);
 	}
@@ -189,7 +215,7 @@ public class DataCreationService {
 				+ "Der Rechtsweg ist ausgeschlossen.";
 	}
 
-	public void createParticipations(Gender gender, int count) throws Exception {
+	public void createParticipations(Project project, Gender gender, int count) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
 		
 		int localCount = count;
 		
@@ -198,19 +224,19 @@ public class DataCreationService {
 			localCount--;
 			
 			// Create and save Participant itself
-			Participant participant = pService.createParticipantForDB(gender);
-			pService.save(participant);
+			Participant participant = participantService.createParticipantForDB(project, gender);
+			participantService.save(participant);
 			
 			// Create and save ParticipationResult
 			Map<Long, Integer> feedbackMap = new HashMap<>();
 			List<RatingQuestion> ratingQuestions = new ArrayList<>();
-			rqService.addRatingQuestionsForGenderToList(ratingQuestions, gender);
+			rqService.addRatingQuestionsForProjectAndGenderToList(ratingQuestions, project, gender);
 			for(RatingQuestion ratingQuestion : ratingQuestions) {
 				long id = ratingQuestion.getIdRatingQuestion();
 				feedbackMap.put(id, gender.equals(Gender.MALE) ? 1 : 2);
 			}
 			ParticipationResult pResult = new ParticipationResult(participant, feedbackMap);
-			prs.saveParticipationResult(pResult);
+			participationResultService.saveParticipationResult(pResult);
 			
 			// Update RatingQuestion
 			rqService.saveFeedback(feedbackMap);
@@ -222,13 +248,13 @@ public class DataCreationService {
 	 * @param gender the gender to use for the free text elements
 	 * @param count the count of free text elements to create
 	 */
-	public void createFreeText(Gender gender, int count) {
+	public void createFreeText(Project project, Gender gender, int count) {
 
 		int localCount = count;
 		
 		while(localCount != 0) {
 			localCount--;			
-			fts.saveFreeText(((Long) System.currentTimeMillis()).toString(), gender);
+			fts.createAndSaveFreeText(project, ((Long) System.currentTimeMillis()).toString(), gender);
 		}
 	}
 }

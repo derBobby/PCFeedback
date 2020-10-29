@@ -8,9 +8,12 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
@@ -20,7 +23,7 @@ import javax.validation.constraints.NotNull;
 @Table(
 		uniqueConstraints={
 			@UniqueConstraint(columnNames = {"idParticipant"}),
-			@UniqueConstraint(columnNames = {"firstname", "name"}),
+			@UniqueConstraint(columnNames = {"firstname", "name", "project"}),
 			@UniqueConstraint(columnNames = {"email"}),
 			@UniqueConstraint(columnNames = {"mobile"}),
 })
@@ -61,13 +64,35 @@ public class Participant implements Serializable {
 	@Column(nullable=false)
 	private LocalDateTime participationDate;
 	
-	private static final String TIME_ZONE = "Europe/Berlin";
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull
+	@JoinColumn(name="project", nullable=false)
+	private Project project;
 	
+	private static final String TIME_ZONE = "Europe/Berlin";
+
 	public Participant() {
+	}
+	
+	public Participant(Project project) {
 		setParticipationDate();
 	}
 
 	public Participant(String firstname, String name, String email, String mobile, Gender gender, boolean priceGameStatementAccepted, boolean dataPrivacyStatementAccepted) {
+		this.firstname = firstname;
+		this.name = name;
+		this.email = email;
+		this.mobile = mobile;
+		this.gender = gender;
+		this.priceGameStatementAccepted = priceGameStatementAccepted;
+		this.dataPrivacyStatementAccepted = dataPrivacyStatementAccepted;
+
+		ZoneId timeZone = ZoneId.of(TIME_ZONE);
+		this.participationDate = LocalDateTime.now(timeZone);
+	}
+
+	public Participant(Project project, String firstname, String name, String email, String mobile, Gender gender, boolean priceGameStatementAccepted, boolean dataPrivacyStatementAccepted) {
+		this.project = project;
 		this.firstname = firstname;
 		this.name = name;
 		this.email = email;
@@ -157,12 +182,20 @@ public class Participant implements Serializable {
 		ZoneId timeZone = ZoneId.of(TIME_ZONE);
 		this.participationDate = LocalDateTime.now(timeZone);
 	}
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
 	
 	/*
 	 * Functions
 	 */	
 	public String toString() {
-		return String.format("firstname=%s, name=%s, gender=%s", firstname, name, gender.toString());
+		return String.format("idParticipant=%s, project=%s, firstname=%s, name=%s, gender=%s", idParticipant, project.getProjectName(), firstname, name, gender.toString());
 	}
 	
     @Override

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.UiTextException;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UiText;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.repository.UiTextRepository;
@@ -23,39 +24,48 @@ public class UiTextService {
 	@Autowired
 	private UiTextRepository uiTextRepo;
 	
-	public void createText(UiTextKey uiTextKey, String description, String text) {
-		UiText uiText = new UiText(uiTextKey, description, text);
+	public void updateText(Project project, UiTextKey uiTextKey, String text) {
+		
+		UiText uiText = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
+		uiText.setText(text);
+		LOG.debug("Updating UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
 		uiTextRepo.save(uiText);
 	}
 
-	public String getText(UiTextKey uiTextKey) {
-		UiText uit = uiTextRepo.findById(uiTextKey).get();
+	public String getText(Project project, UiTextKey uiTextKey) {
+		LOG.debug("Searching UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
+		UiText uit = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
 		return uit.getText();
 	}
 	
-	public void initializeUiText() {
+	public void initializeUiText(Project project) {
 		
 		List<UiText> uiTextList = new ArrayList<>();
 
 		List<UiTextKey> fieldList = Arrays.asList(UiTextKey.values());
 		for(UiTextKey uiTextKey : fieldList) {
-			uiTextList.add(new UiText(uiTextKey));
+			uiTextList.add(new UiText(project, uiTextKey));
 		}
 		
 		uiTextRepo.saveAll(uiTextList);
 	}	
 
-	public List<UiText> getAllUiText() {
-		return (List<UiText>) uiTextRepo.findAll();
+	public List<UiText> getUiTextForProject(Project project) {
+		return (List<UiText>) uiTextRepo.findAllByProject(project);
 	}
 
-	public void updateText(UiText uiText) throws UiTextException {
-		Optional<UiText> optionalDdbUiText = uiTextRepo.findById(uiText.getUiTextKey());
+	/**
+	 * Updates the text of given UiText, identified by idUiText.
+	 * @param uiText 
+	 * @throws UiTextException
+	 */
+	public void updateText(Long idUiText, String text) throws UiTextException {
+		Optional<UiText> optionalDdbUiText = uiTextRepo.findByIdUiText(idUiText);
 		if(! optionalDdbUiText.isPresent()) {
-			throw new UiTextException("Konnte Text nicht speichern, weil das Element " + uiText.getUiTextKey().toString() + " nicht existiert");
+			throw new UiTextException(String.format("Konnte Text nicht speichern, weil kein UiText mit id=%s gefunden wurde", idUiText));
 		}
 		UiText dbUiText = optionalDdbUiText.get();
-		dbUiText.setText(uiText.getText());
+		dbUiText.setText(text);
 		uiTextRepo.save(dbUiText);
 	}
 	
@@ -65,8 +75,8 @@ public class UiTextService {
 	 * @param proactive is true if method is called proactively and ERROR output is not necessary.
 	 * @throws UiTextException 
 	 */
-	public void checkEnoughUiTexts(boolean proactive) throws UiTextException {
-		if(uiTextRepo.countByTextIsNull() > 0) {
+	public void checkEnoughUiTexts(Project project, boolean proactive) throws UiTextException {
+		if(uiTextRepo.countByProjectAndTextIsNull(project) > 0) {
 			if(!proactive) {
 				LOG.error("# ~~~~~~~~ Not enough rating questions initialized! ~~~~~~~~ #");
 			}

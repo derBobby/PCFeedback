@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.model.FreeText;
 import eu.planlos.pcfeedback.model.Gender;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.repository.FreeTextRepository;
 
 @Service
@@ -19,20 +20,15 @@ public class FreeTextService {
 	@Autowired
 	private FreeTextRepository ftRepo;
 	
-	public void saveFreeText(String text, Gender gender) {
-		
-		
-		FreeText freeText = new FreeText();
-		freeText.setText(text);
-		freeText.setGender(gender);
+	public void createAndSaveFreeText(Project project, String text, Gender gender) {
 		
 		LOG.debug("Saving free text with length={}", text.length());
-		ftRepo.save(freeText);
+		ftRepo.save(new FreeText(project, text, gender));
 	}
 	
-	public List<FreeText> findAll() {
+	public List<FreeText> findAllByProject(Project project) {
 		
-		return (List<FreeText>) ftRepo.findAll();
+		return (List<FreeText>) ftRepo.findAllByProject(project);
 	}
 
 	/**

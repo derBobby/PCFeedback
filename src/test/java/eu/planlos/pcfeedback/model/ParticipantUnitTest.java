@@ -39,7 +39,7 @@ public class ParticipantUnitTest {
 		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, true, true);
 		assertEquals(participant.getGender(), Gender.MALE);
 	}
-	
+
 	@Test
 	public final void participantToString_containsFirstnameNameAndGender() {
 		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, true, true);
@@ -47,33 +47,33 @@ public class ParticipantUnitTest {
 		assertTrue(participant.toString().contains(NAME));
 		assertTrue(participant.toString().contains(Gender.MALE.toString()));
 	}
-	
+
 	@Test
 	public final void participantCreated_participationProperlyCreated() {
-		
+
 		try {
 			ZoneId timeZone = ZoneId.of(TIME_ZONE);
-			
+
 			LocalDateTime dt1 = LocalDateTime.now(timeZone);
 			Thread.sleep(1);
 
 			Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, true, true);
 			LocalDateTime participationDate = participant.getParticipationDate();
-						
+
 			Thread.sleep(1);
 			LocalDateTime dt2 = LocalDateTime.now(timeZone);
-			
+
 			assertTrue(dt1.isBefore(participationDate));
 			assertTrue(dt2.isAfter(participationDate));
-			
+
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public final void participantCreated_formatsCorrect() {
-		
+
 		Participant participant = new Participant(FIRSTNAME, NAME, EMAIL, MOBILE, Gender.MALE, true, true);
 		String formattedParticipationDate = participant.getformattedParticipationDateString();
 

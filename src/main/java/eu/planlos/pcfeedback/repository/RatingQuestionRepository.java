@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import eu.planlos.pcfeedback.model.Gender;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.RatingObject;
 import eu.planlos.pcfeedback.model.RatingQuestion;
 
@@ -15,14 +16,14 @@ import eu.planlos.pcfeedback.model.RatingQuestion;
 public interface RatingQuestionRepository extends CrudRepository<RatingQuestion, Long>{
 
 	public List<RatingQuestion> findAllByIdRatingQuestionIn(List<Integer> questionIds);
-	public RatingQuestion findFirstByCountVotedGreaterThanAndGenderOrderByCountVotedAsc(int chosenCount, Gender gender);
+	public RatingQuestion findFirstByProjectAndCountVotedGreaterThanAndGenderOrderByCountVotedAsc(Project project, int chosenCount, Gender gender);
 	
 //	@Query("SELECT R "
 //			+ "FROM RatingQuestion R "
 //			+ "WHERE R.countVoted = ?1 "
 //			+ "AND R.gender = ?2 "
 //		)
-	public List<RatingQuestion> findByGenderAndCountVoted(Gender gender, int lowestVotedCount);
+	public List<RatingQuestion> findByProjectAndGenderAndCountVoted(Project project, Gender gender, int lowestVotedCount);
 	
 	@Modifying
 	@Query("UPDATE RatingQuestion R SET "
@@ -40,7 +41,7 @@ public interface RatingQuestionRepository extends CrudRepository<RatingQuestion,
 		)
 	public int addVoteForRatingObjectTwo(long idRatingQuestion);
 	
-	public List<RatingQuestion> findByGender(Gender gender);
+	public List<RatingQuestion> findByProjectAndGender(Project project, Gender gender);
 	
 	// Edit participant methods
 	
@@ -63,5 +64,7 @@ public interface RatingQuestionRepository extends CrudRepository<RatingQuestion,
 	public RatingQuestion findByGenderAndObjectOneAndObjectTwo(Gender wantedGender, RatingObject ratingObjectOne,
 			RatingObject ratingObjectTwo);
 	
-	public int countByGender(Gender male);
+	public int countByProjectAndGender(Project project, Gender male);
+	
+	public RatingQuestion findByIdRatingQuestion(long idRatingQuestion);
 }

@@ -17,36 +17,94 @@
 	       		<div class="row">
   		
   					<!-- EXPLANATION CARD -->
-			        <div class="col-md-6 border-dark p-3 mb-3">
-	        			<!--  FOR EACH UiText a card -->
-						<div class="card text-white bg-info h-100">
-							<div class="card-header">
+			        <div id="colChevronAnpassung" class="col-md-6 border-dark p-3 mb-3">
+						<div class="card text-white bg-info"> <!-- Notwendig wenn nicht collapsible: h-100 -->
+							<div class="card-header collapsed" data-toggle="collapse" data-target="#collapseAnpassung" aria-expanded="true" aria-controls="collapseAnpassung">
 								<h5 class="mb-0" th:inline="text">
-									HTML-Tags
+									Info zu Anpassungen
+									<button type="button" class="ml-3 btn btn-outline-secondary btn-sm active float-right" th:id="chevronAnpassung">
+										<i class="fa fa-chevron-down"></i>
+									</button>
+									<!-- START styling purpose -->
+									<button type="button" style="visibility: hidden" class="btn btn-outline-secondary btn-sm active float-right">
+											<i class="fas fa-wrench"></i>
+									</button>
+									<!-- END styling purpose -->
+									<script type="text/javascript" th:inline="javascript">
+										/*<![CDATA[*/
+											
+										$("#chevronAnpassung").popover({
+											trigger : 'hover',
+											placement : 'bottom',
+											content : '"Anpassung" aufklappen',
+										})
+										$("#colChevronAnpassung").click( function(e) {
+											$("#colChevronAnpassung").toggleClass('col-md-6');
+											$("#colChevronAnpassung").toggleClass('col-md-12');
+										})
+										
+									</script>
 								</h5>
 							</div>
-							<div class="card-body">
-								<p>Die Texte hier können mit einem Editor angepasst werden. Aktuell ist ein zurücksetzen auf "Standard" noch nicht möglich.</p>
+							<div class="card-body collapse" id="collapseAnpassung">
+								<p>Die Texte hier können mit einem Editor angepasst werden. Dazu einfach auf den Schraubenschlüssel klicken.
+								<p>Aktuell ist ein zurücksetzen auf "Standard" noch nicht möglich.</p>
 	          				</div>
 	         			</div>
 					</div>
 
 					<!-- EDITABLE TEXT CARDS -->
-					<div class="col-md-6 border-dark p-3 mb-3" th:each="uiText : ${uiTextList}" th:object="${uiText}">
+        			<!--  FOR EACH UiText a card -->
+					<div class="col-md-6 border-dark p-3 mb-3" th:each="uiText : ${uiTextList}" th:object="${uiText}" th:id="'col'+*{idUiText}">
 
 	        			<!--  CARD -->
-						<div class="card h-100">
-							<div class="card-header">
+						<div class="card">
+							<div class="card-header collapsed" data-toggle="collapse" aria-expanded="true" th:attr="data-target='#collapse'+*{idUiText}, aria-controls='collapse'+*{idUiText}">
 								<h5 class="mb-0" th:inline="text">
 									[[*{description.toString()}]]
-										<button type="button" class="btn btn-outline-secondary btn-sm active float-right" data-toggle="modal" 
+									
+									<button type="button" class="ml-3 btn btn-outline-secondary btn-sm active float-right" th:id="'chevron'+*{idUiText}">
+											<i class="fa fa-chevron-down"></i>
+									</button>
+									<button type="button" class="btn btn-outline-secondary btn-sm active float-right ignoreResize" data-toggle="modal" 
 											th:id="*{uiTextKey.toString()}" 
 											th:attr="data-target='#' + *{uiTextKey.toString()} + '_Modal'">
-											<i class="fas fa-wrench"></i>
-										</button>
+											<i class="fas fa-wrench ignoreResize"></i>
+									</button>
+									<script type="text/javascript" th:inline="javascript">
+										/*<![CDATA[*/
+										
+										$([['#chevron'+*{idUiText}]]).popover({
+											trigger : 'hover',
+											placement : 'bottom',
+											content : '[[*{description.toString()}]] Aufklappen',
+										})
+										$([['#'+*{uiTextKey.toString()}]]).popover({
+											trigger : 'hover',
+											placement : 'bottom',
+											content : '[[*{description.toString()}]] Editieren',
+										})
+										
+										///////////////////////////////////////////////////////////////////////////////
+										//TODO something behaves wrongly....
+										///////////////////////////////////////////////////////////////////////////////
+										$([['#col'+*{idUiText}]]).click( function(e) {
+											console.log($(e.target).attr('class'));
+											if ($(e.target).attr('class').indexOf("ignoreResize") >= 0) {
+												console.log("YAY");
+												return;
+											}
+											console.log("TOGGLE!");
+											$([['#col'+*{idUiText}]]).toggleClass('col-md-6');
+											$([['#col'+*{idUiText}]]).toggleClass('col-md-12');
+										})
+										///////////////////////////////////////////////////////////////////////////////
+										//TODO something behaves wrongly....
+										///////////////////////////////////////////////////////////////////////////////
+									</script>
 								</h5>
 							</div>
-							<div class="card-body">
+							<div class="card-body collapse" th:id="'collapse'+*{idUiText}">
 								<p th:utext="*{text}"></p>
 	          				</div>
 	         			</div>
@@ -57,7 +115,8 @@
 							<div class="modal-dialog modal-dialog-centered  modal-xl" role="document">
 								<div class="modal-content">
 				        			<form class="h-100" th:action="@{${URL_ADMIN_EDITUITEXT}}" method="post" enctype="multipart/form-data">
-	        							<input type="hidden" th:id="uiTextKey" th:name="uiTextKey" th:value="*{uiTextKey}"/>
+	        							<input type="hidden" th:id="idUiText" th:name="idUiText" th:value="*{idUiText}"/>
+	        							<input type="hidden" th:id="projectName" th:name="projectName" th:value="*{project.getProjectName()}"/>
 										<div class="modal-header">
 											<h5 class="modal-title" th:id="*{uiTextKey.toString()}+'ModalTitle'" th:inline="text">[[*{description.toString()}]]</h5>
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -87,6 +146,7 @@
 					<!-- END OF EDITABLE TEXT CARDS -->
 				</div>
 			</div>
+			
 		</main>
 	    <footer th:replace="template :: footer"></footer>
 	</body>

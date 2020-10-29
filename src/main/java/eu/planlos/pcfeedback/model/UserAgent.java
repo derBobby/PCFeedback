@@ -2,9 +2,12 @@ package eu.planlos.pcfeedback.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -12,17 +15,31 @@ import javax.validation.constraints.NotNull;
 public class UserAgent {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(unique=true, nullable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(unique = true, nullable = false)
 	private Long idUserAgent;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@NotBlank
 	private String text;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	@NotNull
 	private Gender gender;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@NotNull
+	@JoinColumn(name = "project", nullable = false)
+	private Project project;
+
+	public UserAgent() {
+	}
+	
+	public UserAgent(Project project, String text, Gender gender) {
+		this.project = project;
+		this.text = text;
+		this.gender = gender;
+	}
 
 	public String getText() {
 		return text;
@@ -46,5 +63,13 @@ public class UserAgent {
 
 	public void setGender(Gender gender) {
 		this.gender = gender;
+	}
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
 	}
 }

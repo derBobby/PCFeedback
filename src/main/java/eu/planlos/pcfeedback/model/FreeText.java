@@ -2,10 +2,13 @@ package eu.planlos.pcfeedback.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -24,7 +27,21 @@ public class FreeText {
 	@Column(nullable=false)
 	@NotNull
 	private Gender gender;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull
+	@JoinColumn(name="project", nullable=false)
+	private Project project;
 
+	public FreeText() {
+	}
+
+	public FreeText(Project project, String text, Gender gender) {
+		this.project = project;
+		this.text = text;
+		this.gender = gender;
+	}
+	
 	public String getText() {
 		return text;
 	}

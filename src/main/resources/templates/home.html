@@ -4,24 +4,46 @@
 	<body>
 		<nav th:replace="template :: nav"></nav>
 	    <main class="container pt-3">
-   	        <div class="card mb-3">
-	            <div class="card-header text-center"><h3 class="mb-0">Hello there!</h3></div>
-	            <div class="card-block p-3">
-					<div class="col-lg-12 text-center">
-					
-						<p class="" th:utext="${MSG_HOME}"></p>
-						<p class="lead"><b><u>Und so einfach geht's:</u></b></p>
-						<p class="" th:inline="text">Wir stellen dir eine Frage, die du für [[${NEEDED_QUESTION_COUNT}]] Begriffkombinationen beantworten musst.
-						<div>
-							<a th:href="@{${URL_FEEDBACK_START}}" class="btn btn-primary" role="button">
-								Los gehts!<br /><i class="fas fa-play"></i>
-							</a>
+			<div class="jumbotron">
+				<div class="container">
+					<h1 class="display-4">Willkommen auf unserem Feedbackportal!</h1>
+					<p class="lead">Über diese Tool sammeln wir zu verschiedenen Projekten oder Veranstaltungen eure Meinung ein.</p> 
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-4 border-dark p-3 mb-3" th:each="project : ${projectList}" th:object="${project}">
+					<div class="card mb-3">
+						<div class="card-header text-center">
+							<h3 class="mb-0" th:text="*{projectName}"></h3>
 						</div>
-						
+						<div class="card-block p-3">
+							<table>
+								<tr>
+									<th>Start:</th>
+									<td class="pl-3" th:text="*{#dates.format(startDate, 'dd.MM.yyyy - HH:mm:ss')+' Uhr'}"></td>
+								</tr>
+								<tr>
+									<th>Ende:</th>
+									<td class="pl-3" th:text="*{#dates.format(endDate, 'dd.MM.yyyy - HH:mm:ss')+' Uhr'}"></td>
+								</tr>
+							</table>
+						</div>
+						<div class="card-footer text-center">
+							<a th:href="@{${URL_PROJECTHOME}+*{projectName}}" class="btn btn-primary" role="button" th:id="*{idProject}">
+								<i class="fas fa-play"></i>
+							</a>
+							<script type="text/javascript" th:inline="javascript">
+								/*<![CDATA[*/
+								$([['#'+*{idProject}]]).popover({
+									trigger : 'hover',
+									placement : 'bottom',
+									content : 'Zur Umfrage [[*{projectName}]]',
+								})
+							</script>
+						</div>
 					</div>
-	            </div>
-	            <div class="card-footer">&nbsp;</div>			
-			</div>	
+				</div>
+			</div>
 		</main>
 	    <footer th:replace="template :: footer"></footer>		
 	</body>

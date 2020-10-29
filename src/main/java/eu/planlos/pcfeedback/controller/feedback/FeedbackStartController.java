@@ -1,8 +1,5 @@
-package eu.planlos.pcfeedback.controller;
+package eu.planlos.pcfeedback.controller.feedback;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -13,18 +10,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 
 @Controller
+@SessionAttributes(names = {"participant", "project"})
 public class FeedbackStartController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FeedbackStartController.class);
@@ -36,71 +37,83 @@ public class FeedbackStartController {
 	private ParticipantService participantService;
 
 	/**
-	 * Shows form to enter participant details like name etc.
+	 * Creates form for participant with empty participant object
+	 * 
 	 * @param model
+	 * @param session
+	 * @param project
 	 * @return
 	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
-	public String feedbackStart(Model model) {
+	public String participantForm(Model model,
+			HttpSession session,
+			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project) {
 
-		Participant participant = participantService.createParticipantForForm();
+		// Filter validates not null
+		Participant participant = participantService.createParticipantForForm(project);
 		
+		LOG.debug("Adding new participant to form: project={}", project.getProjectName());
 		model.addAttribute(participant);
-		
-		mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_START);
+
+		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
 		mfs.fillGlobal(model);
 		return ApplicationPathHelper.RES_FEEDBACK_START;
 	}
-	
+
 	/**
-	 * Checks submitted participant details for validity.
-	 * If successfull writed these into session and redirects to feedpack page
-	 * @param session stores participant details
-	 * @param participant details provided by form
-	 * @param bindingResult object to validate inputs
+	 * Checks submitted participant for validity.
+	 * If successful writes him into session and redirects to feedpack page
+	 * 
 	 * @param model
-	 * @return template to load / redirect
-	 * @throws ServletException
-	 * @throws IOException
+	 * @param session
+	 * @param bindingResult
+	 * @param project
+	 * @param participant
+	 * @return
 	 */
 	@PostMapping(path = ApplicationPathHelper.URL_FEEDBACK_START)
-	public String feedbackStartSubmit(HttpSession session, @Valid Participant participant, BindingResult bindingResult, Model model) {
+	public String participantSubmit(Model model,
+			HttpSession session,
+			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
+			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) @Valid Participant participant,
+			BindingResult bindingResult) {
 
+		// validate model input
 		if (bindingResult.hasErrors()) {
 			LOG.debug("Input from form not valid");
-			
+
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
-			if(genderFieldError != null) {
+			if (genderFieldError != null) {
 				LOG.debug("Gender is missing");
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
-			
-			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_START);
+
+			mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
 			mfs.fillGlobal(model);
 			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}
-		
+
 		LOG.debug("Form input is valid");
 
 		try {
-			
+
 			LOG.debug("Checking if participant exists: {}", participant.toString());
 			participantService.exists(participant);
-			
+
 			LOG.debug("Adding participant to session");
 			session.setAttribute(SessionAttributeHelper.PARTICIPANT, participant);
-			
+
 			LOG.debug("Proceeding to feedback site");
 			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_QUESTION;
-			
+
 		} catch (ParticipantAlreadyExistingException e) {
-			
+
 			LOG.error("Participant exists already, returning to form");
-			
+
 			model.addAttribute("PARTICIPANT_EXISTS", true);
-			
-			mfs.fillUiText(model, UiTextKey.MSG_FEEDBACK_START);
-			mfs.fillGlobal(model);			
+
+			mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
+			mfs.fillGlobal(model);
 			return ApplicationPathHelper.RES_FEEDBACK_START;
 		}
 	}
