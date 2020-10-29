@@ -8,20 +8,20 @@
 				<div class="card-header text-center"><h3 class="mb-0">Projektdetails</h3></div>
 				<div class="card-block p-3">				
 					<div class="col-lg-12 text-center">
-						<form th:action="${project.running} ? '' : @{${URL_ADMIN_PROJECTDETAILS}}" th:object="${project}" method="post">
+						<form th:action="${project.active} ? '' : @{${URL_ADMIN_PROJECTDETAILS}}" th:object="${project}" method="post">
 
 						  <input id="project" name="project" th:field="*{idProject}" type="hidden" />
 			
 							<div class="form-group">
-								<input th:field="*{projectName}" class="form-control" placeholder="Projektname" required="required"  th:disabled="*{running}" />
+								<input th:field="*{projectName}" class="form-control" placeholder="Projektname" required="required"  th:disabled="*{active}" />
 								<span th:errors="*{projectName}" class="text-warning"></span>
 							</div>								
 							
 							<div class="form-group">
 								<div class="custom-control custom-checkbox">
-								 	<input type="checkbox" class="custom-control-input" th:field="*{running}" id="running" disabled="disabled" />
-									<label class="custom-control-label" for="running">Projekt aktiv</label>
-									<span th:errors="*{running}" class="text-warning"></span>
+								 	<input type="checkbox" class="custom-control-input" th:field="*{active}" id="active" disabled="disabled" />
+									<label class="custom-control-label" for="active">Projekt aktiv</label>
+									<span th:errors="*{active}" class="text-warning"></span>
 								</div>
 							</div>
 														
@@ -30,7 +30,7 @@
 									<div class="input-group-prepend" data-target="#datetimepicker1" data-toggle="datetimepicker">
 										<span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
 									</div>
-									<input type="text" th:field="*{startDate}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker1" placeholder="Startdatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{running}" />
+									<input type="text" th:field="*{startDate}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker1" placeholder="Startdatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{active}" />
 									<span th:errors="*{startDate}" class="text-warning"></span>
 								</div>
 							</div>
@@ -39,7 +39,7 @@
 									<div class="input-group-prepend" data-target="#datetimepicker2" data-toggle="datetimepicker">
 										<span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
 									</div>
-									<input type="text" th:field="*{endDate}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker2" placeholder="Enddatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{running}" />
+									<input type="text" th:field="*{endDate}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker2" placeholder="Enddatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{active}" />
 									<span th:errors="*{endDate}" class="text-warning"></span>
 								</div>
 							</div>
@@ -82,7 +82,7 @@
 									<input type="text"
 										th:field="${project.ratingObjectList[__${iterStat.index}__].name}" class="form-control" required="required"
 										th:attr="aria-describedby='basic-addon'+${iterStat.index}"
-										th:disabled="${project.running}" />
+										th:disabled="${project.active}" />
 									<span th:errors="${project.ratingObjectList[__${iterStat.index}__].name}" class="text-warning"></span>
 								</div>
 																
@@ -100,7 +100,7 @@
 									<button type="button" class="btn btn-secondary">Zurück<br /><i class="fa fa-times" aria-hidden="true"></i></button>
 								</a>
 								
-								<div th:remove="tag" th:if="*{! running}">
+								<div th:remove="tag" th:if="*{! active}">
 									<!-- RATIGNOBJECT PART -->
 								
 									<button type="button" id="addRatingObject" class="btn btn-secondary">
@@ -129,34 +129,6 @@
 												});
 											});
 									</script>
-									
-									<!-- MODAL PART -->
-	
-									<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#lockAndStartModal">
-										Sperren und Starten<br /><i class="fas fa-play"></i>
-									</button>
-									
-									<div id="lockAndStartModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-										<div class="modal-dialog" role="document">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title">Umfrage starten</h5>
-													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-												</div>
-												<div class="modal-body">
-													<p>Möchtest du die Umfrage starten? Die Änderung der Umfrageeigenschaften ist dann nicht mehr möglich.</p>
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-													<a th:href="@{${URL_ADMIN_PROJECTRUN + project.projectName}}">
-														<button type="button" class="btn btn-warning">Starten</button>
-													</a>
-												</div>
-											</div>
-										</div>
-									</div>
 		
 									<!-- JUST SAVE PART :-) -->
 		

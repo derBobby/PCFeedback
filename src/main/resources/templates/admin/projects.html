@@ -31,36 +31,68 @@
 								</tr>
 								<tr>
 									<th>Aktiv:</th>
-									<td class="pl-3" th:text="*{running ? 'Ja' : 'Nein'}"></td>
+									<td class="pl-3" th:text="*{active ? 'Ja' : 'Nein'}"></td>
+								</tr>
+								<tr>
+									<th>Online:</th>
+									<td class="pl-3" th:text="*{online ? 'Ja' : 'Nein'}"></td>
 								</tr>
 							</table>
 						</div>
 						<div class="card-footer text-center">
-							<a th:href="@{${URL_ADMIN_PROJECTDETAILS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'edituitext'">
+							<a th:href="@{${URL_ADMIN_PROJECTDETAILS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'editproject'" th:if="*{! active}">
 								<i class="fas fa-wrench"></i>
 							</a>
-							<a th:href="@{${URL_ADMIN_EDITUITEXT}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'editproject'">
+							<a th:href="@{${URL_ADMIN_EDITUITEXT}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'edituitext'">
 								<i class="fas fa-quote-right"></i>
 							</a>
-							<a th:href="@{${URL_PROJECTHOME}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'projecthome'">
+							<a href="#" class="btn btn-warning mt-1" role="button" data-toggle="modal" th:attr="data-target='#lockAndStartModal'+*{idProject}" th:if="*{! active}" >
+								<i class="fas fa-play"></i>
+							</a>
+							<a th:href="@{${URL_PROJECTHOME}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'projecthome'"  th:if="*{active}">
 								<i class="fas fa-home"></i>
 							</a>
-							<a th:href="@{${URL_ADMIN_SHOWFEEDBACK}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showfeedback'">
+							<a th:href="@{${URL_ADMIN_SHOWFEEDBACK}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showfeedback'" th:if="*{active}">
 								<i class="fas fa-users"></i>
 							</a>
-							<a th:href="@{${URL_ADMIN_SHOWUSERAGENTS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showuseragents'">
+							<a th:href="@{${URL_ADMIN_SHOWUSERAGENTS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showuseragents'" th:if="*{active}">
 								<i class="fas fa-user-tie"></i>
 							</a>
+							
+							<!-- MODAL for activation button -->
+							<div th:id="'lockAndStartModal'+*{idProject}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title">Umfrage starten</h5>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body">
+											<p>Möchtest du die Umfrage starten? Die Änderung der Umfrageeigenschaften ist dann nicht mehr möglich.</p>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+											<a th:href="@{${URL_ADMIN_PROJECTRUN} + *{projectName}}">
+												<button type="button" class="btn btn-warning">Starten</button>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							
 							<script type="text/javascript" th:inline="javascript">
 								/*<![CDATA[*/
 									
-								$([['#'+*{idProject}+edituitext]]).popover({
+								$([['#'+*{idProject}+editproject]]).popover({
 									trigger : 'hover',
 									placement : 'bottom',
 									content : 'Projekt [[*{projectName}]] und Bewertungsobjekte bearbeiten',
 								})
 									
-								$([['#'+*{idProject}+editproject]]).popover({
+								$([['#'+*{idProject}+edituitext]]).popover({
 									trigger : 'hover',
 									placement : 'bottom',
 									content : 'Beschreibungstexte für [[*{projectName}]] bearbeiten',

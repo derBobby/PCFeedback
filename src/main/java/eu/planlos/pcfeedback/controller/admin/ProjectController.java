@@ -55,6 +55,12 @@ public class ProjectController {
 	public String listProjects(Model model) {
 		
 		List<Project> projectList = ps.findAll();
+		
+		for(Project project : projectList) {
+			project.setOnline(ps.isOnline(project));
+		}
+		
+		model.addAttribute("URL_ADMIN_PROJECTRUN", ApplicationPathHelper.URL_ADMIN_PROJECTRUN);
 		model.addAttribute("projectList", projectList);
 
 		mfs.fillGlobal(model);
@@ -81,7 +87,7 @@ public class ProjectController {
 	public String editProject(Model model, @PathVariable("projectName") String projectName) {
 		
 		Project project = ps.findProject(projectName);
-		
+
 		mfs.fillProjectDetails(model, project);
 		mfs.fillGlobal(model);
 
@@ -90,14 +96,21 @@ public class ProjectController {
 	
 	@RequestMapping(method = RequestMethod.POST, path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS)
 	public String submitProject(Model model, ServletResponse response, @ModelAttribute("project") @Valid Project uiProject, BindingResult bindingResult) throws IOException {
+			
+		boolean isNewProject = false;
+		if(uiProject.getIdProject() == null) {
+			isNewProject = true;
+		}
 		
 		HttpServletResponse res = (HttpServletResponse) response;
 		
-		Project dbProject = ps.findProject(uiProject.getIdProject());
-		if(dbProject.isRunning()) {
-			LOG.error("Project name='{}' is active. Edit not allowed -> sending 403", dbProject.getProjectName());
-			res.sendError(403, String.format("Projekt %s ist nicht aktiv. Speichern verboten.", dbProject.getProjectName()));
-			return null;
+		if(! isNewProject) {
+			Project dbProject = ps.findProject(uiProject.getIdProject());
+			if(dbProject.isActive()) {
+				LOG.error("Project name='{}' is active. Edit not allowed -> sending 403", dbProject.getProjectName());
+				res.sendError(403, String.format("Projekt %s ist nicht aktiv. Speichern verboten.", dbProject.getProjectName()));
+				return null;
+			}
 		}
 		
 		// validate model input
@@ -113,11 +126,6 @@ public class ProjectController {
 		LOG.debug("Form input is valid");
 
 		try {
-
-			boolean isNewProject = false;
-			if(uiProject.getIdProject() == null) {
-				isNewProject = true;
-			}
 			
 			LOG.debug("Trying to save project: id={} | name={}", uiProject.getIdProject(), uiProject.getProjectName());
 			
@@ -160,11 +168,11 @@ public class ProjectController {
 			return null;
 		}
 	
-		project.setRunning(true);
+		project.setActive(true);
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
 		rqList.addAll(rqService.create(project));
-		project.setRunning(true);
+		project.setActive(true);
 		rqService.saveAll(rqList);
 		ps.save(project);
 		

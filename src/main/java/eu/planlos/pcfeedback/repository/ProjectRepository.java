@@ -13,5 +13,5 @@ public interface ProjectRepository extends CrudRepository<Project, Long>{
 	public Project findByProjectName(String projectName);
 	public List<Project> findAll();
 	public Project findByIdProject(Long idProject);
-	public List<Project> findAllByRunningAndStartDateLessThanAndEndDateGreaterThan(boolean b, Date date, Date date2);
+	public List<Project> findAllByActiveAndStartDateLessThanAndEndDateGreaterThan(boolean b, Date date, Date date2);
 }

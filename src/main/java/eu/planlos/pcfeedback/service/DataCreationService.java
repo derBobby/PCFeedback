@@ -143,7 +143,7 @@ public class DataCreationService {
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
 		rqList.addAll(rqService.create(project));
-		project.setRunning(true);
+		project.setActive(true);
 		rqService.saveAll(rqList);
 		projectService.save(project);
 		

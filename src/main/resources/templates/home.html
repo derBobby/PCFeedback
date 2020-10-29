@@ -26,10 +26,6 @@
 									<th>Ende:</th>
 									<td class="pl-3" th:text="*{#dates.format(endDate, 'dd.MM.yyyy - HH:mm:ss')+' Uhr'}"></td>
 								</tr>
-								<tr>
-									<th>Aktiv:</th>
-									<td class="pl-3" th:text="*{running ? 'Ja' : 'Nein'}"></td>
-								</tr>
 							</table>
 						</div>
 						<div class="card-footer text-center">

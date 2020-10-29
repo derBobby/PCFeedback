@@ -55,12 +55,12 @@ public class ProjectService {
 
 	public List<Project> getActive() {
 		Date date = new Date();
-		return projectRepo.findAllByRunningAndStartDateLessThanAndEndDateGreaterThan(true, date, date);
+		return projectRepo.findAllByActiveAndStartDateLessThanAndEndDateGreaterThan(true, date, date);
 	}
 
-	public boolean isActive(Project project) {
+	public boolean isOnline(Project project) {
 		
-		if(! project.isRunning()) {
+		if(! project.isActive()) {
 			return false;
 		}
 		

@@ -33,9 +33,11 @@ public class Project implements Serializable {
 	@Column(unique=true, nullable=false)
 	@NotBlank
 	private String projectName;
-	
+
 	@Column(nullable=false)
-	private boolean running;
+	private boolean active;
+	
+	private boolean online;
 
 	private Date saveDate;
 
@@ -59,10 +61,10 @@ public class Project implements Serializable {
 		this.ratingObjectList = roList;
 	}
 	
-	public Project(String projectName, List<RatingObject> ratingObjectList, boolean running, Date startDate, Date endDate) {
+	public Project(String projectName, List<RatingObject> ratingObjectList, boolean active, Date startDate, Date endDate) {
 		this.ratingObjectList = ratingObjectList;
 		this.projectName = projectName;
-		this.running = running;
+		this.active = active;
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
@@ -83,12 +85,12 @@ public class Project implements Serializable {
 		this.projectName = projectName;
 	}
 
-	public boolean isRunning() {
-		return running;
+	public boolean isActive() {
+		return active;
 	}
 
-	public void setRunning(boolean running) {
-		this.running = running;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public Date getSaveDate() {
@@ -128,6 +130,14 @@ public class Project implements Serializable {
 
 	public void setRatingObjectList(List<RatingObject> ratingObjectList) {
 		this.ratingObjectList = ratingObjectList;
+	}
+
+	public boolean isOnline() {
+		return online;
+	}
+
+	public void setOnline(boolean online) {
+		this.online = online;
 	}
 
 }

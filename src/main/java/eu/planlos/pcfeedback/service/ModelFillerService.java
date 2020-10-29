@@ -139,6 +139,5 @@ public class ModelFillerService implements EnvironmentAware {
 	public void fillProjectDetails(Model model, Project project) {
 		model.addAttribute("project", project);
 		model.addAttribute("URL_ADMIN_PROJECTDETAILS", ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS);
-		model.addAttribute("URL_ADMIN_PROJECTRUN", ApplicationPathHelper.URL_ADMIN_PROJECTRUN);
 	}
 }

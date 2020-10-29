@@ -48,7 +48,7 @@ public class ProjectHomeController {
 		if(ps.exists(projectName)) {
 			
 			Project project = ps.findProject(projectName);
-			if(! ps.isActive(project)) {
+			if(! ps.isOnline(project)) {
 				LOG.error("User tried to Start inactive project {}", projectName);
 				res.sendError(404, String.format("Projekt %s läuft aktuell nicht.", projectName));
 				return null;
