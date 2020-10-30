@@ -27,7 +27,7 @@ public class FeedbackValidationService {
 		} 
 
 		int givenQuestionCount = feedbackMap.size();
-		int neededQuestionCount = rqService.getRatingQuestionCountFor(project);
+		int neededQuestionCount = project.getRatingQuestionCount();
 		
 		//feedback has needed question count
 		if(givenQuestionCount == neededQuestionCount) {
