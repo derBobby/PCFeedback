@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
-import eu.planlos.pcfeedback.model.Participant;
+import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.service.DeleteParticipationService;
 import eu.planlos.pcfeedback.service.EditParticipationService;
 import eu.planlos.pcfeedback.service.ModelFillerService;

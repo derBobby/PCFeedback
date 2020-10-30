@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.model;
+package eu.planlos.pcfeedback.model.db;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +12,10 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-@Entity@Table(
+import eu.planlos.pcfeedback.model.UiTextKey;
+
+@Entity
+@Table(
 		uniqueConstraints={
 				@UniqueConstraint(columnNames = {"project", "uiTextKey"}),
 	})

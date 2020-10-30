@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
-import eu.planlos.pcfeedback.model.Project;
+import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.service.ProjectService;
 
 public class RequestResponseProjectFilter implements Filter {

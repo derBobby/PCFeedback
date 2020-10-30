@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.UiTextException;
-import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.UiText;
 import eu.planlos.pcfeedback.model.UiTextKey;
+import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.UiText;
 import eu.planlos.pcfeedback.repository.UiTextRepository;
 
 @Service

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
-import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UiTextKey;
+import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ProjectService;
 

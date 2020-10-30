@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.model;
+package eu.planlos.pcfeedback.model.db;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import eu.planlos.pcfeedback.model.Gender;
 
 @Entity
 @Table(

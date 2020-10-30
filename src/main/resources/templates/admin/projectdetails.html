@@ -5,12 +5,14 @@
 		<nav th:replace="template :: nav"></nav>
 		<main class="container pt-3">
 			<div class="card mb-3">
-				<div class="card-header text-center"><h3 class="mb-0">Projektdetails</h3></div>
-				<div class="card-block p-3">				
-					<div class="col-lg-12 text-center">
-						<form th:action="${project.active} ? '' : @{${URL_ADMIN_PROJECTDETAILS}}" th:object="${project}" method="post">
-
-						  <input id="project" name="project" th:field="*{idProject}" type="hidden" />
+				<form th:action="${project.active} ? '' : @{${URL_ADMIN_PROJECTDETAILS}}" th:object="${project}" method="post">
+					<div class="card-header text-center"><h3 class="mb-0">Projektdetails</h3></div>
+					<div class="card-block p-3">
+						<div class="col-lg-12 text-center">
+							
+							<h4 class="mt-4 text-left">Einstellungen</h4>
+	
+							<input id="project" name="project" th:field="*{idProject}" type="hidden" />
 			
 							<div class="form-group">
 								<input th:field="*{projectName}" class="form-control" placeholder="Projektname" required="required"  th:disabled="*{active}" />
@@ -71,7 +73,13 @@
 							    });
 							</script>
 
-							<h4 class="mt-4">Bewertungsobjekte</h4>
+							<div class="form-group text-left">
+							    <label for="ratingQuestionCount">Anzahl zu bewertender Paare pro Teilnehmer</label>
+								<input th:field="*{ratingQuestionCount}" class="form-control" placeholder="" required="required" type="number" th:disabled="*{active}" />
+								<span th:errors="*{ratingQuestionCount}" class="text-warning"></span>
+							</div>
+							
+							<h4 class="mt-4 text-left">Bewertungsobjekte</h4>
 
 							<div th:remove="tag" th:each="ratingObject, iterStat : *{ratingObjectList}" th:object="${ratingObject}">
 								
@@ -90,57 +98,53 @@
 							
 							<div id="buttonMarker"></div>
 							
+							<div th:remove="tag" th:if="*{! active}">
+								<!-- RATIGNOBJECT PART -->
+							
+								<button type="button" id="addRatingObject" class="btn btn-secondary">
+									Bewertungsobjekt<br /><i class="fas fa-plus"></i>
+								</button>
+				
+								<script th:inline="javascript">
+									var ratingObjectNumber = [[${#lists.size(project.ratingObjectList)}]];
+									var ratingObjectIndex = [[${#lists.size(project.ratingObjectList)}]];
+									$(document).ready(function(){
+										$("#addRatingObject").click(function(){
+											ratingObjectNumber += 1;
+											$("#buttonMarker").before(""
+												+ "<div class='input-group mb-3'>"	
+												+ "	<div class='input-group-prepend'>"
+												+ "		<span class='input-group-text' id='basic-addon" + ratingObjectIndex + "'>" + ratingObjectNumber + "</span>"
+												+ "	</div>"
+												+ "	<input type='text'"
+												+ "		id='ratingObjectList" + ratingObjectIndex + ".name'"
+												+ "		name='ratingObjectList[" + ratingObjectIndex + "].name'"
+												+ "		value='Wertungsobjekt'" + ratingObjectNumber
+												+ "		class='form-control' required='required'"
+												+ "		aria-describedby='basic-addon" +  ratingObjectIndex + "' />"
+												+ "</div>");
+											ratingObjectIndex += 1;
+											});
+										});
+								</script>
+							</div>
+								
 							<div>
 								<p class="text-error" th:text="${globalError}"></p>
 							</div>
-							
-							<div class="form-group mb-0">
-								
-								<a th:href="@{${URL_ADMIN_PROJECTS}}">
-									<button type="button" class="btn btn-secondary">Zurück<br /><i class="fa fa-times" aria-hidden="true"></i></button>
-								</a>
-								
-								<div th:remove="tag" th:if="*{! active}">
-									<!-- RATIGNOBJECT PART -->
-								
-									<button type="button" id="addRatingObject" class="btn btn-secondary">
-										Bewertungsobjekt<br /><i class="fas fa-plus"></i>
-									</button>
-					
-									<script th:inline="javascript">
-										var ratingObjectNumber = [[${#lists.size(project.ratingObjectList)}]];
-										var ratingObjectIndex = [[${#lists.size(project.ratingObjectList)}]];
-										$(document).ready(function(){
-											$("#addRatingObject").click(function(){
-												ratingObjectNumber += 1;
-												$("#buttonMarker").before(""
-													+ "<div class='input-group mb-3'>"	
-													+ "	<div class='input-group-prepend'>"
-													+ "		<span class='input-group-text' id='basic-addon" + ratingObjectIndex + "'>" + ratingObjectNumber + "</span>"
-													+ "	</div>"
-													+ "	<input type='text'"
-													+ "		id='ratingObjectList" + ratingObjectIndex + ".name'"
-													+ "		name='ratingObjectList[" + ratingObjectIndex + "].name'"
-													+ "		value='Wertungsobjekt'" + ratingObjectNumber
-													+ "		class='form-control' required='required'"
-													+ "		aria-describedby='basic-addon" +  ratingObjectIndex + "' />"
-													+ "</div>");
-												ratingObjectIndex += 1;
-												});
-											});
-									</script>
-		
-									<!-- JUST SAVE PART :-) -->
-		
-									<button type="submit" id="submit" class="btn btn-primary">
-										Speichern<br /><i class="fas fa-save"></i>
-									</button>
-								</div>
-							</div>
-						</form>
-					</div>	
-				</div>
-				<div class="card-footer">&nbsp;</div>
+						</div>	
+					</div>
+					<div class="card-footer">
+						<div class="form-group mb-0  text-center">
+							<a th:href="@{${URL_ADMIN_PROJECTS}}">
+								<button type="button" class="btn btn-secondary">Zurück<br /><i class="fa fa-times" aria-hidden="true"></i></button>
+							</a>
+							<button type="submit" id="submit" class="btn btn-primary">
+								Speichern<br /><i class="fas fa-save"></i>
+							</button>
+						</div>
+					</div>
+				</form>
 			</div>
 		</main>
 		<footer th:replace="template :: footer"></footer>

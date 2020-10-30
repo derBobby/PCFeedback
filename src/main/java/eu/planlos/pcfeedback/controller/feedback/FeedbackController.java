@@ -26,11 +26,11 @@ import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.model.FeedbackContainer;
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.Participant;
-import eu.planlos.pcfeedback.model.ParticipationResult;
-import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
+import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.ParticipationResult;
+import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.service.FeedbackValidationService;
 import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
@@ -137,7 +137,7 @@ public class FeedbackController {
 		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
 		
 		try {
-			validationService.isValidFeedback(feedbackMap);
+			validationService.isValidFeedback(project, feedbackMap);
 			LOG.debug("Adding feedback to session");
 			session.setAttribute(SessionAttributeHelper.FEEDBACK, fbc);
 			
@@ -200,7 +200,7 @@ public class FeedbackController {
 			freeTextService.createAndSaveFreeText(project, freeText, participant.getGender());			
 			
 			//Save the result for later plausibilisation/correction
-			ParticipationResult pr = new ParticipationResult(participant, feedbackMap);
+			ParticipationResult pr = new ParticipationResult(project, participant, feedbackMap);
 			participationResultService.saveParticipationResult(pr);
 			
 			//Save user agent for later analysis

@@ -10,7 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
-import eu.planlos.pcfeedback.model.Project;
+import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.repository.ProjectRepository;
 
 @Service
@@ -73,5 +73,10 @@ public class ProjectService {
 		}
 			
 		return true;
+	}
+
+	public void resetProject(Project project) {
+		project.setActive(false);
+		projectRepo.save(project);		
 	}
 }

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
-import eu.planlos.pcfeedback.model.FreeText;
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.Participant;
-import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.model.db.FreeText;
+import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;

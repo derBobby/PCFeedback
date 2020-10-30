@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.Project;
+import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.service.CSVExporterService;
 import eu.planlos.pcfeedback.service.ProjectService;
 

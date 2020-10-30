@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
-import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 
@@ -26,7 +26,7 @@ public class FeedbackControllerTest {
 	@Autowired
 	private RatingQuestionRepository ratingQuestioRepository;
 	
-	@Value("${eu.planlos.pcfeedback.question-count}")
+//	@Value("${eu.planlos.pcfeedback.question-count}")
 	private int neededQuestionCount;
 	
 	@BeforeClass

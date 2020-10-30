@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.planlos.pcfeedback.model.db.Participant;
+
 public class ParticipantUnitTest {
 
 	private static final String FIRSTNAME = "Peter";

@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
-import eu.planlos.pcfeedback.model.Participant;
-import eu.planlos.pcfeedback.model.Project;
 import eu.planlos.pcfeedback.model.UiTextKey;
+import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 

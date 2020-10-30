@@ -9,16 +9,15 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.RatingObject;
-import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.RatingObject;
+import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 
 @Service
@@ -28,9 +27,6 @@ public class RatingQuestionService {
 
 	public static final int OBJECT_ONE = 1;
 	public static final int OBJECT_TWO = 2;
-
-	@Value("${eu.planlos.pcfeedback.question-count}")
-	public int totalQuestionCount;
 	
 	@Autowired
 	private RatingQuestionRepository rqRepository;
@@ -52,6 +48,8 @@ public class RatingQuestionService {
 	 */
 	public void addRatingQuestionsForProjectAndGenderToList(List<RatingQuestion> givenQuestions, Project project, Gender gender) throws RatingQuestionsNotExistentException {
 
+		int totalQuestionCount = project.getRatingQuestionCount();
+		
 		int neededQuestionCount = totalQuestionCount - givenQuestions.size();
 		
 		LOG.debug("Needed ratingQuestion count is: {}", neededQuestionCount);
@@ -241,15 +239,36 @@ public class RatingQuestionService {
 	 * @throws WrongRatingQuestionCountExistingException 
 	 */
 	public void checkEnoughRatingQuestions(Project project, boolean proactive) throws WrongRatingQuestionCountExistingException {
-		if(rqRepository.countByProjectAndGender(project, Gender.MALE) < totalQuestionCount) {
+		
+		int givenRatingObjectCount = project.getRatingObjectList().size();
+		
+		int neededQuestionCount = project.getRatingQuestionCount();
+		int possibleQuestionCount = calcPossible(givenRatingObjectCount - 1);
+
+		if(possibleQuestionCount < neededQuestionCount) {
 			if(!proactive) {
 				LOG.error("# ~~~~~~~~ Not correct count of rating questions available! ~~~~~~~~ #");
 			}
-			throw new WrongRatingQuestionCountExistingException();
+			throw new WrongRatingQuestionCountExistingException(String.format("Die Bewertungsobjekte reichen nur für %s von nötigen %s Paare.", possibleQuestionCount, neededQuestionCount));
 		}
+	}
+	
+	private int calcPossible(int given) {
+		if(given == 1) {
+			return 1;
+		}
+		return given + calcPossible(given - 1);
 	}
 
 	public RatingQuestion findByIdRatingQuestion(long idRatingQuestion) {
 		return rqRepository.findByIdRatingQuestion(idRatingQuestion);
+	}
+
+	public void resetProject(Project project) {
+		rqRepository.deleteByProject(project);
+	}
+	
+	public int getRatingQuestionCountFor(Project project) {
+		return rqRepository.countByProjectAndGender(project, Gender.MALE);
 	}
 }

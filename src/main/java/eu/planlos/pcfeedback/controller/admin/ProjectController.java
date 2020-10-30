@@ -22,14 +22,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.DuplicateRatingObjectException;
 import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
-import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.RatingObject;
-import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
+import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.RatingObject;
+import eu.planlos.pcfeedback.model.db.RatingQuestion;
+import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
+import eu.planlos.pcfeedback.service.ParticipantService;
+import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.ProjectService;
 import eu.planlos.pcfeedback.service.RatingObjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 import eu.planlos.pcfeedback.service.UiTextService;
+import eu.planlos.pcfeedback.service.UserAgentService;
 
 @Controller
 public class ProjectController {
@@ -38,6 +43,15 @@ public class ProjectController {
 
 	@Autowired
 	private ProjectService ps;
+
+	@Autowired
+	private ParticipantService participantService;
+
+	@Autowired
+	private ParticipationResultService prs;
+	
+	@Autowired
+	private UserAgentService uaService;
 	
 	@Autowired
 	private UiTextService uts;
@@ -49,7 +63,10 @@ public class ProjectController {
 	private RatingObjectService ros;
 
 	@Autowired
-	private RatingQuestionService rqService;
+	private RatingQuestionService rqs;
+	
+	@Autowired
+	private FreeTextService fts;
 	
 	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTS)
 	public String listProjects(Model model) {
@@ -59,8 +76,9 @@ public class ProjectController {
 		for(Project project : projectList) {
 			project.setOnline(ps.isOnline(project));
 		}
-		
+
 		model.addAttribute("URL_ADMIN_PROJECTRUN", ApplicationPathHelper.URL_ADMIN_PROJECTRUN);
+		model.addAttribute("URL_ADMIN_PROJECTRESET", ApplicationPathHelper.URL_ADMIN_PROJECTRESET);
 		model.addAttribute("projectList", projectList);
 
 		mfs.fillGlobal(model);
@@ -129,8 +147,9 @@ public class ProjectController {
 			
 			LOG.debug("Trying to save project: id={} | name={}", uiProject.getIdProject(), uiProject.getProjectName());
 			
-			ros.validateUniqueAndSaveList(uiProject.getRatingObjectList());
-
+			rqs.checkEnoughRatingQuestions(uiProject, false);
+			ros.validateAndSaveList(uiProject.getRatingObjectList());
+			
 			ps.save(uiProject);
 
 			if(isNewProject) {
@@ -143,7 +162,7 @@ public class ProjectController {
 			
 			return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
 
-		} catch (ProjectAlreadyExistingException | DuplicateRatingObjectException e) {
+		} catch (ProjectAlreadyExistingException | DuplicateRatingObjectException | WrongRatingQuestionCountExistingException e) {
 
 			LOG.error(e.getMessage());
 			
@@ -171,10 +190,34 @@ public class ProjectController {
 		project.setActive(true);
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
-		rqList.addAll(rqService.create(project));
+		rqList.addAll(rqs.create(project));
 		project.setActive(true);
-		rqService.saveAll(rqList);
+		rqs.saveAll(rqList);
 		ps.save(project);
+		
+		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
+	}
+	
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_PROJECTRESET + "{projectName}")
+	public String resetProject(Model model, ServletResponse response, @PathVariable String projectName) throws ProjectAlreadyExistingException, IOException {
+		
+		HttpServletResponse res = (HttpServletResponse) response;
+
+		Project project = ps.findProject(projectName);
+		if(project == null) {
+			LOG.error("Project name='{}' does not exist -> sending 400", projectName);
+			res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
+			return null;
+		}
+	
+		LOG.debug("Resetting Project name={}", projectName);
+		
+		fts.resetProject(project);
+		prs.resetProject(project);
+		participantService.resetProject(project);
+		ps.resetProject(project);
+		rqs.resetProject(project);
+		uaService.resetProject(project);
 		
 		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
 	}

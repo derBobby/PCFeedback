@@ -5,8 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.model.Participant;
-import eu.planlos.pcfeedback.model.ParticipationResult;
+import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.ParticipationResult;
+import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.repository.ParticipationResultRepository;
 
 @Service
@@ -35,5 +36,9 @@ public class ParticipationResultService {
 	public void resetDB() {
 		LOG.debug("RESET: ParticipantResult");
 		prRepo.deleteAll();
+	}
+
+	public void resetProject(Project project) {
+		prRepo.deleteByProject(project);		
 	}
 }

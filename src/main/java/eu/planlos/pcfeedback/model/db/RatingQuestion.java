@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.model;
+package eu.planlos.pcfeedback.model.db;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+
+import eu.planlos.pcfeedback.model.Gender;
 
 @Entity
 @Table(

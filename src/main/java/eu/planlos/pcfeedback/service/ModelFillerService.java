@@ -14,11 +14,11 @@ import org.springframework.ui.Model;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
-import eu.planlos.pcfeedback.model.FreeText;
-import eu.planlos.pcfeedback.model.Participant;
-import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
+import eu.planlos.pcfeedback.model.db.FreeText;
+import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.RatingQuestion;
 
 @Service
 public class ModelFillerService implements EnvironmentAware {
@@ -30,9 +30,6 @@ public class ModelFillerService implements EnvironmentAware {
 	
 	@Value("${eu.planlos.pcfeedback.need-mobile}")
 	private boolean needMobile;
-
-	@Value("${eu.planlos.pcfeedback.question-count}")
-	public int neededQuestionCount;
 	
 	@Autowired
 	private Environment environment;
@@ -52,9 +49,6 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("URL_IMPRESSUM", ApplicationPathHelper.URL_IMPRESSUM);
 		model.addAttribute("URL_DATENSCHUTZ", ApplicationPathHelper.URL_DATENSCHUTZ);
 		model.addAttribute("URL_PRICEGAME", ApplicationPathHelper.URL_PRICEGAME);
-
-		LOG.debug("Preparing model for home area");
-		model.addAttribute("NEEDED_QUESTION_COUNT", neededQuestionCount);
 		
 		LOG.debug("Preparing model for feedback start area");
 		model.addAttribute("URL_FEEDBACK_START", ApplicationPathHelper.URL_FEEDBACK_START);

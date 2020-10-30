@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.UserAgent;
+import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.UserAgent;
 import eu.planlos.pcfeedback.repository.UserAgentRepository;
 
 @Service
@@ -34,5 +34,9 @@ public class UserAgentService {
 	public void resetDB() {
 		LOG.debug("RESET: UserAgent");
 		uaRepo.deleteAll();
+	}
+
+	public void resetProject(Project project) {
+		uaRepo.deleteByProject(project);
 	}
 }

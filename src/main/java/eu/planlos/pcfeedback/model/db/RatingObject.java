@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.model;
+package eu.planlos.pcfeedback.model.db;
 
 import java.io.Serializable;
 import java.util.Objects;

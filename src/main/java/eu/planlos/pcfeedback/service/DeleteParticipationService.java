@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
-import eu.planlos.pcfeedback.model.Participant;
-import eu.planlos.pcfeedback.model.ParticipationResult;
+import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.ParticipationResult;
 
 @Service
 public class DeleteParticipationService {

@@ -18,8 +18,8 @@ import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.Participant;
-import eu.planlos.pcfeedback.model.Project;
+import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.repository.ParticipantRepository;
 
 @Service
@@ -184,5 +184,10 @@ public class ParticipantService implements EnvironmentAware {
 		Gender newGender = newParticipant.getGender();
 		
 		return oldGender.equals(newGender);
+	}
+
+	public void resetProject(Project project) {
+		participantRepo.deleteByProject(project);
+		
 	}
 }

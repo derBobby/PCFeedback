@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.model;
+package eu.planlos.pcfeedback.model.db;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -37,6 +37,9 @@ public class Project implements Serializable {
 	@Column(nullable=false)
 	private boolean active;
 	
+	@Column(nullable=false)
+	private int ratingQuestionCount;
+	
 	private boolean online;
 
 	private Date saveDate;
@@ -53,20 +56,17 @@ public class Project implements Serializable {
 	public Project() {
 	}
 
-	public Project(String projectName) {
-		this.projectName = projectName;
-	}
-
 	public Project(List<RatingObject> roList) {
 		this.ratingObjectList = roList;
 	}
 	
-	public Project(String projectName, List<RatingObject> ratingObjectList, boolean active, Date startDate, Date endDate) {
+	public Project(String projectName, List<RatingObject> ratingObjectList, boolean active, Date startDate, Date endDate, int ratingQuestionCount) {
 		this.ratingObjectList = ratingObjectList;
 		this.projectName = projectName;
 		this.active = active;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.ratingQuestionCount = ratingQuestionCount;
 	}
 	
 	public Long getIdProject() {
@@ -140,4 +140,11 @@ public class Project implements Serializable {
 		this.online = online;
 	}
 
+	public int getRatingQuestionCount() {
+		return ratingQuestionCount;
+	}
+
+	public void setRatingQuestionCount(int ratingQuestionCount) {
+		this.ratingQuestionCount = ratingQuestionCount;
+	}
 }

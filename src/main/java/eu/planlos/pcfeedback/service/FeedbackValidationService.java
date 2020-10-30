@@ -4,22 +4,22 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.NoFeedbackException;
+import eu.planlos.pcfeedback.model.db.Project;
 
 @Service
 public class FeedbackValidationService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FeedbackValidationService.class);
-
-	//TODO move to project config
-	@Value("${eu.planlos.pcfeedback.question-count}")
-	public int neededQuestionCount;
+	@Autowired
+	private RatingQuestionService rqService;
 	
-	public void isValidFeedback(Map<Long, Integer> feedbackMap) throws InvalidFeedbackException, NoFeedbackException {
+	private static final Logger LOG = LoggerFactory.getLogger(FeedbackValidationService.class);
+	
+	public void isValidFeedback(Project project, Map<Long, Integer> feedbackMap) throws InvalidFeedbackException, NoFeedbackException {
 		
 		//no feedback given
 		if(feedbackMap == null) {
@@ -27,6 +27,7 @@ public class FeedbackValidationService {
 		} 
 
 		int givenQuestionCount = feedbackMap.size();
+		int neededQuestionCount = rqService.getRatingQuestionCountFor(project);
 		
 		//feedback has needed question count
 		if(givenQuestionCount == neededQuestionCount) {

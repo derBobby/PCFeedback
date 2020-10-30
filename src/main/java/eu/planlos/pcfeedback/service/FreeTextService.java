@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.model.FreeText;
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.Project;
+import eu.planlos.pcfeedback.model.db.FreeText;
+import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.repository.FreeTextRepository;
 
 @Service
@@ -37,5 +37,9 @@ public class FreeTextService {
 	public void resetDB() {
 		LOG.debug("RESET: FreeText");
 		ftRepo.deleteAll();		
+	}
+	
+	public void resetProject(Project project) {
+		ftRepo.deleteByProject(project);
 	}
 }

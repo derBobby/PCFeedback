@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.RatingObject;
-import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.RatingObject;
+import eu.planlos.pcfeedback.model.db.RatingQuestion;
 
 @Repository
 public interface RatingQuestionRepository extends CrudRepository<RatingQuestion, Long>{
@@ -67,4 +68,6 @@ public interface RatingQuestionRepository extends CrudRepository<RatingQuestion,
 	public int countByProjectAndGender(Project project, Gender male);
 	
 	public RatingQuestion findByIdRatingQuestion(long idRatingQuestion);
+	@Transactional
+	public void deleteByProject(Project project);
 }

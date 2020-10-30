@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.DuplicateRatingObjectException;
-import eu.planlos.pcfeedback.model.RatingObject;
+import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.repository.RatingObjectRepository;
 
 @Service
@@ -20,8 +20,8 @@ public class RatingObjectService {
 	@Autowired
 	private RatingObjectRepository ratingObjectRepository;
 
-	public List<RatingObject> validateUniqueAndSaveList(List<RatingObject> ratingObjectList) throws DuplicateRatingObjectException {
-		
+	public List<RatingObject> validateAndSaveList(List<RatingObject> ratingObjectList) throws DuplicateRatingObjectException {
+
 		List<RatingObject> saveList = new ArrayList<>();
 		
 		for(RatingObject ro : ratingObjectList) {

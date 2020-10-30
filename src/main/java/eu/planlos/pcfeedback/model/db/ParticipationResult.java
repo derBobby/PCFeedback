@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.model;
+package eu.planlos.pcfeedback.model.db;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -11,7 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class ParticipationResult {
@@ -28,11 +30,17 @@ public class ParticipationResult {
 	@Column
     @ElementCollection(targetClass=Integer.class)
 	private Map<Long, Integer> feedbackMap;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull
+	@JoinColumn(name="project", nullable=false)
+	private Project project;
 
 	public ParticipationResult() {
 	}
 	
-	public ParticipationResult(Participant participant, Map<Long, Integer> feedbackMap) {
+	public ParticipationResult(Project project, Participant participant, Map<Long, Integer> feedbackMap) {
+		this.project = project;
 		this.participant = participant;
 		this.feedbackMap = feedbackMap;
 	}

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.Participant;
-import eu.planlos.pcfeedback.model.ParticipationResult;
-import eu.planlos.pcfeedback.model.RatingObject;
-import eu.planlos.pcfeedback.model.RatingQuestion;
+import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.ParticipationResult;
+import eu.planlos.pcfeedback.model.db.RatingObject;
+import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 
 @Service

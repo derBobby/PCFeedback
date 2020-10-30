@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.UiTextException;
-import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.UiText;
 import eu.planlos.pcfeedback.model.UiTextContainer;
+import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.UiText;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ProjectService;
 import eu.planlos.pcfeedback.service.UiTextService;

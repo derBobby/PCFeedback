@@ -58,6 +58,9 @@
 							<a th:href="@{${URL_ADMIN_SHOWUSERAGENTS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showuseragents'" th:if="*{active}">
 								<i class="fas fa-user-tie"></i>
 							</a>
+							<a href="#" class="btn btn-warning mt-1" role="button" data-toggle="modal" th:attr="data-target='#resetModal'+*{idProject}" th:if="*{active}" >
+								<i class="fa fa-times"></i>
+							</a>
 							
 							<!-- MODAL for activation button -->
 							<div th:id="'lockAndStartModal'+*{idProject}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
@@ -76,6 +79,29 @@
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
 											<a th:href="@{${URL_ADMIN_PROJECTRUN} + *{projectName}}">
 												<button type="button" class="btn btn-warning">Starten</button>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<!-- MODAL for reset button -->
+							<div th:id="'resetModal'+*{idProject}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title">Umfrage zurücksetzen</h5>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body">
+											<p>Möchtest du die Umfrage zurücksetzen und dabei alle Ergebnisse löschen? Das Wiederherstellen der Umfrage ist nicht möglich.</p>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+											<a th:href="@{${URL_ADMIN_PROJECTRESET} + *{projectName}}">
+												<button type="button" class="btn btn-warning">Zurücksetzen</button>
 											</a>
 										</div>
 									</div>

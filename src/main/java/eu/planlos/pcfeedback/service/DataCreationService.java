@@ -12,7 +12,6 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.DuplicateRatingObjectException;
@@ -22,20 +21,17 @@ import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.exceptions.UiTextException;
 import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.Participant;
-import eu.planlos.pcfeedback.model.ParticipationResult;
-import eu.planlos.pcfeedback.model.Project;
-import eu.planlos.pcfeedback.model.RatingObject;
-import eu.planlos.pcfeedback.model.RatingQuestion;
 import eu.planlos.pcfeedback.model.UiTextKey;
+import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.ParticipationResult;
+import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.RatingObject;
+import eu.planlos.pcfeedback.model.db.RatingQuestion;
 
 @Service
 public class DataCreationService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataCreationService.class);
-
-	@Value("${eu.planlos.pcfeedback.question-count}")
-	private int neededQuestionCount;
 	
 	@Autowired
 	private RatingObjectService roService;
@@ -83,9 +79,11 @@ public class DataCreationService {
 		cal.set(2002, 2, 2, 2, 2, 2);
 		Date endDate = cal.getTime();
 
-		List<RatingObject> roList = createRatingObjects();
+		int neededQuestionCount = 15;
 		
-		Project project = new Project(projectName, roList, false, startDate, endDate);
+		List<RatingObject> roList = createRatingObjects(neededQuestionCount);
+		
+		Project project = new Project(projectName, roList, false, startDate, endDate, neededQuestionCount);
 		projectService.save(project);
 
 		//Create UiTexts and check if enough in method are created.
@@ -110,7 +108,7 @@ public class DataCreationService {
 		createParticipations(project, Gender.FEMALE, 10);		
 	}
 
-	private List<RatingObject> createRatingObjects() throws DuplicateRatingObjectException {
+	private List<RatingObject> createRatingObjects(int neededRatingQuestionCount) throws DuplicateRatingObjectException {
 		// ~~~~~~~~~~~~ RO ~~~~~~~~~~~~
 		
 		List<RatingObject> roList = new ArrayList<>();
@@ -129,7 +127,7 @@ public class DataCreationService {
 		roList.add(new RatingObject("neue Leute kennenlernen"));
 		roList.add(new RatingObject("gute Zeit mit meinen Teenkreis Mitarbeitern haben"));		
 
-		roService.validateUniqueAndSaveList(roList);
+		roService.validateAndSaveList(roList);
 
 		
 		LOG.debug("Demo data created: rating objects");
@@ -235,7 +233,7 @@ public class DataCreationService {
 				long id = ratingQuestion.getIdRatingQuestion();
 				feedbackMap.put(id, gender.equals(Gender.MALE) ? 1 : 2);
 			}
-			ParticipationResult pResult = new ParticipationResult(participant, feedbackMap);
+			ParticipationResult pResult = new ParticipationResult(project, participant, feedbackMap);
 			participationResultService.saveParticipationResult(pResult);
 			
 			// Update RatingQuestion
