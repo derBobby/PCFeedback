@@ -79,4 +79,8 @@ public class ProjectService {
 		project.setActive(false);
 		projectRepo.save(project);		
 	}
+
+	public void deleteProject(Project project) {
+		projectRepo.delete(project);		
+	}
 }

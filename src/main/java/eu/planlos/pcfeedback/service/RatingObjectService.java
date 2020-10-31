@@ -36,4 +36,8 @@ public class RatingObjectService {
 		
 		return (List<RatingObject>) ratingObjectRepository.saveAll(saveList);
 	}
+
+	public void deleteAll(List<RatingObject> roList) {
+		ratingObjectRepository.deleteAll(roList);
+	}
 }

@@ -46,10 +46,10 @@
 							<a th:href="@{${URL_ADMIN_EDITUITEXT}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'edituitext'">
 								<i class="fas fa-quote-right"></i>
 							</a>
-							<a href="#" class="btn btn-warning mt-1" role="button" data-toggle="modal" th:attr="data-target='#lockAndStartModal'+*{idProject}" th:if="*{! active}" >
+							<a href="#" class="btn btn-warning mt-1" role="button" data-toggle="modal" th:id="*{idProject}+'projectrun'"  th:attr="data-target='#lockAndStartModal'+*{idProject}" th:if="*{! active}" >
 								<i class="fas fa-play"></i>
 							</a>
-							<a th:href="@{${URL_PROJECTHOME}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'projecthome'"  th:if="*{active}">
+							<a th:href="@{${URL_PROJECTHOME}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'projecthome'" th:if="*{active}">
 								<i class="fas fa-home"></i>
 							</a>
 							<a th:href="@{${URL_ADMIN_SHOWFEEDBACK}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showfeedback'" th:if="*{active}">
@@ -58,8 +58,11 @@
 							<a th:href="@{${URL_ADMIN_SHOWUSERAGENTS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showuseragents'" th:if="*{active}">
 								<i class="fas fa-user-tie"></i>
 							</a>
-							<a href="#" class="btn btn-warning mt-1" role="button" data-toggle="modal" th:attr="data-target='#resetModal'+*{idProject}" th:if="*{active}" >
+							<a href="#" class="btn btn-warning mt-1" role="button" data-toggle="modal" th:attr="data-target='#resetModal'+*{idProject}" th:id="*{idProject}+'projectreset'" th:if="*{active}" >
 								<i class="fa fa-times"></i>
+							</a>
+							<a href="#" class="btn btn-warning mt-1" role="button" data-toggle="modal" th:attr="data-target='#deleteModal'+*{idProject}" th:id="*{idProject}+'projectdelete'">
+								<i class="fa fa-trash" aria-hidden="true"></i>
 							</a>
 							
 							<!-- MODAL for activation button -->
@@ -78,7 +81,7 @@
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
 											<a th:href="@{${URL_ADMIN_PROJECTRUN} + *{projectName}}">
-												<button type="button" class="btn btn-warning">Starten</button>
+												<button type="button" class="btn btn-warning"><i class="fas fa-play"></i>&nbsp;Starten</button>
 											</a>
 										</div>
 									</div>
@@ -101,7 +104,30 @@
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
 											<a th:href="@{${URL_ADMIN_PROJECTRESET} + *{projectName}}">
-												<button type="button" class="btn btn-warning">Zurücksetzen</button>
+												<button type="button" class="btn btn-warning"><i class="fas fa-times"></i>&nbsp;Zurücksetzen</button>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<!-- MODAL for delete button -->
+							<div th:id="'deleteModal'+*{idProject}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title">Umfrage löschen</h5>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body">
+											<p>Möchtest du die Umfrage <b>löschen</b> und damit auch alle Ergebnisse löschen? Das Wiederherstellen der Umfrage ist nicht möglich.</p>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+											<a th:href="@{${URL_ADMIN_PROJECTDELETE} + *{projectName}}">
+												<button type="button" class="btn btn-warning"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Löschen</button>
 											</a>
 										</div>
 									</div>
@@ -140,6 +166,18 @@
 									trigger : 'hover',
 									placement : 'bottom',
 									content : 'Zu den UserAgents von [[*{projectName}]]',
+								})
+
+								$([['#'+*{idProject}+projectreset]]).popover({
+									trigger : 'hover',
+									placement : 'bottom',
+									content : 'Setzt das Projekt zurück in einen bearbeitbaren Zustand und löscht alle Ergebnisse.',
+								})
+
+								$([['#'+*{idProject}+projectdelete]]).popover({
+									trigger : 'hover',
+									placement : 'bottom',
+									content : 'Löscht das Projekt mit all seinen Ergebnissen.',
 								})
 							</script>
 						</div>

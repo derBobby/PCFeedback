@@ -83,4 +83,8 @@ public class UiTextService {
 			throw new UiTextException("Es wurden nicht für jedes UiTextField ein Element initialisiert oder der zugehörige Text fehlt.");
 		}
 	}
+	
+	public void deleteByProject(Project project) {
+		uiTextRepo.deleteByProject(project);
+	}
 }

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Project;
@@ -17,4 +18,6 @@ public interface UiTextRepository extends CrudRepository<UiText, UiTextKey> {
 	public UiText findByProjectAndUiTextKey(Project project, UiTextKey uiTextKey);
 	public List<UiText> findAllByProject(Project project);
 	public Optional<UiText> findByIdUiText(Long idUiText);
+	@Transactional
+	public void deleteByProject(Project project);
 }

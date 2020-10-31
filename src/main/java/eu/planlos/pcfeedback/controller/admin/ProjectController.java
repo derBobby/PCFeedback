@@ -79,6 +79,7 @@ public class ProjectController {
 
 		model.addAttribute("URL_ADMIN_PROJECTRUN", ApplicationPathHelper.URL_ADMIN_PROJECTRUN);
 		model.addAttribute("URL_ADMIN_PROJECTRESET", ApplicationPathHelper.URL_ADMIN_PROJECTRESET);
+		model.addAttribute("URL_ADMIN_PROJECTDELETE", ApplicationPathHelper.URL_ADMIN_PROJECTDELETE);
 		model.addAttribute("projectList", projectList);
 
 		mfs.fillGlobal(model);
@@ -101,7 +102,7 @@ public class ProjectController {
 		return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;
 	}	
 	
-	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS + "/{projectName}")
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS + "/{projectName}")
 	public String editProject(Model model, @PathVariable("projectName") String projectName) {
 		
 		Project project = ps.findProject(projectName);
@@ -218,6 +219,36 @@ public class ProjectController {
 		ps.resetProject(project);
 		rqs.resetProject(project);
 		uaService.resetProject(project);
+		
+		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
+	}	
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_PROJECTDELETE+ "{projectName}")
+	public String deleteProject(Model model, ServletResponse response, @PathVariable String projectName) throws IOException, ProjectAlreadyExistingException {
+		
+		HttpServletResponse res = (HttpServletResponse) response;
+
+		Project project = ps.findProject(projectName);
+		if(project == null) {
+			LOG.error("Project name='{}' does not exist -> sending 400", projectName);
+			res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
+			return null;
+		}
+	
+		LOG.debug("Deleting Project name={}", projectName);
+		
+		fts.resetProject(project);
+		prs.resetProject(project);
+		participantService.resetProject(project);
+		rqs.resetProject(project);
+		uaService.resetProject(project);
+		uts.deleteByProject(project);
+		
+		List<RatingObject> roList = project.getRatingObjectList();
+		project.setRatingObjectList(null);
+		ps.save(project);
+		
+		ros.deleteAll(roList);
+		ps.deleteProject(project); 
 		
 		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
 	}
