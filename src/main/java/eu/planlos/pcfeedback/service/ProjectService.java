@@ -1,5 +1,6 @@
 package eu.planlos.pcfeedback.service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -59,19 +60,30 @@ public class ProjectService {
 	}
 
 	public boolean isOnline(Project project) {
+
+		Calendar nowTime = Calendar.getInstance();
+		
+		Calendar startTime = Calendar.getInstance();
+		startTime.setTime(project.getStartDate());
+		
+		Calendar endTime = Calendar.getInstance();
+		endTime.setTime(project.getEndDate());
 		
 		if(! project.isActive()) {
+			LOG.debug("Project {} not active", project.getProjectName());
 			return false;
 		}
 		
-		Date now = new Date();
-		if(now.before(project.getStartDate())) {
+		if(nowTime.before(startTime)) {
+			LOG.debug("{} before {}", nowTime.getTime(), startTime.getTime());
 			return false;
 		}
-		if(now.after(project.getEndDate())) {
+		if(nowTime.after(endTime)) {
+			LOG.debug("{} after {}", nowTime.getTime(), endTime.getTime());
 			return false;
 		}
-			
+		
+		LOG.debug("Start={} <<< Now={} <<< End={}", startTime.getTime(), nowTime.getTime(), endTime.getTime());
 		return true;
 	}
 

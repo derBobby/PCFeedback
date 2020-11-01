@@ -1,6 +1,7 @@
 package eu.planlos.pcfeedback.service;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -66,6 +67,10 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("URL_ADMIN_EDITUITEXT", ApplicationPathHelper.URL_ADMIN_EDITUITEXT); //TODO notwendig?
 		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS); //TODO notwendig?
 		model.addAttribute("URL_LOGOUT", ApplicationPathHelper.URL_LOGOUT);
+		
+
+		Calendar cal = Calendar.getInstance();
+		model.addAttribute("TIMENOW", cal.getTime());
 		
 		/*
 		 * URLs for DEV profile
