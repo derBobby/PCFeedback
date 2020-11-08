@@ -1,6 +1,6 @@
 package eu.planlos.pcfeedback.repository;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
@@ -13,5 +13,5 @@ public interface ProjectRepository extends CrudRepository<Project, Long>{
 	public Project findByProjectName(String projectName);
 	public List<Project> findAll();
 	public Project findByIdProject(Long idProject);
-	public List<Project> findAllByActiveAndStartDateLessThanAndEndDateGreaterThan(boolean b, Date date, Date date2);
+	public List<Project> findAllByActiveAndStartInstantLessThanAndEndInstantGreaterThan(boolean b, Instant now, Instant now2);
 }

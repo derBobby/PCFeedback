@@ -172,7 +172,7 @@ public class CSVExporterService {
 		String firstname = participant.getFirstname();
 		String name = participant.getName();
 		Gender gender = participant.getGender();
-		String participationDate = participant.getformattedParticipationDateString();
+		String participationDate = participant.getformattedParticipationTimeString();
 
 		List<Object> participantRecord = new ArrayList<>();
 		participantRecord.add(firstname);

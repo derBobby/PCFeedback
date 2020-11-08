@@ -26,14 +26,13 @@
 									<span th:errors="*{active}" class="text-warning"></span>
 								</div>
 							</div>
-														
 							<div class="form-group">
 								<div class="input-group date" id="datetimepicker1" data-target-input="nearest">
 									<div class="input-group-prepend" data-target="#datetimepicker1" data-toggle="datetimepicker">
 										<span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
 									</div>
-									<input type="text" th:field="*{startDate}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker1" placeholder="Startdatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{active}" />
-									<span th:errors="*{startDate}" class="text-warning"></span>
+									<input type="text" th:field="*{startZonedDateTime}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker1" placeholder="Startdatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{active}" />
+									<span th:errors="*{startZonedDateTime}" class="text-warning"></span>
 								</div>
 							</div>
 							<div class="form-group">
@@ -41,11 +40,10 @@
 									<div class="input-group-prepend" data-target="#datetimepicker2" data-toggle="datetimepicker">
 										<span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
 									</div>
-									<input type="text" th:field="*{endDate}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker2" placeholder="Enddatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{active}" />
-									<span th:errors="*{endDate}" class="text-warning"></span>
+									<input type="text" th:field="*{endZonedDateTime}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker2" placeholder="Enddatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{active}" />
+									<span th:errors="*{endZonedDateTime}" class="text-warning"></span>
 								</div>
 							</div>
-
 							<script type="text/javascript">
 						
 								$.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {

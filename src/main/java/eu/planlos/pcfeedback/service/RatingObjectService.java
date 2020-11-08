@@ -26,7 +26,7 @@ public class RatingObjectService {
 		
 		for(RatingObject ro : ratingObjectList) {
 			
-			LOG.debug("Processing RatingObject {}", ro.getName());
+			LOG.debug("Validate and save RatingObject {}", ro.getName());
 			
 			if(saveList.contains(ro) ) {
 				throw new DuplicateRatingObjectException(String.format("Name des Bewertungsobjekt '%s' ist schon vergeben", ro.getName()));

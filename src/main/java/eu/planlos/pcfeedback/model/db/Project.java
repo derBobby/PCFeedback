@@ -1,7 +1,9 @@
 package eu.planlos.pcfeedback.model.db;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,10 +14,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
 
 @Entity
 @Table(
@@ -43,13 +48,26 @@ public class Project implements Serializable {
 	
 	private boolean online;
 
-	private Date saveDate;
+	@Column
+	private Instant saveInstant;
 
-	@DateTimeFormat(pattern = "dd.MM.yyyy HH:mm")
-	private Date startDate;
+	@Column
+	private Instant startInstant;
+	
+	@Column
+	private Instant endInstant;
 
-	@DateTimeFormat(pattern = "dd.MM.yyyy HH:mm")
-	private Date endDate;
+	@Transient
+	@DateTimeFormat(pattern = "dd.MM.YYYY HH:mm")
+	private ZonedDateTime saveZonedDateTime;
+	
+	@Transient
+	@DateTimeFormat(pattern = "dd.MM.YYYY HH:mm")
+	private ZonedDateTime startZonedDateTime;
+	
+	@Transient
+	@DateTimeFormat(pattern = "dd.MM.YYYY HH:mm")
+	private ZonedDateTime endZonedDateTime;
 
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<RatingObject> ratingObjectList;
@@ -61,12 +79,12 @@ public class Project implements Serializable {
 		this.ratingObjectList = roList;
 	}
 	
-	public Project(String projectName, List<RatingObject> ratingObjectList, boolean active, Date startDate, Date endDate, int ratingQuestionCount) {
+	public Project(String projectName, List<RatingObject> ratingObjectList, boolean active, ZonedDateTime startZonedDateTime, ZonedDateTime endZonedDateTime, int ratingQuestionCount) {
 		this.ratingObjectList = ratingObjectList;
 		this.projectName = projectName;
 		this.active = active;
-		this.startDate = startDate;
-		this.endDate = endDate;
+		setStartZonedDateTimeUpdateInstant(startZonedDateTime);
+		setEndZonedDateTimeUpdateInstant(endZonedDateTime);
 		this.ratingQuestionCount = ratingQuestionCount;
 	}
 	
@@ -94,35 +112,71 @@ public class Project implements Serializable {
 		this.active = active;
 	}
 
-	public Date getSaveDate() {
-		return saveDate;
+	public ZonedDateTime getStartZonedDateTime() {
+		// Should always be set
+		if (startInstant != null) {
+			this.startZonedDateTime = ZonedDateTime.ofInstant(startInstant, ZoneId.of(ZonedDateTimeHelper.CET));
+			return startZonedDateTime;
+		}
+		// except for new unsaved projects
+		return null;
 	}
 
-	public void setSaveDate(Date saveDate) {
-		this.saveDate = saveDate;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	// Absolute necessary for Binding from UI to objects
+	public void setStartZonedDateTime(ZonedDateTime startZonedDateTime) {
+		setStartZonedDateTimeUpdateInstant(startZonedDateTime);
 	}
 	
+	public void setStartZonedDateTimeUpdateInstant(ZonedDateTime startZonedDateTime) {
+		this.startZonedDateTime = startZonedDateTime;
+		this.startInstant = startZonedDateTime.toInstant();
+	}
+	
+	public ZonedDateTime getEndZonedDateTime() {
+		// Should always be set
+		if (endInstant != null) {
+			this.endZonedDateTime = ZonedDateTime.ofInstant(endInstant, ZoneId.of(ZonedDateTimeHelper.CET));
+			return endZonedDateTime;
+		}
+		// except for new unsaved projects
+		return null;
+	}
+	
+	// Absolute necessary for Binding from UI to objects
+	public void setEndZonedDateTime(ZonedDateTime startZonedDateTime) {
+		setEndZonedDateTimeUpdateInstant(startZonedDateTime);
+	}
+	
+	public void setEndZonedDateTimeUpdateInstant(ZonedDateTime endZonedDateTime) {
+		this.endZonedDateTime = endZonedDateTime;
+		this.endInstant = endZonedDateTime.toInstant();
+	}
+	
+	public ZonedDateTime getSaveZonedDateTime() {
+		// Should always be set
+		if (saveInstant != null) {
+			this.saveZonedDateTime = ZonedDateTime.ofInstant(saveInstant, ZoneId.of(ZonedDateTimeHelper.CET));
+			return saveZonedDateTime;
+		}
+		// except for new unsaved projects
+		return null;
+	}
+	
+	// Absolute necessary for Binding from UI to objects
+	public void setSaveZonedDateTime(ZonedDateTime saveZonedDateTime) {
+		setSaveZonedDateTimeUpdateInstant(saveZonedDateTime);
+	}
+	
+	public void setSaveZonedDateTimeUpdateInstant(ZonedDateTime saveZonedDateTime) {
+		this.saveZonedDateTime = saveZonedDateTime;
+		this.saveInstant = saveZonedDateTime.toInstant();
+	}
+
 	/*
 	 * Functions
 	 */	
 	public String toString() {
-		return String.format("idProject=%s, name=%s", idProject, projectName);
+		return String.format("idProject='%s', name='%s'", idProject, projectName);
 	}
 
 	public List<RatingObject> getRatingObjectList() {

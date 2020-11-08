@@ -20,11 +20,11 @@
 							<table>
 								<tr>
 									<th>Start:</th>
-									<td class="pl-3" th:text="*{#dates.format(startDate, 'dd.MM.yyyy - HH:mm:ss')+' Uhr'}"></td>
+									<td class="pl-3" th:text="*{startZonedDateTime+' Uhr'}"></td>
 								</tr>
 								<tr>
 									<th>Ende:</th>
-									<td class="pl-3" th:text="*{#dates.format(endDate, 'dd.MM.yyyy - HH:mm:ss')+' Uhr'}"></td>
+									<td class="pl-3" th:text="*{endZonedDateTime+' Uhr'}"></td>
 								</tr>
 							</table>
 						</div>

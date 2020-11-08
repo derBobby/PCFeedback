@@ -1,7 +1,6 @@
 package eu.planlos.pcfeedback.service;
 
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,6 +19,7 @@ import eu.planlos.pcfeedback.model.db.FreeText;
 import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
+import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
 
 @Service
 public class ModelFillerService implements EnvironmentAware {
@@ -68,9 +68,7 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS); //TODO notwendig?
 		model.addAttribute("URL_LOGOUT", ApplicationPathHelper.URL_LOGOUT);
 		
-
-		Calendar cal = Calendar.getInstance();
-		model.addAttribute("TIMENOW", cal.getTime());
+		model.addAttribute("TIMENOW", ZonedDateTimeHelper.nice(ZonedDateTimeHelper.nowCET()));		
 		
 		/*
 		 * URLs for DEV profile

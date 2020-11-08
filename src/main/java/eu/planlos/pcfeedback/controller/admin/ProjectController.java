@@ -146,7 +146,7 @@ public class ProjectController {
 
 		try {
 			
-			LOG.debug("Trying to save project: id={} | name={}", uiProject.getIdProject(), uiProject.getProjectName());
+			LOG.debug("Trying to save project: id='{}' | name='{}'", uiProject.getIdProject(), uiProject.getProjectName());
 			
 			rqs.checkEnoughRatingQuestions(uiProject, false);
 			ros.validateAndSaveList(uiProject.getRatingObjectList());
@@ -234,7 +234,7 @@ public class ProjectController {
 			return null;
 		}
 	
-		LOG.debug("Deleting Project name={}", projectName);
+		LOG.debug("Deleting Project name='{}'", projectName);
 		
 		fts.resetProject(project);
 		prs.resetProject(project);

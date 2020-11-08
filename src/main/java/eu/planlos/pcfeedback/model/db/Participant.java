@@ -1,9 +1,7 @@
 package eu.planlos.pcfeedback.model.db;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -20,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import eu.planlos.pcfeedback.model.Gender;
+import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
 
 @Entity
 @Table(
@@ -64,20 +63,18 @@ public class Participant implements Serializable {
 	private boolean dataPrivacyStatementAccepted;
 	
 	@Column(nullable=false)
-	private LocalDateTime participationDate;
+	private Instant participationTime;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@NotNull
 	@JoinColumn(name="project", nullable=false)
 	private Project project;
-	
-	private static final String TIME_ZONE = "Europe/Berlin";
 
 	public Participant() {
 	}
 	
 	public Participant(Project project) {
-		setParticipationDate();
+		setParticipationTime();
 	}
 
 	public Participant(String firstname, String name, String email, String mobile, Gender gender, boolean priceGameStatementAccepted, boolean dataPrivacyStatementAccepted) {
@@ -88,9 +85,7 @@ public class Participant implements Serializable {
 		this.gender = gender;
 		this.priceGameStatementAccepted = priceGameStatementAccepted;
 		this.dataPrivacyStatementAccepted = dataPrivacyStatementAccepted;
-
-		ZoneId timeZone = ZoneId.of(TIME_ZONE);
-		this.participationDate = LocalDateTime.now(timeZone);
+		this.participationTime = Instant.now();
 	}
 
 	public Participant(Project project, String firstname, String name, String email, String mobile, Gender gender, boolean priceGameStatementAccepted, boolean dataPrivacyStatementAccepted) {
@@ -102,9 +97,7 @@ public class Participant implements Serializable {
 		this.gender = gender;
 		this.priceGameStatementAccepted = priceGameStatementAccepted;
 		this.dataPrivacyStatementAccepted = dataPrivacyStatementAccepted;
-
-		ZoneId timeZone = ZoneId.of(TIME_ZONE);
-		this.participationDate = LocalDateTime.now(timeZone);
+		this.participationTime = Instant.now();
 	}
 	
 	public Long getIdParticipant() {
@@ -171,18 +164,16 @@ public class Participant implements Serializable {
 		this.mobile = mobile;
 	}
 
-	public LocalDateTime getParticipationDate() {
-		return participationDate;
+	public Instant getParticipationTime() {
+		return participationTime;
 	}
 
-	public String getformattedParticipationDateString() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		return participationDate.format(formatter);
+	public String getformattedParticipationTimeString() {
+		return ZonedDateTimeHelper.niceCET(participationTime);
 	}
 
-	public final void setParticipationDate() {
-		ZoneId timeZone = ZoneId.of(TIME_ZONE);
-		this.participationDate = LocalDateTime.now(timeZone);
+	public final void setParticipationTime() {
+		this.participationTime = Instant.now();
 	}
 
 	public Project getProject() {

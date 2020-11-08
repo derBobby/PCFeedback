@@ -225,6 +225,12 @@ public class FeedbackController {
 
 	private void finalValidation(Project project, Participant participant, Map<Long, Integer> feedbackMap) throws InvalidFeedbackException {
 
+		int mapEntryCount = feedbackMap.size();
+		
+		if(mapEntryCount < project.getRatingQuestionCount()) {
+			throw new InvalidFeedbackException("Im Feedback ist nicht die erwartete Anzahl Paare enthalten.");
+		}
+		
 		long project1 = project.getIdProject();
 		long project2 = participant.getProject().getIdProject();
 		
@@ -232,6 +238,11 @@ public class FeedbackController {
 			throw new InvalidFeedbackException("Projekt in folgenden Objekten nicht identisch: Projekt, Teilnehmer.");
 		}
 
+		if(mapEntryCount == 0) {
+			LOG.debug("No rating questions have been submitted");
+			return;
+		}
+		
 		long idRatingQuestion = feedbackMap.keySet().iterator().next();
 		RatingQuestion ratingQuestion = rqs.findByIdRatingQuestion(idRatingQuestion);
 		

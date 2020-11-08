@@ -1,8 +1,8 @@
 package eu.planlos.pcfeedback.service;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +27,7 @@ import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
+import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
 
 @Service
 public class DataCreationService {
@@ -71,19 +72,14 @@ public class DataCreationService {
 
 	private void createSampleData(String projectName, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 
-		Calendar cal = Calendar.getInstance();
+		ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 1, 14, 30, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
+		ZonedDateTime endTime = ZonedDateTime.of(2020, 11, 8, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
 		
-		cal.set(2001, 1, 1, 1, 1, 1);
-		Date startDate = cal.getTime();
-		
-		cal.set(2002, 2, 2, 2, 2, 2);
-		Date endDate = cal.getTime();
-
 		int neededQuestionCount = 15;
 		
 		List<RatingObject> roList = createRatingObjects(neededQuestionCount);
 		
-		Project project = new Project(projectName, roList, false, startDate, endDate, neededQuestionCount);
+		Project project = new Project(projectName, roList, false, startTime, endTime, neededQuestionCount);
 		projectService.save(project);
 
 		//Create UiTexts and check if enough in method are created.

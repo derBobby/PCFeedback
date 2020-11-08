@@ -64,7 +64,7 @@ public class ParticipantService implements EnvironmentAware {
 		
 		LOG.debug("Saving participant: {}", participant.toString());
 		try {
-			participant.setParticipationDate();
+			participant.setParticipationTime();
 			participantRepo.save(participant);
 			
 		} catch(ConstraintViolationException e) {

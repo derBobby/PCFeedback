@@ -1,7 +1,7 @@
 package eu.planlos.pcfeedback.service;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.repository.ProjectRepository;
+import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
 
 @Service
 public class ProjectService {
@@ -27,7 +28,7 @@ public class ProjectService {
 		try {
 			projectRepo.save(project);
 		} catch (DataIntegrityViolationException e) {
-			throw new ProjectAlreadyExistingException(String.format("Projekt mit Namen {} existiert bereits", project.getProjectName()));
+			throw new ProjectAlreadyExistingException(String.format("Projekt mit Namen '{}' existiert bereits", project.getProjectName()));
 		}
 	}
 
@@ -41,7 +42,7 @@ public class ProjectService {
 	}
 
 	public List<Project> findAll() {
-		return (List<Project>) projectRepo.findAll();
+		return projectRepo.findAll();
 	}
 
 	public void resetDB() {
@@ -55,35 +56,41 @@ public class ProjectService {
 	}
 
 	public List<Project> getActive() {
-		Date date = new Date();
-		return projectRepo.findAllByActiveAndStartDateLessThanAndEndDateGreaterThan(true, date, date);
+		ZonedDateTime now = ZonedDateTimeHelper.nowUTC();
+		Instant nowInstant = now.toInstant();
+		return projectRepo.findAllByActiveAndStartInstantLessThanAndEndInstantGreaterThan(true, nowInstant, nowInstant);
 	}
 
 	public boolean isOnline(Project project) {
 
-		Calendar nowTime = Calendar.getInstance();
-		
-		Calendar startTime = Calendar.getInstance();
-		startTime.setTime(project.getStartDate());
-		
-		Calendar endTime = Calendar.getInstance();
-		endTime.setTime(project.getEndDate());
-		
-		if(! project.isActive()) {
-			LOG.debug("Project {} not active", project.getProjectName());
+		ZonedDateTime now = ZonedDateTimeHelper.nowCET();
+
+		ZonedDateTime projectStart = project.getStartZonedDateTime();
+		ZonedDateTime projectEnd = project.getEndZonedDateTime();
+
+		if (!project.isActive()) {
+			LOG.debug("Project '{}' not active", project.getProjectName());
 			return false;
 		}
-		
-		if(nowTime.before(startTime)) {
-			LOG.debug("{} before {}", nowTime.getTime(), startTime.getTime());
+
+		if (now.isBefore(projectStart)) {
+			LOG.debug("'{}' before '{}'",
+					ZonedDateTimeHelper.nice(now),
+					ZonedDateTimeHelper.nice(projectStart));
 			return false;
 		}
-		if(nowTime.after(endTime)) {
-			LOG.debug("{} after {}", nowTime.getTime(), endTime.getTime());
+		if (now.isAfter(projectEnd)) {
+			LOG.debug("'{}' after '{}'",
+					ZonedDateTimeHelper.nice(now),
+					ZonedDateTimeHelper.nice(projectEnd));
 			return false;
 		}
-		
-		LOG.debug("Start={} <<< Now={} <<< End={}", startTime.getTime(), nowTime.getTime(), endTime.getTime());
+
+		LOG.debug("Start='{}'   <   Now='{}'   <   End='{}'",
+				projectStart.toString(),
+				now.toString(),
+				projectEnd.toString());
+
 		return true;
 	}
 
