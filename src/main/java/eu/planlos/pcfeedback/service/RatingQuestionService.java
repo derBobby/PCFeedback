@@ -49,10 +49,8 @@ public class RatingQuestionService {
 	public void addRatingQuestionsForProjectAndGenderToList(List<RatingQuestion> givenQuestions, Project project, Gender gender) throws RatingQuestionsNotExistentException {
 
 		int totalQuestionCount = project.getRatingQuestionCount();
-		
-		int neededQuestionCount = totalQuestionCount - givenQuestions.size();
-		
-		LOG.debug("Needed ratingQuestion count is: {}", neededQuestionCount);
+				
+		LOG.debug("Needed ratingQuestion count for project is: {}", totalQuestionCount);
 		
 		LOG.debug("Get the lowest number a ratingQuestion is voted for gender: {}", gender.toString());
 		int lowestVotedCount = getLowestCountRatingQuestionIsVoted(project, gender);
@@ -60,13 +58,16 @@ public class RatingQuestionService {
 		LOG.debug("Start adding ratingQuestions to result set");
 		while(givenQuestions.size() <= totalQuestionCount) {
 			
+			int remainingQuestionCount = totalQuestionCount - givenQuestions.size();
+			LOG.debug("Question count remaining to load is '{}'", remainingQuestionCount);
+			
 			// Load IDs with minimum count of answers
 			LOG.debug("Load all questions for lowest number voted: {}", lowestVotedCount);
 			List<RatingQuestion> loadedQuestions = rqRepository.findByProjectAndGenderAndCountVoted(project, gender, lowestVotedCount);
 			loadedQuestions.removeAll(givenQuestions);
 			
 			// If exact count is found
-			if(loadedQuestions.size() == neededQuestionCount) {
+			if(loadedQuestions.size() == remainingQuestionCount) {
 
 				LOG.debug("Required count was loaded, add to result set and stop");
 				givenQuestions.addAll(loadedQuestions);
@@ -74,7 +75,7 @@ public class RatingQuestionService {
 			}
 			
 			//If more questions are available chose random ones
-			if(loadedQuestions.size() > neededQuestionCount) {
+			if(loadedQuestions.size() > remainingQuestionCount) {
 
 				LOG.debug("Shuffle rating questions in list");
 				Collections.shuffle(loadedQuestions);
@@ -86,7 +87,7 @@ public class RatingQuestionService {
 			}
 						
 			//If not enough questions are available
-			if(loadedQuestions.size() < neededQuestionCount) {
+			if(loadedQuestions.size() < remainingQuestionCount) {
 				
 				LOG.debug("Lesser than required count was loaded, get new lowest number voted");
 				givenQuestions.addAll(loadedQuestions);

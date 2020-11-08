@@ -86,7 +86,9 @@ public class ModelFillerService implements EnvironmentAware {
 		}
 	}
 
-	public void fillResults(Model model, List<Participant> randomParticipantList, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale, List<FreeText> freeTextList) {
+	public void fillResults(Model model, Project project, List<Participant> randomParticipantList, List<Participant> participantList, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale, List<FreeText> freeTextList) {
+		model.addAttribute("project", project);
+		
 		model.addAttribute("randomParticipantList", randomParticipantList);
 		model.addAttribute("participantList", participantList);
 		model.addAttribute("rqListMale", rqListMale);
@@ -100,6 +102,7 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("URL_ADMIN_CSVFEEDBACK_FREETEXT", ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_FREETEXT);
 		
 		model.addAttribute("URL_ADMIN_EDITPARTICIPANT", ApplicationPathHelper.URL_ADMIN_EDITPARTICIPANT);
+		//TODO use with modal
 		model.addAttribute("URL_ADMIN_DELETEPARTICIPANT", ApplicationPathHelper.URL_ADMIN_DELETEPARTICIPANT);
 	}
 

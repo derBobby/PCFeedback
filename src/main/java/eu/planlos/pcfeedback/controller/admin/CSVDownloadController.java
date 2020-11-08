@@ -29,21 +29,19 @@ public class CSVDownloadController {
 	@ResponseBody
 	public void participantsCSV(HttpServletResponse response, @PathVariable("projectName") String projectName) throws IOException {
 		
-	    response.setHeader("Content-Disposition", "attachment; filename=Teilnehmerliste.csv");
-	    response.setContentType("text/csv");
-
+	    setCsvHeader(response, "Teilnehmerliste.csv");
 	    Project project = pService.findProject(projectName);
+	    
 	    expService.writeParticipantsCSV(project, response.getWriter());
 	}
-	
+
 	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK + "{projectName}")
 	@ResponseBody
 	public void feedbackCSV(HttpServletResponse response, @PathVariable("projectName") String projectName) throws IOException {
 		
-	    response.setHeader("Content-Disposition", "attachment; filename=Feedback_MW.csv");
-	    response.setContentType("text/csv");
+		setCsvHeader(response, "Feedback_MW.csv");
+		Project project = pService.findProject(projectName);
 	    	    
-	    Project project = pService.findProject(projectName);
 	    expService.writeRatingQuestionCSV(response.getWriter(), project, null);
 	}
 	
@@ -51,10 +49,9 @@ public class CSVDownloadController {
 	@ResponseBody
 	public void feedbackMaleCSV(HttpServletResponse response, @PathVariable("projectName") String projectName) throws IOException {
 		
-	    response.setHeader("Content-Disposition", "attachment; filename=Feedback_M.csv");
-	    response.setContentType("text/csv");
+		setCsvHeader(response, "Feedback_M.csv");
+		Project project = pService.findProject(projectName);
 
-	    Project project = pService.findProject(projectName);
 	    expService.writeRatingQuestionCSV(response.getWriter(), project, Gender.MALE);
 	}
 	
@@ -62,21 +59,24 @@ public class CSVDownloadController {
 	@ResponseBody
 	public void feedbackFemaleCSV(HttpServletResponse response, @PathVariable("projectName") String projectName) throws IOException {
 		
-	    response.setHeader("Content-Disposition", "attachment; filename=Feedback_W.csv");
-	    response.setContentType("text/csv");
+		setCsvHeader(response, "Feedback_W.csv");
+		Project project = pService.findProject(projectName);
 
-	    Project project = pService.findProject(projectName);
 	    expService.writeRatingQuestionCSV(response.getWriter(), project, Gender.FEMALE);
 	}	
 	
-	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_FREETEXT)
+	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_FREETEXT + "{projectName}")
 	@ResponseBody
 	public void feedbackFreeTextCSV(HttpServletResponse response, @PathVariable("projectName") String projectName) throws IOException {
 		
-	    response.setHeader("Content-Disposition", "attachment; filename=Feedback_Freitext.csv");
-	    response.setContentType("text/csv");
+		setCsvHeader(response, "Feedback_Freitext.csv");
+		Project project = pService.findProject(projectName);
 
-	    Project project = pService.findProject(projectName);
 	    expService.writeFreeTextCSV(response.getWriter(), project);
-	}	
+	}
+	
+	private void setCsvHeader(HttpServletResponse response, String filename) {
+		response.setHeader("Content-Disposition", String.format("attachment; filename=%s", filename));
+	    response.setContentType("text/csv");		
+	}
 }

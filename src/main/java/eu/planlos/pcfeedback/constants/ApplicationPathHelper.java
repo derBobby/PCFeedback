@@ -76,11 +76,12 @@ public class ApplicationPathHelper {
 	public static final String URL_ADMIN_DELETEPARTICIPANT		= URL_AREA_ADMIN + "deleteparticipant" + URL_DELIMETER;
 	public static final String URL_ADMIN_EDITUITEXT				= URL_AREA_ADMIN + "edituitext" + URL_DELIMETER;
 	//Buttons
-	public static final String URL_ADMIN_CSVPARTICIPANTS		= URL_AREA_ADMIN + "csvparticipants" + URL_DELIMETER;
-	public static final String URL_ADMIN_CSVFEEDBACK			= URL_AREA_ADMIN + "csvfeedback" + URL_DELIMETER;
-	public static final String URL_ADMIN_CSVFEEDBACK_M			= URL_AREA_ADMIN + "csvfeedbackm" + URL_DELIMETER;
-	public static final String URL_ADMIN_CSVFEEDBACK_W			= URL_AREA_ADMIN + "csvfeedbackw" + URL_DELIMETER;
-	public static final String URL_ADMIN_CSVFEEDBACK_FREETEXT	= URL_AREA_ADMIN + "csvfeedbackfreetext" + URL_DELIMETER;
+	public static final String URL_ADMIN_CSV					= URL_AREA_ADMIN + "csv" + URL_DELIMETER;
+	public static final String URL_ADMIN_CSVPARTICIPANTS		= URL_ADMIN_CSV + "participants" + URL_DELIMETER;
+	public static final String URL_ADMIN_CSVFEEDBACK			= URL_ADMIN_CSV + "feedback" + URL_DELIMETER;
+	public static final String URL_ADMIN_CSVFEEDBACK_M			= URL_ADMIN_CSV + "feedbackm" + URL_DELIMETER;
+	public static final String URL_ADMIN_CSVFEEDBACK_W			= URL_ADMIN_CSV + "feedbackw" + URL_DELIMETER;
+	public static final String URL_ADMIN_CSVFEEDBACK_FREETEXT	= URL_ADMIN_CSV + "feedbackfreetext" + URL_DELIMETER;
 
 	public static final String RES_ADMIN_PROJECTS				= "admin/projects";
 	public static final String RES_ADMIN_PROJECTDETAILS			= "admin/projectdetails";

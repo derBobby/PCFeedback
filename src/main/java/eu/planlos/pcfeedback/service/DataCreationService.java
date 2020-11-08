@@ -60,22 +60,22 @@ public class DataCreationService {
 			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 		
 		LOG.debug("Initializing database");
-		createSampleData("Demo-Projekt", true);
+		createSampleData("Demo-Projekt", false);
 		createSampleData("Demo-Projekt 1", false);
-		createSampleData("Demo-Projekt 2", true);
-		createSampleData("Demo-Projekt 3", true);
-		createSampleData("Demo-Projekt 4", true);
-		createSampleData("Demo-Projekt 5", false);
-		createSampleData("Demo-Projekt 6", false);
+//		createSampleData("Demo-Projekt 2", true);
+//		createSampleData("Demo-Projekt 3", true);
+//		createSampleData("Demo-Projekt 4", true);
+//		createSampleData("Demo-Projekt 5", false);
+//		createSampleData("Demo-Projekt 6", false);
 		LOG.debug("Initializing database ... DONE");		
 	}
 
 	private void createSampleData(String projectName, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 
 		ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 1, 14, 30, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
-		ZonedDateTime endTime = ZonedDateTime.of(2020, 11, 8, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
+		ZonedDateTime endTime = ZonedDateTime.of(2020, 11, 15, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
 		
-		int neededQuestionCount = 15;
+		int neededQuestionCount = 5;
 		
 		List<RatingObject> roList = createRatingObjects(neededQuestionCount);
 		
@@ -112,16 +112,16 @@ public class DataCreationService {
 		roList.add(new RatingObject("guter Referent im Opening"));
 		roList.add(new RatingObject("gutes Programm im Opening"));
 		roList.add(new RatingObject("gute \"Zeitraum\" Leute, die für mich beten oder mir zuhören"));
-		roList.add(new RatingObject("gute kreative Aktionen die Nacht über"));
-		roList.add(new RatingObject("gute actionreiche Aktionen die Nacht über"));
-		roList.add(new RatingObject("neue Aktionen die Nacht über"));
-		roList.add(new RatingObject("coole Stationsmitarbeiter"));
-		roList.add(new RatingObject("gute Band"));
-		roList.add(new RatingObject("gute Seminare"));
-		roList.add(new RatingObject("gute chillige Aktionen die Nacht über"));
-		roList.add(new RatingObject("gutes Essen / guter Megabrunch"));
-		roList.add(new RatingObject("neue Leute kennenlernen"));
-		roList.add(new RatingObject("gute Zeit mit meinen Teenkreis Mitarbeitern haben"));		
+//		roList.add(new RatingObject("gute kreative Aktionen die Nacht über"));
+//		roList.add(new RatingObject("gute actionreiche Aktionen die Nacht über"));
+//		roList.add(new RatingObject("neue Aktionen die Nacht über"));
+//		roList.add(new RatingObject("coole Stationsmitarbeiter"));
+//		roList.add(new RatingObject("gute Band"));
+//		roList.add(new RatingObject("gute Seminare"));
+//		roList.add(new RatingObject("gute chillige Aktionen die Nacht über"));
+//		roList.add(new RatingObject("gutes Essen / guter Megabrunch"));
+//		roList.add(new RatingObject("neue Leute kennenlernen"));
+//		roList.add(new RatingObject("gute Zeit mit meinen Teenkreis Mitarbeitern haben"));		
 
 		roService.validateAndSaveList(roList);
 

@@ -1,6 +1,10 @@
 package eu.planlos.pcfeedback.controller.admin;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,18 +43,21 @@ public class ResultsController {
 	private FreeTextService ftService;
 	
 	@Autowired
-	private ProjectService prService;
+	private ProjectService psService;
 	
 	@Autowired
 	private ModelFillerService mfs;
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + "{projectName}", method = RequestMethod.GET)
-	public String showResults(@PathVariable(name = "projectName") String projectName, Model model) throws RatingQuestionsNotExistentException {
+	public String showResults(ServletResponse response, @PathVariable(name = "projectName") String projectName, Model model) throws RatingQuestionsNotExistentException, IOException {
 
-		Project project = prService.findProject(projectName);
+		HttpServletResponse res = (HttpServletResponse) response;
+
+		Project project = psService.findProject(projectName);
 		if(project == null) {
-			//TODO real handling 
-			return "FUCK";
+			LOG.error("Project name='{}' does not exist -> sending 400", projectName);
+			res.sendError(404, "Kein Projekt angegeben");
+			return null;
 		}
 		
 		LOG.debug("Loading random participants");
@@ -69,7 +76,7 @@ public class ResultsController {
 		List<FreeText> freeTextList = ftService.findAllByProject(project);
 		
 		mfs.fillGlobal(model);
-		mfs.fillResults(model, randomParticipantList, participantList, rqListMale, rqListFemale, freeTextList);
+		mfs.fillResults(model, project, randomParticipantList, participantList, rqListMale, rqListFemale, freeTextList);
 		
 		return ApplicationPathHelper.RES_ADMIN_SHOWFEEDBACK;
 	}

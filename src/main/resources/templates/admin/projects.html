@@ -40,13 +40,13 @@
 							</table>
 						</div>
 						<div class="card-footer text-center">
-							<a th:href="@{${URL_ADMIN_PROJECTDETAILS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'editproject'" th:if="*{! active}">
+							<a th:href="@{${URL_ADMIN_PROJECTDETAILS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'editproject'">
 								<i class="fas fa-wrench"></i>
 							</a>
 							<a th:href="@{${URL_ADMIN_EDITUITEXT}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'edituitext'">
 								<i class="fas fa-quote-right"></i>
 							</a>
-							<a href="#" class="btn btn-warning mt-1" role="button" data-toggle="modal" th:id="*{idProject}+'projectrun'"  th:attr="data-target='#lockAndStartModal'+*{idProject}" th:if="*{! active}" >
+							<a href="#" class="btn btn-warning mt-1" role="button" data-toggle="modal" th:id="*{idProject}+'projectrun'"  th:attr="data-target='#lockAndStartModal'+*{idProject}" th:if="*{! active}">
 								<i class="fas fa-play"></i>
 							</a>
 							<a th:href="@{${URL_PROJECTHOME}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'projecthome'" th:if="*{active}">

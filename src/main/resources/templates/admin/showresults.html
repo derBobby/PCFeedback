@@ -14,27 +14,27 @@
        		</div>
     		<div class="row justify-content-center">
         		<div class="column border-dark p-3 mb-3">
-        			<a th:href="@{${URL_ADMIN_CSVPARTICIPANTS}}" class="btn btn-secondary">
+        			<a th:href="@{${URL_ADMIN_CSVPARTICIPANTS}+${project.projectName}}" class="btn btn-secondary">
 						<span class="fas fa-file-download">&nbsp;&nbsp;Teilnehmer</span>
 					</a>
        			</div>
         		<div class="column border-dark p-3 mb-3">
-        			<a th:href="@{${URL_ADMIN_CSVFEEDBACK}}" class="btn btn-secondary">
+        			<a th:href="@{${URL_ADMIN_CSVFEEDBACK}+${project.projectName}}" class="btn btn-secondary">
 						<span class="fas fa-file-download">&nbsp;&nbsp;Feedback M/W</span>
 					</a>
        			</div>
         		<div class="column border-dark p-3 mb-3">
-        			<a th:href="@{${URL_ADMIN_CSVFEEDBACK_M}}" class="btn btn-secondary">
+        			<a th:href="@{${URL_ADMIN_CSVFEEDBACK_M}+${project.projectName}}" class="btn btn-secondary">
 						<span class="fas fa-file-download">&nbsp;&nbsp;Feedback M</span>
 					</a>
        			</div>
         		<div class="column border-dark p-3 mb-3">
-        			<a th:href="@{${URL_ADMIN_CSVFEEDBACK_W}}" class="btn btn-secondary">
+        			<a th:href="@{${URL_ADMIN_CSVFEEDBACK_W}+${project.projectName}}" class="btn btn-secondary">
 						<span class="fas fa-file-download">&nbsp;&nbsp;Feedback W</span>
 					</a>
        			</div>
        			<div class="column border-dark p-3 mb-3">
-        			<a th:href="@{${URL_ADMIN_CSVFEEDBACK_FREETEXT}}" class="btn btn-secondary">
+        			<a th:href="@{${URL_ADMIN_CSVFEEDBACK_FREETEXT}+${project.projectName}}" class="btn btn-secondary">
 						<span class="fas fa-file-download">&nbsp;&nbsp;Freitext</span>
 					</a>
        			</div>
