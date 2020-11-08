@@ -43,11 +43,11 @@ public class EditParticipationService {
 	 */
 	public boolean editParticipant(Participant participant) throws ParticipantNotFoundException {
 		
-		boolean genderChanged = pService.isGenderSame(participant);
+		boolean genderSame = pService.isGenderSame(participant);
 		
 		pService.saveEdited(participant);
 
-		if(! genderChanged) {
+		if(genderSame) {
 			return false;
 		}
 		

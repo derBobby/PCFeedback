@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
 import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.service.DeleteParticipationService;
 import eu.planlos.pcfeedback.service.EditParticipationService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
@@ -68,8 +69,9 @@ public class ParticipantController {
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
 			
+			model.addAttribute("URL_ADMIN_EDITPARTICIPANT", ApplicationPathHelper.URL_ADMIN_EDITPARTICIPANT);
 			mfs.fillGlobal(model);
-			return ApplicationPathHelper.RES_FEEDBACK_START;
+			return ApplicationPathHelper.RES_ADMIN_EDITPARTICIPANT;
 		}
 		
 		LOG.debug("Input from form is valid");
@@ -78,9 +80,10 @@ public class ParticipantController {
 
 			if(eps.editParticipant(participant)) {
 				mfs.fillGlobal(model);
+				model.addAttribute("URL_TOPROJECT", ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + participant.getProject().getProjectName());
 				return ApplicationPathHelper.RES_ADMIN_EDITPARTICIPANTDONE;
 			}
-			return "redirect:" + ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK;
+			return "redirect:" + ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + participant.getProject().getProjectName();
 			
 		} catch (ParticipantNotFoundException e) {
 			LOG.debug(e.getMessage());
@@ -95,8 +98,9 @@ public class ParticipantController {
 		
 		try {
 			participant = ps.findByIdParticipant(idParticipant);
+			Project project = participant.getProject();
 			dps.deleteParticipant(participant);
-			return "redirect:" + ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK;
+			return "redirect:" + ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + project.getProjectName();
 			
 		} catch (ParticipantNotFoundException e) {
 			LOG.error(e.getMessage());

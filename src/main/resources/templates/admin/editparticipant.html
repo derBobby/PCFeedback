@@ -14,6 +14,10 @@
 							
 							<input type="hidden" th:field="*{idParticipant}" />
 							
+							<input type="hidden" th:field="*{project}" />
+							
+							<input type="hidden" th:field="*{participationTime}" />
+							
 							<div class="form-group">
 								<input th:field="*{firstname}" class="form-control" placeholder="Vorname" />
 								<span th:errors="*{firstname}" class="text-warning"></span>

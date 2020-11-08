@@ -167,6 +167,10 @@ public class Participant implements Serializable {
 	public Instant getParticipationTime() {
 		return participationTime;
 	}
+	
+	public void setParticipationTime(Instant participationTime) {
+		this.participationTime = participationTime;
+	}
 
 	public String getformattedParticipationTimeString() {
 		return ZonedDateTimeHelper.niceCET(participationTime);
