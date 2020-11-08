@@ -74,6 +74,7 @@ public class Participant implements Serializable {
 	}
 	
 	public Participant(Project project) {
+		this.project = project;
 		setParticipationTime();
 	}
 
@@ -192,7 +193,16 @@ public class Participant implements Serializable {
 	 * Functions
 	 */	
 	public String toString() {
-		return String.format("idParticipant=%s, project=%s, firstname=%s, name=%s, gender=%s", idParticipant, project.getProjectName(), firstname, name, gender.toString());
+		String projectName = null;
+		if(project != null) {
+			projectName = project.getProjectName();
+		}
+		String genderName = null;
+		if(gender != null) {
+			genderName = gender.toString();
+		}
+		
+		return String.format("idParticipant=%s, project=%s, firstname=%s, name=%s, gender=%s", idParticipant, projectName, firstname, name, genderName);
 	}
 	
     @Override
