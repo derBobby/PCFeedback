@@ -60,26 +60,26 @@ public class DataCreationService {
 			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 		
 		LOG.debug("Initializing database");
-		createSampleData("Demo-Projekt", false);
-		createSampleData("Demo-Projekt 1", false);
-//		createSampleData("Demo-Projekt 2", true);
-//		createSampleData("Demo-Projekt 3", true);
+		createSampleData("Demo-Projekt", false, false, true);
+		createSampleData("Demo-Projekt 1", false, true, true);
+		createSampleData("Demo-Projekt 2", true, false, true);
+		createSampleData("Demo-Projekt 3", true, true, true);
 //		createSampleData("Demo-Projekt 4", true);
 //		createSampleData("Demo-Projekt 5", false);
 //		createSampleData("Demo-Projekt 6", false);
 		LOG.debug("Initializing database ... DONE");		
 	}
 
-	private void createSampleData(String projectName, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
+	private void createSampleData(String projectName, boolean needMail, boolean needMobile, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 
 		ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 1, 14, 30, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
-		ZonedDateTime endTime = ZonedDateTime.of(2020, 11, 15, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
+		ZonedDateTime endTime = ZonedDateTime.of(2020, 12, 15, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
 		
 		int neededQuestionCount = 5;
 		
 		List<RatingObject> roList = createRatingObjects(neededQuestionCount);
 		
-		Project project = new Project(projectName, roList, false, startTime, endTime, neededQuestionCount);
+		Project project = new Project(projectName, roList, needMail, needMobile, active, startTime, endTime, neededQuestionCount);
 		projectService.save(project);
 
 		//Create UiTexts and check if enough in method are created.

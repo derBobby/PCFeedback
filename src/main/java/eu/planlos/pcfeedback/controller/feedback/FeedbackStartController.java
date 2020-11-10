@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
+import eu.planlos.pcfeedback.exceptions.ParticipantIsMissingEmailException;
+import eu.planlos.pcfeedback.exceptions.ParticipantIsMissingMobileException;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.Project;
@@ -88,14 +90,16 @@ public class FeedbackStartController {
 				model.addAttribute("genderError", "muss ausgewählt sein");
 			}
 
-			mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
-			mfs.fillGlobal(model);
-			return ApplicationPathHelper.RES_FEEDBACK_START;
+			return backToForm(model, project);
 		}
 
-		LOG.debug("Form input is valid");
 
 		try {
+
+			validateOptionalEmail(project, participant);
+			validateOptionalMobile(project, participant);
+			
+			LOG.debug("Form input is valid");
 
 			LOG.debug("Checking if participant exists: {}", participant.toString());
 			participantService.exists(participant);
@@ -107,14 +111,47 @@ public class FeedbackStartController {
 			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_QUESTION;
 
 		} catch (ParticipantAlreadyExistingException e) {
-
 			LOG.error("Participant exists already, returning to form");
-
 			model.addAttribute("PARTICIPANT_EXISTS", true);
+			return backToForm(model, project);
 
-			mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
-			mfs.fillGlobal(model);
-			return ApplicationPathHelper.RES_FEEDBACK_START;
+		} catch (ParticipantIsMissingMobileException e) {
+			LOG.error("Participant has no mobile number set");
+			bindingResult.addError(new FieldError("participant", "mobile", e.getMessage()));
+			return backToForm(model, project);
+
+		} catch (ParticipantIsMissingEmailException e) {
+			LOG.error("Participant has no email address set");
+			bindingResult.addError(new FieldError("participant", "email", e.getMessage()));
+			return backToForm(model, project);
 		}
+	}
+
+	private String backToForm(Model model, Project project) {
+		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
+		mfs.fillGlobal(model);
+		return ApplicationPathHelper.RES_FEEDBACK_START;		
+	}
+	
+	private void validateOptionalEmail(Project project, Participant participant) throws ParticipantIsMissingEmailException {
+		
+		String email = participant.getEmail();
+		
+		if(project.getNeedMail() &&
+				(email == null || email.equals(""))){
+			throw new ParticipantIsMissingEmailException("E-Mailadresse ist ein Pflichtfeld");
+		}
+		LOG.debug("Mail not necessary or was given");
+	}
+
+	private void validateOptionalMobile(Project project, Participant participant) throws ParticipantIsMissingMobileException {
+		
+		String mobile = participant.getMobile();
+		
+		if(project.getNeedMobile() &&
+				(mobile == null || mobile.equals(""))){
+			throw new ParticipantIsMissingMobileException("Mobilnummmer ist ein Pflichtfeld");
+		}		
+		LOG.debug("Mobile not necessary or was given");
 	}
 }

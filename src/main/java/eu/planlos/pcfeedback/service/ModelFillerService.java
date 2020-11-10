@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -26,12 +25,6 @@ public class ModelFillerService implements EnvironmentAware {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ModelFillerService.class);
 	
-	@Value("${eu.planlos.pcfeedback.need-mail}")
-	private boolean needMail;
-	
-	@Value("${eu.planlos.pcfeedback.need-mobile}")
-	private boolean needMobile;
-	
 	@Autowired
 	private Environment environment;
 
@@ -39,11 +32,7 @@ public class ModelFillerService implements EnvironmentAware {
 	private UiTextService ums;
 	
 	public void fillGlobal(Model model) {
-		
-		LOG.debug("Adding configs from application.properties");
-		model.addAttribute("needMail", needMail);
-		model.addAttribute("needMobile", needMobile);
-		
+				
 		LOG.debug("Preparing model for global area");
 		model.addAttribute("URL_HOME", ApplicationPathHelper.URL_HOME);
 		model.addAttribute("URL_PROJECTHOME", ApplicationPathHelper.URL_PROJECTHOME); //TODO where necessary?

@@ -40,6 +40,12 @@ public class Project implements Serializable {
 	@NotBlank
 	private String projectName;
 
+	@Column(nullable = false)
+	private boolean needMobile;
+	
+	@Column(nullable = false)
+	private boolean needMail;
+	
 	@Column(nullable=false)
 	private boolean active;
 	
@@ -79,9 +85,12 @@ public class Project implements Serializable {
 		this.ratingObjectList = roList;
 	}
 	
-	public Project(String projectName, List<RatingObject> ratingObjectList, boolean active, ZonedDateTime startZonedDateTime, ZonedDateTime endZonedDateTime, int ratingQuestionCount) {
+	public Project(String projectName, List<RatingObject> ratingObjectList, boolean needMail, boolean needMobile, boolean active, ZonedDateTime startZonedDateTime, ZonedDateTime endZonedDateTime, int ratingQuestionCount) {
 		this.ratingObjectList = ratingObjectList;
+		
 		this.projectName = projectName;
+		this.needMail = needMail;
+		this.needMobile = needMobile;
 		this.active = active;
 		setStartZonedDateTimeUpdateInstant(startZonedDateTime);
 		setEndZonedDateTimeUpdateInstant(endZonedDateTime);
@@ -104,6 +113,22 @@ public class Project implements Serializable {
 		this.projectName = projectName;
 	}
 
+	public boolean getNeedMobile() {
+		return this.needMobile;
+	}
+	
+	public void setNeedMobile(boolean needMobile) {
+		this.needMobile = needMobile;
+	}
+
+	public boolean getNeedMail() {
+		return this.needMail;
+	}
+	
+	public void setNeedMail(boolean needMail) {
+		this.needMail = needMail;
+	}
+	
 	public boolean isActive() {
 		return active;
 	}
