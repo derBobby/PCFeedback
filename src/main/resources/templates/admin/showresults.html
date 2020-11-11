@@ -205,10 +205,10 @@
 										<th class="text-center">m/w</th>
 										<th class="">Text</th>
 									</tr>
-									<tr th:each="freeText : ${freeTextList}" th:object="${freeText}">
-										<td class="text-center" th:text="*{idFreeText}"></td>
-										<td class="text-center" th:text="*{gender.toString()}"></td>
-										<td th:utext="*{#strings.replace( #strings.escapeXml(text),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}"></td>
+									<tr th:each="participationResult : ${prList}" th:object="${participationResult}">
+										<td class="text-center" th:text="*{idParticipationResult}"></td>
+										<td class="text-center" th:text="*{participant.gender.toString()}"></td>
+										<td th:utext="*{#strings.replace( #strings.escapeXml(freeText),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}"></td>
 									</tr>
 								</table>
 							</div>

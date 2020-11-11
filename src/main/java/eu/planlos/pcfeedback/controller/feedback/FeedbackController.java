@@ -32,7 +32,6 @@ import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.service.FeedbackValidationService;
-import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
@@ -60,9 +59,6 @@ public class FeedbackController {
 
 	@Autowired
 	private UserAgentService userAgentService;
-
-	@Autowired
-	private FreeTextService freeTextService;
 	
 	@Autowired
 	private FeedbackValidationService validationService;
@@ -197,10 +193,9 @@ public class FeedbackController {
 			//Save participant first, might not complete
 			participantService.save(participant);
 			ratingQuestionService.saveFeedback(feedbackMap);
-			freeTextService.createAndSaveFreeText(project, freeText, participant.getGender());			
 			
 			//Save the result for later plausibilisation/correction
-			ParticipationResult pr = new ParticipationResult(project, participant, feedbackMap);
+			ParticipationResult pr = new ParticipationResult(project, participant, feedbackMap, freeText);
 			participationResultService.saveParticipationResult(pr);
 			
 			//Save user agent for later analysis

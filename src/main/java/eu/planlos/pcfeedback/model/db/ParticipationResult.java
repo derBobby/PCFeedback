@@ -27,6 +27,9 @@ public class ParticipationResult {
 	@JoinColumn(name="participant", nullable=false)
 	private Participant participant;
 	
+	@Column(nullable = true)
+	private String freeText;
+	
 	@Column
     @ElementCollection(targetClass=Integer.class)
 	private Map<Long, Integer> feedbackMap;
@@ -39,10 +42,19 @@ public class ParticipationResult {
 	public ParticipationResult() {
 	}
 	
-	public ParticipationResult(Project project, Participant participant, Map<Long, Integer> feedbackMap) {
+	public ParticipationResult(Project project, Participant participant, Map<Long, Integer> feedbackMap, String freeText) {
 		this.project = project;
 		this.participant = participant;
 		this.feedbackMap = feedbackMap;
+		this.freeText = freeText;
+	}
+	
+	public long getIdParticipationResult() {
+		return idParticipationResult;
+	}
+
+	public void setIdParticipationResult(long idParticipationResult) {
+		this.idParticipationResult = idParticipationResult;
 	}
 
 	public void setFeedbackMap(Map<Long, Integer> feedbackMap) {
@@ -57,6 +69,14 @@ public class ParticipationResult {
 		return participant;
 	}
 	
+	public String getFreeText() {
+		return freeText;
+	}
+
+	public void setFreeText(String freeText) {
+		this.freeText = freeText;
+	}
+
 	public String printKeyList() {
 		
 		Map<Long, Integer> sortedMap = new TreeMap<Long, Integer>(feedbackMap);

@@ -14,11 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.db.FreeText;
 import eu.planlos.pcfeedback.model.db.Participant;
+import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
+import eu.planlos.pcfeedback.repository.ParticipationResultRepository;
 
 @Service
 public class CSVExporterService {
@@ -30,12 +31,12 @@ public class CSVExporterService {
 	private ParticipantService pService;
 	
 	@Autowired
-	private FreeTextService ftService;
-		
+	private ParticipationResultRepository prRepo;
+	
 	private static final Logger LOG = LoggerFactory.getLogger(CSVExporterService.class);
 
 	private static final String[] FILE_RATINGQUESTION_HEADER = { "Geschlecht","A Bezeichnung","A Stimmen","B Stimmen","B Bezeichnung" };
-	private static final String[] FILE_PARTICIPANT_HEADER = { "Vorname","Nachname","Geschlecht","Teilnahmezeitpuntk" };
+	private static final String[] FILE_PARTICIPANT_HEADER = { "Vorname","Nachname","Geschlecht","Teilnahmezeitpunkt" };
 	private static final String[] FILE_FREETEXT_HEADER = { "M/W","Text" };
 	
 	public void writeParticipantsCSV(Project project, PrintWriter writer) {
@@ -107,8 +108,8 @@ public class CSVExporterService {
 	
 	public void writeFreeTextCSV(PrintWriter writer, Project project) {
 
-		List<FreeText> ftList = ftService.findAllByProject(project);
-
+		List<ParticipationResult> prList = (List<ParticipationResult>) prRepo.findAllByProject(project);
+		
 		CSVFormat csvFile = CSVFormat.EXCEL.withHeader(FILE_FREETEXT_HEADER).withAutoFlush(true).withDelimiter(';');
 		CSVPrinter csvPrinter = null;
 
@@ -117,8 +118,8 @@ public class CSVExporterService {
 
 			// --- Print Participants ---
 			LOG.debug("Write free texts");
-			for (FreeText freeText : ftList) {
-				csvPrinter.printRecord(createFreeTextRecord(freeText));
+			for (ParticipationResult pr : prList) {
+				csvPrinter.printRecord(createFreeTextRecord(pr.getFreeText(), pr.getParticipant().getGender()));
 				csvPrinter.flush();
 			}
 			
@@ -187,18 +188,11 @@ public class CSVExporterService {
 		return participantRecord;
 	}
 	
-	private List<Object> createFreeTextRecord(FreeText freeText) {
-
-		Gender gender = freeText.getGender();
-		String text = freeText.getText();
+	private List<Object> createFreeTextRecord(String freeText, Gender gender) {
 
 		List<Object> participantRecord = new ArrayList<>();
 		participantRecord.add(gender.toString());
-		participantRecord.add(text);
-
-		LOG.debug(
-				"Creating record for free text: idFreeText={}",
-				freeText.getIdFreeText());
+		participantRecord.add(freeText);
 
 		return participantRecord;
 	}

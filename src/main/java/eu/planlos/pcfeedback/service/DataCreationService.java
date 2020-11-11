@@ -1,5 +1,6 @@
 package eu.planlos.pcfeedback.service;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -52,9 +53,6 @@ public class DataCreationService {
 	@Autowired
 	private ProjectService projectService;
 	
-	@Autowired
-	private FreeTextService fts;
-	
 	@PostConstruct
 	private void initialize() throws WrongRatingQuestionCountExistingException, UiTextException,
 			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
@@ -98,8 +96,6 @@ public class DataCreationService {
 		//Throws Exception if not
 		rqService.checkEnoughRatingQuestions(project, false);
 		
-		createFreeText(project, Gender.MALE, 10);
-		createFreeText(project, Gender.FEMALE, 10);
 		createParticipations(project, Gender.MALE, 10);
 		createParticipations(project, Gender.FEMALE, 10);		
 	}
@@ -229,26 +225,11 @@ public class DataCreationService {
 				long id = ratingQuestion.getIdRatingQuestion();
 				feedbackMap.put(id, gender.equals(Gender.MALE) ? 1 : 2);
 			}
-			ParticipationResult pResult = new ParticipationResult(project, participant, feedbackMap);
+			ParticipationResult pResult = new ParticipationResult(project, participant, feedbackMap, Instant.now().toString());
 			participationResultService.saveParticipationResult(pResult);
 			
 			// Update RatingQuestion
 			rqService.saveFeedback(feedbackMap);
-		}
-	}
-
-	/**
-	 * Creates given count of free text submissions in DB
-	 * @param gender the gender to use for the free text elements
-	 * @param count the count of free text elements to create
-	 */
-	public void createFreeText(Project project, Gender gender, int count) {
-
-		int localCount = count;
-		
-		while(localCount != 0) {
-			localCount--;			
-			fts.createAndSaveFreeText(project, ((Long) System.currentTimeMillis()).toString(), gender);
 		}
 	}
 }

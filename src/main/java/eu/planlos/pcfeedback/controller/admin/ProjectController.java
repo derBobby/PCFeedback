@@ -26,7 +26,6 @@ import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingExceptio
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
-import eu.planlos.pcfeedback.service.FreeTextService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
@@ -64,9 +63,6 @@ public class ProjectController {
 
 	@Autowired
 	private RatingQuestionService rqs;
-	
-	@Autowired
-	private FreeTextService fts;
 	
 	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTS)
 	public String listProjects(Model model) {
@@ -213,7 +209,6 @@ public class ProjectController {
 	
 		LOG.debug("Resetting Project name={}", projectName);
 		
-		fts.resetProject(project);
 		prs.resetProject(project);
 		participantService.resetProject(project);
 		ps.resetProject(project);
@@ -236,7 +231,6 @@ public class ProjectController {
 	
 		LOG.debug("Deleting Project name='{}'", projectName);
 		
-		fts.resetProject(project);
 		prs.resetProject(project);
 		participantService.resetProject(project);
 		rqs.resetProject(project);
