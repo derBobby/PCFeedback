@@ -29,9 +29,9 @@ import eu.planlos.pcfeedback.service.ProjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 
 @Controller
-public class ResultsController {
+public class AdminController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ResultsController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AdminController.class);
 
 	@Autowired
 	private ParticipantService pService;
@@ -49,7 +49,7 @@ public class ResultsController {
 	private ModelFillerService mfs;
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + "{projectName}", method = RequestMethod.GET)
-	public String showResults(ServletResponse response, @PathVariable(name = "projectName") String projectName, Model model) throws RatingQuestionsNotExistentException, IOException {
+	public String adminPage(ServletResponse response, @PathVariable(name = "projectName") String projectName, Model model) throws RatingQuestionsNotExistentException, IOException {
 
 		HttpServletResponse res = (HttpServletResponse) response;
 
