@@ -1,7 +1,9 @@
 package eu.planlos.pcfeedback.service;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
 
@@ -77,7 +80,9 @@ public class ModelFillerService implements EnvironmentAware {
 
 	public void fillResults(Model model, Project project, List<Participant> randomParticipantList,
 			List<Participant> participantList, List<RatingQuestion> rqListMale,
-			List<RatingQuestion> rqListFemale, List<ParticipationResult> prList) {
+			List<RatingQuestion> rqListFemale, List<ParticipationResult> prList,
+			Map<RatingObject, BigDecimal> maleResultMap, Map<RatingObject, BigDecimal> femaleResultMap, Map<RatingObject, BigDecimal> overallResultMap
+			) {
 		
 		model.addAttribute("project", project);
 		
@@ -86,6 +91,10 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("rqListMale", rqListMale);
 		model.addAttribute("rqListFemale", rqListFemale);
 		model.addAttribute("prList", prList);
+		
+		model.addAttribute("maleResultMap", maleResultMap);
+		model.addAttribute("femaleResultMap", femaleResultMap);
+		model.addAttribute("overallResultMap", overallResultMap);
 		
 		model.addAttribute("URL_ADMIN_CSVPARTICIPANTS", ApplicationPathHelper.URL_ADMIN_CSVPARTICIPANTS);
 		model.addAttribute("URL_ADMIN_CSVFEEDBACK", ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK);

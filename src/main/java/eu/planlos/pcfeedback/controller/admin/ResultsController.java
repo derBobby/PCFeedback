@@ -1,7 +1,9 @@
 package eu.planlos.pcfeedback.controller.admin;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
@@ -21,17 +23,19 @@ import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.ProjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
+import eu.planlos.pcfeedback.service.ResultService;
 
 @Controller
-public class AdminController {
+public class ResultsController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AdminController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ResultsController.class);
 
 	@Autowired
 	private ParticipantService pService;
@@ -46,10 +50,13 @@ public class AdminController {
 	private ParticipationResultService prService;
 	
 	@Autowired
+	private ResultService rService;
+	
+	@Autowired
 	private ModelFillerService mfs;
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + "{projectName}", method = RequestMethod.GET)
-	public String adminPage(ServletResponse response, @PathVariable(name = "projectName") String projectName, Model model) throws RatingQuestionsNotExistentException, IOException {
+	public String showResults(ServletResponse response, @PathVariable(name = "projectName") String projectName, Model model) throws RatingQuestionsNotExistentException, IOException {
 
 		HttpServletResponse res = (HttpServletResponse) response;
 
@@ -74,9 +81,18 @@ public class AdminController {
 		
 		LOG.debug("Loading free texts");
 		List<ParticipationResult> prList = prService.findAllByProject(project);
+
+		LOG.debug("Creating results");
+		Map<RatingObject, BigDecimal> maleResultMap = rService.rate(project, Gender.MALE);
+
+		LOG.debug("Creating results");
+		Map<RatingObject, BigDecimal> femaleResultMap = rService.rate(project, Gender.FEMALE);
+		
+		LOG.debug("Creating results");
+		Map<RatingObject, BigDecimal> overallResultMap = rService.combine(maleResultMap, femaleResultMap);
 		
 		mfs.fillGlobal(model);
-		mfs.fillResults(model, project, randomParticipantList, participantList, rqListMale, rqListFemale, prList);
+		mfs.fillResults(model, project, randomParticipantList, participantList, rqListMale, rqListFemale, prList, maleResultMap, femaleResultMap, overallResultMap);
 		
 		return ApplicationPathHelper.RES_ADMIN_SHOWFEEDBACK;
 	}

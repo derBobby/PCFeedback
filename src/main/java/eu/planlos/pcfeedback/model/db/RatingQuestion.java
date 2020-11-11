@@ -1,6 +1,7 @@
 package eu.planlos.pcfeedback.model.db;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -53,6 +55,12 @@ public class RatingQuestion implements Serializable {
 	@NotNull
 	@JoinColumn(name="project", nullable=false)
 	private Project project;
+
+	@Transient
+	private BigDecimal ratingForObjectOne;
+	
+	@Transient
+	private BigDecimal ratingForObjectTwo;
 	
 	/*
 	 * Connection
@@ -131,6 +139,22 @@ public class RatingQuestion implements Serializable {
 
 	public void setObjectTwo(RatingObject objectTwo) {
 		this.objectTwo = objectTwo;
+	}
+
+	public BigDecimal getRatingForObjectOne() {
+		return ratingForObjectOne;
+	}
+
+	public void setRatingForObjectOne(BigDecimal ratingForObjectOne) {
+		this.ratingForObjectOne = ratingForObjectOne;
+	}
+
+	public BigDecimal getRatingForObjectTwo() {
+		return ratingForObjectTwo;
+	}
+
+	public void setRatingForObjectTwo(BigDecimal ratingForObjectTwo) {
+		this.ratingForObjectTwo = ratingForObjectTwo;
 	}
 
 	public Project getProject() {

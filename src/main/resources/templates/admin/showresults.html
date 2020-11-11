@@ -128,7 +128,7 @@
         		<div class="col-12 border-dark p-3 mb-3">
 					<div class="card">
 						<div class="card-header">
-							<h4 class="text-center mb-0" th:inline="text">Antworten Jungs</h4>
+							<h4 class="text-center mb-0">Antworten Jungs</h4>
           				</div>
 						<div class="card-body">
 							<div class="table-responsive">
@@ -162,7 +162,7 @@
         		<div class="col-12 border-dark p-3 mb-3">
 					<div class="card">
 						<div class="card-header">
-							<h4 class="text-center mb-0" th:inline="text">Antworten Mädels</h4>
+							<h4 class="text-center mb-0">Antworten Mädels</h4>
           				</div>
 						<div class="card-body">
 							<div class="table-responsive">
@@ -217,7 +217,82 @@
        			</div>
 			</div>
 			
-			<!-- ~~~~~~~~~~~~~~~ END ~~~~~~~~~~~~~~~ -->		
+			<!-- ~~~~~~~~~~~~~~~ Results MALE ~~~~~~~~~~~~~~~ -->
+			
+       		<div class="row justify-content-center">
+        		<div class="col-12 border-dark p-3 mb-3">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="text-center mb-0">Ranking Jungs</h4>
+          				</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table text-nowrap table-bordered table-hover table-striped m-0 text-left table-sm">
+										<th class="">Bewertungsobjekt</th>
+										<th class="">Punktezahl</th>
+									</tr>
+									<tr th:each="maleResult, stats : ${maleResultMap}" th:object="${maleResult}">
+										<td class="" th:text="*{key}"></td>
+										<td class="" th:text="*{value}"></td>
+									</tr>
+								</table>
+							</div>
+          				</div>
+         			</div>
+       			</div>
+			</div>
+			
+			<!-- ~~~~~~~~~~~~~~~ Results FEMALE ~~~~~~~~~~~~~~~ -->
+			
+       		<div class="row justify-content-center">
+        		<div class="col-12 border-dark p-3 mb-3">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="text-center mb-0">Ranking Mädels</h4>
+          				</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table text-nowrap table-bordered table-hover table-striped m-0 text-left table-sm">
+										<th class="">Bewertungsobjekt</th>
+										<th class="">Punktezahl</th>
+									</tr>
+									<tr th:each="femaleResult, stats : ${femaleResultMap}" th:object="${femaleResult}">
+										<td class="" th:text="*{key}"></td>
+										<td class="" th:text="*{value}"></td>
+									</tr>
+								</table>
+							</div>
+          				</div>
+         			</div>
+       			</div>
+			</div>
+			
+			<!-- ~~~~~~~~~~~~~~~ Results OVERALL ~~~~~~~~~~~~~~~ -->
+			
+       		<div class="row justify-content-center">
+        		<div class="col-12 border-dark p-3 mb-3">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="text-center mb-0">Ranking Gesamt</h4>
+          				</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table text-nowrap table-bordered table-hover table-striped m-0 text-left table-sm">
+										<th class="">Bewertungsobjekt</th>
+										<th class="">Punktezahl</th>
+									</tr>
+									<tr th:each="overallResult, stats : ${overallResultMap}" th:object="${overallResult}">
+										<td class="" th:text="*{key}"></td>
+										<td class="" th:text="*{value}"></td>
+									</tr>
+								</table>
+							</div>
+          				</div>
+         			</div>
+       			</div>
+			</div>
+			
+			<!-- ~~~~~~~~~~~~~~~ END ~~~~~~~~~~~~~~~ -->
 			
 		</main>
 	    <footer th:replace="template :: footer"></footer>		

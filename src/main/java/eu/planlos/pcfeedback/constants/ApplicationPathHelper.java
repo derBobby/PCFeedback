@@ -75,7 +75,7 @@ public class ApplicationPathHelper {
 	public static final String URL_ADMIN_EDITPARTICIPANT		= URL_AREA_ADMIN + "editparticipant" + URL_DELIMETER;
 	public static final String URL_ADMIN_DELETEPARTICIPANT		= URL_AREA_ADMIN + "deleteparticipant" + URL_DELIMETER;
 	public static final String URL_ADMIN_EDITUITEXT				= URL_AREA_ADMIN + "edituitext" + URL_DELIMETER;
-	//Buttons
+	//CSV Buttons
 	public static final String URL_ADMIN_CSV					= URL_AREA_ADMIN + "csv" + URL_DELIMETER;
 	public static final String URL_ADMIN_CSVPARTICIPANTS		= URL_ADMIN_CSV + "participants" + URL_DELIMETER;
 	public static final String URL_ADMIN_CSVFEEDBACK			= URL_ADMIN_CSV + "feedback" + URL_DELIMETER;
