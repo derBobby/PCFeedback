@@ -149,7 +149,7 @@
 							<a th:href="@{${URL_ADMIN_PROJECTS}}">
 								<button type="button" class="btn btn-secondary">Zurück<br /><i class="fa fa-times" aria-hidden="true"></i></button>
 							</a>
-							<button type="submit" id="submit" class="btn btn-primary">
+							<button type="submit" id="submit" class="btn btn-primary" th:if="*{not active}">
 								Speichern<br /><i class="fas fa-save"></i>
 							</button>
 						</div>
