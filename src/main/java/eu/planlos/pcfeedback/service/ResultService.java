@@ -1,6 +1,7 @@
 package eu.planlos.pcfeedback.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -89,21 +90,28 @@ public class ResultService {
 	private void rate(List<RatingQuestion> rqList) {
 		
 		for(RatingQuestion rq : rqList) {
-			// 2
-			BigDecimal factor = new BigDecimal(2);
+			
+			int voteCountInt = rq.getCountVoted();
+			if(voteCountInt == 0) {
+				BigDecimal zeroDecimal = new BigDecimal(0);
+				rq.setRatingForObjectOne(zeroDecimal);
+				rq.setRatingForObjectTwo(zeroDecimal);
+				continue;
+			}
+			
 			// multiplied with rating of object
 			BigDecimal ratingOne = new BigDecimal(rq.getVotesOne());
 			BigDecimal ratingTwo = new BigDecimal(rq.getVotesTwo());
 			// divided by voteCount
-			BigDecimal voteCount = new BigDecimal(rq.getCountVoted());
+			BigDecimal voteCount = new BigDecimal(voteCountInt);
 
-			ratingOne = ratingOne.multiply(factor);
-			ratingOne = ratingOne.divide(voteCount);
+			ratingOne = ratingOne.divide(voteCount, 2, RoundingMode.HALF_EVEN);
 			rq.setRatingForObjectOne(ratingOne);
 			
-			ratingTwo = ratingTwo.multiply(factor);
-			ratingTwo = ratingTwo.divide(voteCount);
+			ratingTwo = ratingTwo.divide(voteCount, 2, RoundingMode.HALF_EVEN);
 			rq.setRatingForObjectTwo(ratingTwo);
+			
+			LOG.debug("Result is '{}'={} '{}'={}", rq.getObjectOne(), ratingOne, rq.getObjectTwo(), ratingTwo);
 		}
 	}
 
