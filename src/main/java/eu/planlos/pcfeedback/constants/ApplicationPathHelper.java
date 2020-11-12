@@ -36,7 +36,7 @@ public class ApplicationPathHelper {
 	public static final String URL_FEEDBACK_QUESTION		 	= URL_AREA_PUBLIC + "feedbackquestion";
 	public static final String URL_FEEDBACK_SUBMIT				= URL_AREA_PUBLIC + "feedbackfreetext";
 	public static final String URL_FEEDBACK_END		 			= URL_AREA_PUBLIC + "feedbackend";
-	public static final String URL_PRICEGAME 					= URL_AREA_PUBLIC + "gewinnspielhinweise";
+	public static final String URL_PRICEGAME 					= URL_AREA_PUBLIC + "gewinnspielhinweise" + URL_DELIMETER;
 	public static final String RES_HOME 						= "home";
 	public static final String RES_PROJECTHOME 					= "projecthome";
 	public static final String RES_PRICEGAME 					= "pricegame";

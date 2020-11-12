@@ -45,6 +45,9 @@ public class Project implements Serializable {
 	
 	@Column(nullable = false)
 	private boolean needMail;
+
+	@Column(nullable = false)
+	private boolean isPricegame;
 	
 	@Column(nullable=false)
 	private boolean active;
@@ -218,6 +221,14 @@ public class Project implements Serializable {
 
 	public void setOnline(boolean online) {
 		this.online = online;
+	}
+
+	public boolean isPricegame() {
+		return isPricegame;
+	}
+
+	public void setPricegame(boolean isPricegame) {
+		this.isPricegame = isPricegame;
 	}
 
 	public int getRatingQuestionCount() {

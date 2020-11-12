@@ -33,7 +33,7 @@ public class ModelFillerService implements EnvironmentAware {
 
 	@Autowired
 	private UiTextService ums;
-	
+
 	public void fillGlobal(Model model) {
 				
 		LOG.debug("Preparing model for global area");
@@ -127,6 +127,7 @@ public class ModelFillerService implements EnvironmentAware {
 	}
 
 	public void fillUiText(Model model, Project project, UiTextKey uiTextKey) {
+
 		model.addAttribute(uiTextKey.toString(), ums.getText(project, uiTextKey));
 		model.addAttribute("projectName", project.getProjectName());
 	}
