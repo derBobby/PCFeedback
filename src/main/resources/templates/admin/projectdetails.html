@@ -31,6 +31,11 @@
 									<span th:errors="*{needMail}" class="text-warning"></span>
 								</div>
 								<div class="custom-control custom-checkbox">
+								 	<input type="checkbox" class="custom-control-input" th:field="*{isPricegame}" id="isPricegame" th:disabled="*{active}" />
+									<label class="custom-control-label" for="isPricegame">Befragung ist ein Gewinnspiel</label>
+									<span th:errors="*{isPricegame}" class="text-warning"></span>
+								</div>
+								<div class="custom-control custom-checkbox">
 								 	<input type="checkbox" class="custom-control-input" th:field="*{active}" id="active" disabled="disabled" />
 									<label class="custom-control-label" for="active">Projekt aktiv</label>
 									<span th:errors="*{active}" class="text-warning"></span>
