@@ -272,4 +272,8 @@ public class RatingQuestionService {
 	public int getRatingQuestionCountFor(Project project) {
 		return rqRepository.countByProjectAndGender(project, Gender.MALE);
 	}
+
+	public List<RatingQuestion> loadByProject(Project project) {
+		return rqRepository.findByProject(project);
+	}
 }

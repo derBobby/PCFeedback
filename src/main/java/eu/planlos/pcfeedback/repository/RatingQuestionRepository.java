@@ -43,6 +43,7 @@ public interface RatingQuestionRepository extends CrudRepository<RatingQuestion,
 	public int addVoteForRatingObjectTwo(long idRatingQuestion);
 	
 	public List<RatingQuestion> findByProjectAndGender(Project project, Gender gender);
+	public List<RatingQuestion> findByProject(Project project);
 	
 	// Edit participant methods
 	
