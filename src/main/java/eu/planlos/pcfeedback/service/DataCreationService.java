@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.exceptions.DuplicateRatingObjectException;
@@ -31,6 +32,7 @@ import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
 
 @Service
+@Profile(value = {"DEV", "REV"})
 public class DataCreationService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataCreationService.class);
@@ -205,7 +207,7 @@ public class DataCreationService {
 				+ "Der Rechtsweg ist ausgeschlossen.";
 	}
 
-	public void createParticipations(Project project, Gender gender, int count) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
+	private void createParticipations(Project project, Gender gender, int count) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
 		
 		int localCount = count;
 		

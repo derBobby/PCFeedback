@@ -227,7 +227,12 @@ public class Project implements Serializable {
 		return isPricegame;
 	}
 
-	public void setPricegame(boolean isPricegame) {
+	// Redundant for isPricegame for Thymeleaf compatibility 
+	public boolean getIsPricegame() {
+		return isPricegame;
+	}
+
+	public void setIsPricegame(boolean isPricegame) {
 		this.isPricegame = isPricegame;
 	}
 
