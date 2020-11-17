@@ -73,6 +73,9 @@ public class RatingQuestion implements Serializable {
 	@JoinColumn(name="objectTwo", nullable=false)
 	private RatingObject objectTwo;
 
+	/*
+	 * Getter and Setter
+	 */
 	public long getIdRatingQuestion() {
 		return idRatingQuestion;
 	}
