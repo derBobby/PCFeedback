@@ -38,7 +38,7 @@ public class ResultService {
 	 * 3)	Order the sums for each RO descending
 	 * 
 	 */
-	public Map<RatingObject, BigDecimal> rateForGender(Project project, Gender gender) {
+	public Map<RatingObject, BigDecimal> rateWithGender(Project project, Gender gender) {
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
 		Map<RatingObject, BigDecimal> targetRatingMap = new HashMap<RatingObject, BigDecimal>();
@@ -48,29 +48,7 @@ public class ResultService {
 		rqList.addAll(rqs.loadByProjectAndGender(project, gender));
 
 		// 1)
-		rateSingleGender(rqList);
-		
-		// 2)
-		fillResultMapFor(targetRatingMap, rqList);
-		
-		// 3)
-		order(targetRatingMap, sortedRatingMap);
-		//LinkedHashMap preserve the ordering of elements in which they are inserted
-		
-		return sortedRatingMap;
-	}
-
-	public Map<RatingObject, BigDecimal> rateGenderless(Project project) {
-		
-		List<RatingQuestion> rqList = new ArrayList<>();
-		Map<RatingObject, BigDecimal> targetRatingMap = new HashMap<RatingObject, BigDecimal>();
-		LinkedHashMap<RatingObject, BigDecimal> sortedRatingMap = new LinkedHashMap<>();
-
-		LOG.debug("Loading ratingQuestions to rate them genderless");
-		rqList.addAll(rqs.loadByProject(project));
-
-		// 1)
-		rateGenderless(rqList);
+		rate(rqList);
 		
 		// 2)
 		fillResultMapFor(targetRatingMap, rqList);
@@ -82,41 +60,87 @@ public class ResultService {
 		return sortedRatingMap;
 	}
 	
-	private void rateGenderless(List<RatingQuestion> rqList) {
+	/*
+	 * Rating happens in the following steps:
+	 * 
+	 * 0)	Aggregate male and female rating questions
+	 * 1-3)	identical to rateWithoutGender
+	 * 
+	 */
+	public Map<RatingObject, BigDecimal> rateWithoutGender(Project project) {
 		
-		for(RatingQuestion rq : rqList) {
-			
-			int voteCountInt = rq.getCountVoted();
-			if(voteCountInt == 0) {
-				BigDecimal zeroDecimal = new BigDecimal(0);
-				rq.setRatingForObjectOne(zeroDecimal);
-				rq.setRatingForObjectTwo(zeroDecimal);
-				continue;
-			}
-			
-			// multiplied with rating of object
-			BigDecimal ratingOne = new BigDecimal(rq.getVotesOne());
-			BigDecimal ratingTwo = new BigDecimal(rq.getVotesTwo());
-			// divided by voteCount
-			BigDecimal voteCount = new BigDecimal(voteCountInt);
+		List<RatingQuestion> rqList = new ArrayList<>();
+		
+		Map<RatingObject, BigDecimal> targetRatingMap = new HashMap<RatingObject, BigDecimal>();
+		LinkedHashMap<RatingObject, BigDecimal> sortedRatingMap = new LinkedHashMap<>();
 
-			ratingOne = ratingOne.divide(voteCount, 2, RoundingMode.HALF_EVEN);
-			rq.setRatingForObjectOne(ratingOne);
-			
-			ratingTwo = ratingTwo.divide(voteCount, 2, RoundingMode.HALF_EVEN);
-			rq.setRatingForObjectTwo(ratingTwo);
-			
-			LOG.debug("Result is '{}'={} '{}'={}", rq.getObjectOne(), ratingOne, rq.getObjectTwo(), ratingTwo);
-		}		
+		// 0)
+		aggregateGenders(project, rqList);
+
+		// 1)
+		rate(rqList);
+		
+		// 2)
+		fillResultMapFor(targetRatingMap, rqList);
+		
+		// 3)
+		order(targetRatingMap, sortedRatingMap);
+		//LinkedHashMap preserve the ordering of elements in which they are inserted
+		
+		return sortedRatingMap;
 	}
+	
+	private void aggregateGenders(Project project, List<RatingQuestion> rqList) {
+		
+		List<RatingQuestion> rqListMale = new ArrayList<>();
+		List<RatingQuestion> rqListFemale = new ArrayList<>();
+		
+		LOG.debug("Loading ratingQuestions to rate them for both genders");
+		
+		rqListMale.addAll(rqs.loadByProjectAndGender(project, Gender.MALE));
+		rqListFemale.addAll(rqs.loadByProjectAndGender(project, Gender.FEMALE));
 
+		for(RatingQuestion rqMale : rqListMale) {
+		
+			RatingObject roOneMale = rqMale.getObjectOne();
+			RatingObject roTwoMale = rqMale.getObjectTwo(); 
+			
+			for(RatingQuestion rqFemale : rqListFemale) {
+
+				RatingObject roOneFemale = rqFemale.getObjectOne();
+				RatingObject roTwoFemale = rqFemale.getObjectTwo();
+				
+				if(roOneMale.equals(roOneFemale) && roTwoMale.equals(roTwoFemale)) {
+				
+					int votesOne = rqMale.getVotesOne() + rqFemale.getVotesOne();
+					int votesTwo = rqMale.getVotesTwo() + rqFemale.getVotesTwo();
+					int countVoted = rqMale.getCountVoted() + rqFemale.getCountVoted();
+					
+					RatingQuestion newRQ = new RatingQuestion();
+					newRQ.setObjectOne(roOneMale);
+					newRQ.setObjectTwo(roTwoMale);
+					newRQ.setVotesOne(votesOne);
+					newRQ.setVotesTwo(votesTwo);
+					newRQ.setCountVoted(countVoted);
+					
+					rqList.add(newRQ);
+					
+					continue;
+				}
+				
+				LOG.error("No matching female-male question pair found. This should never happen");
+			}
+		}
+		LOG.debug("Questions female-male have been aggregated for genders");
+	}
+	
 	private void order(Map<RatingObject, BigDecimal> unsortedMap, LinkedHashMap<RatingObject, BigDecimal> sortedMap) {
 
 		unsortedMap.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
 				.forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
 	}
 
-	private void rateSingleGender(List<RatingQuestion> rqList) {
+	private void rate(List<RatingQuestion> rqList) {
 		
 		for(RatingQuestion rq : rqList) {
 			

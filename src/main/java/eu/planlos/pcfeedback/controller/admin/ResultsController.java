@@ -83,13 +83,13 @@ public class ResultsController {
 		List<ParticipationResult> prList = prService.findAllByProject(project);
 
 		LOG.debug("Creating results");
-		Map<RatingObject, BigDecimal> maleResultMap = rService.rateForGender(project, Gender.MALE);
+		Map<RatingObject, BigDecimal> maleResultMap = rService.rateWithGender(project, Gender.MALE);
 
 		LOG.debug("Creating results");
-		Map<RatingObject, BigDecimal> femaleResultMap = rService.rateForGender(project, Gender.FEMALE);
+		Map<RatingObject, BigDecimal> femaleResultMap = rService.rateWithGender(project, Gender.FEMALE);
 		
 		LOG.debug("Creating results");
-		Map<RatingObject, BigDecimal> overallResultMap = rService.rateGenderless(project);
+		Map<RatingObject, BigDecimal> overallResultMap = rService.rateWithoutGender(project);
 		
 		mfs.fillGlobal(model);
 		mfs.fillResults(model, project, randomParticipantList, participantList, rqListMale, rqListFemale, prList, maleResultMap, femaleResultMap, overallResultMap);
