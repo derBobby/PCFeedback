@@ -1,6 +1,10 @@
 package eu.planlos.pcfeedback.controller.admin;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +39,17 @@ public class UiTextController {
 	@Autowired
 	private ProjectService ps;
 	
-	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITUITEXT + "{projectName}", method = RequestMethod.GET)
-	public String showUiText(@PathVariable(name = "projectName") String projectName, Model model) {
-
-		Project project = ps.findProject(projectName);
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITUITEXT + "{idProject}", method = RequestMethod.GET)
+	public String showUiText(ServletResponse response, @PathVariable(name = "idProject") Long idProject, Model model) throws IOException {
+	
+		Project project = ps.findProject(idProject);
 		if(project == null) {
-			//TODO implement
-			return "FUCK";
+			
+			HttpServletResponse res = (HttpServletResponse) response;
+			LOG.error("Project id='{}' does not exist -> sending 404", idProject);
+			res.sendError(404, String.format("Projekt mit id %d wurde nicht gefunden.", idProject));
+
+			return null;
 		}
 		
 		List<UiText> uiTextList = uts.getUiTextForProject(project);
@@ -56,7 +64,7 @@ public class UiTextController {
 
 		try {
 			uts.updateText(uiTextContainer.getIdUiText(), uiTextContainer.getText());
-			return "redirect:" + ApplicationPathHelper.URL_ADMIN_EDITUITEXT + uiTextContainer.getProjectName();
+			return "redirect:" + ApplicationPathHelper.URL_ADMIN_EDITUITEXT + uiTextContainer.getIdProject().toString();
 		} catch (UiTextException e) {
 			LOG.error(e.getMessage());
 			throw e;

@@ -4,7 +4,7 @@ public class UiTextContainer {
 
 	private Long idUiText;
 	private String text;
-	private String projectName;
+	private Long idProject;
 	
 	public Long getIdUiText() {
 		return idUiText;
@@ -22,11 +22,11 @@ public class UiTextContainer {
 		this.text = text;
 	}
 
-	public String getProjectName() {
-		return projectName;
+	public Long getIdProject() {
+		return idProject;
 	}
 	
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+	public void setIdProject(Long idProject) {
+		this.idProject = idProject;
 	}
 }

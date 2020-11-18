@@ -116,7 +116,7 @@
 								<div class="modal-content">
 				        			<form class="h-100" th:action="@{${URL_ADMIN_EDITUITEXT}}" method="post" enctype="multipart/form-data">
 	        							<input type="hidden" th:id="idUiText" th:name="idUiText" th:value="*{idUiText}"/>
-	        							<input type="hidden" th:id="projectName" th:name="projectName" th:value="*{project.getProjectName()}"/>
+	        							<input type="hidden" th:id="idProject" th:name="idProject" th:value="*{project.getIdProject()}"/>
 										<div class="modal-header">
 											<h5 class="modal-title" th:id="*{uiTextKey.toString()}+'ModalTitle'" th:inline="text">[[*{description.toString()}]]</h5>
 											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
