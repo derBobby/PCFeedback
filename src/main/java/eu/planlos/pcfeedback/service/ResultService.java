@@ -38,7 +38,7 @@ public class ResultService {
 	 * 3)	Order the sums for each RO descending
 	 * 
 	 */
-	public Map<RatingObject, BigDecimal> rateForGender(Project project, Gender gender) {
+	public Map<RatingObject, BigDecimal> rateWithGender(Project project, Gender gender) {
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
 		Map<RatingObject, BigDecimal> targetRatingMap = new HashMap<RatingObject, BigDecimal>();
@@ -89,7 +89,7 @@ public class ResultService {
 		
 		return sortedRatingMap;
 	}
-	
+		
 	private void aggregateGenders(Project project, List<RatingQuestion> rqList) {
 		
 		List<RatingQuestion> rqListMale = new ArrayList<>();
@@ -117,6 +117,8 @@ public class ResultService {
 					int countVoted = rqMale.getCountVoted() + rqFemale.getCountVoted();
 					
 					RatingQuestion newRQ = new RatingQuestion();
+					newRQ.setObjectOne(roOneMale);
+					newRQ.setObjectTwo(roTwoMale);
 					newRQ.setVotesOne(votesOne);
 					newRQ.setVotesTwo(votesTwo);
 					newRQ.setCountVoted(countVoted);
@@ -132,28 +134,6 @@ public class ResultService {
 		LOG.debug("Questions female-male have been aggregated for genders");
 	}
 
-	public Map<RatingObject, BigDecimal> rateGenderless(Project project) {
-		
-		List<RatingQuestion> rqList = new ArrayList<>();
-		Map<RatingObject, BigDecimal> targetRatingMap = new HashMap<RatingObject, BigDecimal>();
-		LinkedHashMap<RatingObject, BigDecimal> sortedRatingMap = new LinkedHashMap<>();
-
-		LOG.debug("Loading ratingQuestions to rate them genderless");
-		rqList.addAll(rqs.loadByProject(project));
-
-		// 1)
-		rate(rqList);
-		
-		// 2)
-		fillResultMapFor(targetRatingMap, rqList);
-		
-		// 3)
-		order(targetRatingMap, sortedRatingMap);
-		//LinkedHashMap preserve the ordering of elements in which they are inserted
-		
-		return sortedRatingMap;
-	}
-	
 	private void order(Map<RatingObject, BigDecimal> unsortedMap, LinkedHashMap<RatingObject, BigDecimal> sortedMap) {
 
 		unsortedMap.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
