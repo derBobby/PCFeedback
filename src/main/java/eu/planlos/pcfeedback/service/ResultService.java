@@ -89,28 +89,6 @@ public class ResultService {
 		
 		return sortedRatingMap;
 	}
-
-	public Map<RatingObject, BigDecimal> rateGenderless(Project project) {
-		
-		List<RatingQuestion> rqList = new ArrayList<>();
-		Map<RatingObject, BigDecimal> targetRatingMap = new HashMap<RatingObject, BigDecimal>();
-		LinkedHashMap<RatingObject, BigDecimal> sortedRatingMap = new LinkedHashMap<>();
-
-		LOG.debug("Loading ratingQuestions to rate them genderless");
-		rqList.addAll(rqs.loadByProject(project));
-
-		// 1)
-		rate(rqList);
-		
-		// 2)
-		fillResultMapFor(targetRatingMap, rqList);
-		
-		// 3)
-		order(targetRatingMap, sortedRatingMap);
-		//LinkedHashMap preserve the ordering of elements in which they are inserted
-		
-		return sortedRatingMap;
-	}
 		
 	private void aggregateGenders(Project project, List<RatingQuestion> rqList) {
 		
