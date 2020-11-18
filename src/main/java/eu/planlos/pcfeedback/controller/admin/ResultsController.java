@@ -85,9 +85,10 @@ public class ResultsController {
 		LOG.debug("Creating results");
 		Map<RatingObject, BigDecimal> maleResultMap = rService.rateWithGender(project, Gender.MALE);
 
+
 		LOG.debug("Creating results");
 		Map<RatingObject, BigDecimal> femaleResultMap = rService.rateWithGender(project, Gender.FEMALE);
-		
+
 		LOG.debug("Creating results");
 		Map<RatingObject, BigDecimal> overallResultMap = rService.rateWithoutGender(project);
 		
