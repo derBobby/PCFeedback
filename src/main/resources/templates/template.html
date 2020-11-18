@@ -45,7 +45,10 @@
 		<!-- Navigation -->		
 		<nav th:fragment="nav" class="navbar navbar-expand-sm sticky-top navbar-dark bg-dark">
 		
-			<a class="navbar-brand" th:href="@{${URL_HOME}}">Feedback App</a>
+			<a class="navbar-brand" th:href="@{${URL_HOME}}">
+				<img th:src="@{/img/logo.png}" class="d-inline-block align-top" height="30" alt="">
+				Feedback App
+			</a>
 	
 			<button sec:authorize="hasAnyRole('ROLE_ADMIN')" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
