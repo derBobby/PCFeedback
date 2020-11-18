@@ -101,37 +101,42 @@ public class ResultService {
 		rqListFemale.addAll(rqs.loadByProjectAndGender(project, Gender.FEMALE));
 
 		for(RatingQuestion rqMale : rqListMale) {
+			aggregateGendersInnerLoop(rqList, rqListFemale, rqMale);
+		}
 		
-			RatingObject roOneMale = rqMale.getObjectOne();
-			RatingObject roTwoMale = rqMale.getObjectTwo(); 
-			
-			for(RatingQuestion rqFemale : rqListFemale) {
+		LOG.debug("Questions female-male have been aggregated for genders");
+	}
 
-				RatingObject roOneFemale = rqFemale.getObjectOne();
-				RatingObject roTwoFemale = rqFemale.getObjectTwo();
+	private void aggregateGendersInnerLoop(List<RatingQuestion> rqList, List<RatingQuestion> rqListFemale, RatingQuestion rqMale) {
+		
+		RatingObject roOneMale = rqMale.getObjectOne();
+		RatingObject roTwoMale = rqMale.getObjectTwo(); 
+		
+		for(RatingQuestion rqFemale : rqListFemale) {
+
+			RatingObject roOneFemale = rqFemale.getObjectOne();
+			RatingObject roTwoFemale = rqFemale.getObjectTwo();
+			
+			if(roOneMale.equals(roOneFemale) && roTwoMale.equals(roTwoFemale)) {
+			
+				int votesOne = rqMale.getVotesOne() + rqFemale.getVotesOne();
+				int votesTwo = rqMale.getVotesTwo() + rqFemale.getVotesTwo();
+				int countVoted = rqMale.getCountVoted() + rqFemale.getCountVoted();
 				
-				if(roOneMale.equals(roOneFemale) && roTwoMale.equals(roTwoFemale)) {
+				RatingQuestion newRQ = new RatingQuestion();
+				newRQ.setObjectOne(roOneMale);
+				newRQ.setObjectTwo(roTwoMale);
+				newRQ.setVotesOne(votesOne);
+				newRQ.setVotesTwo(votesTwo);
+				newRQ.setCountVoted(countVoted);
 				
-					int votesOne = rqMale.getVotesOne() + rqFemale.getVotesOne();
-					int votesTwo = rqMale.getVotesTwo() + rqFemale.getVotesTwo();
-					int countVoted = rqMale.getCountVoted() + rqFemale.getCountVoted();
-					
-					RatingQuestion newRQ = new RatingQuestion();
-					newRQ.setObjectOne(roOneMale);
-					newRQ.setObjectTwo(roTwoMale);
-					newRQ.setVotesOne(votesOne);
-					newRQ.setVotesTwo(votesTwo);
-					newRQ.setCountVoted(countVoted);
-					
-					rqList.add(newRQ);
-					
-					continue;
-				}
+				rqList.add(newRQ);
 				
-				LOG.error("No matching female-male question pair found. This should never happen");
+				return;
 			}
 		}
-		LOG.debug("Questions female-male have been aggregated for genders");
+		
+		LOG.error("No matching female-male question pair found. This should never happen");
 	}
 
 	private void order(Map<RatingObject, BigDecimal> unsortedMap, LinkedHashMap<RatingObject, BigDecimal> sortedMap) {
