@@ -1,5 +1,8 @@
 package eu.planlos.pcfeedback.service;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -8,16 +11,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 import eu.planlos.pcfeedback.model.db.Project;
 
 @Service
-public class MailService {
+public class MailService implements EnvironmentAware {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MailService.class);
 
@@ -38,6 +44,8 @@ public class MailService {
 
 	@Value("${spring.mail.password}")
 	private String springMailPassword;
+
+	private Environment environment;
 	
 	@Async
 	public void notifyParticipation(Project project) {
@@ -49,8 +57,10 @@ public class MailService {
 		
 		try {
 			
+			
+			
 			mailHelper = new MimeMessageHelper(mail, true);
-			mailHelper.setSubject("PCFeedback - Update Benachrichtigung");
+			mailHelper.setSubject(String.format("%sPCFeedback - Update Benachrichtigung", subjectPrefix()));
 			mailHelper.setFrom(mailSender);
 			mailHelper.setTo(project.getNotificationMail());
 			
@@ -67,6 +77,20 @@ public class MailService {
 		}
 	}
 		
+	private String subjectPrefix() {
+		
+		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
+
+		if (profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
+			return "DEV - ";
+		}
+		if (profiles.contains(ApplicationProfileHelper.REV_PROFILE)) {
+			return "REV - ";
+		}
+		
+		return "";
+	}
+
 	@PostConstruct
 	@Profile(value = {"DEV", "REV"})
 	private void printCredentials() {
@@ -85,7 +109,7 @@ public class MailService {
 		try {
 			
 			mailHelper = new MimeMessageHelper(mail, true);
-			mailHelper.setSubject("PCFeedback - Server gestartet");
+			mailHelper.setSubject(String.format("%sPCFeedback - Server gestartet", subjectPrefix()));
 			mailHelper.setFrom(mailSender);
 			mailHelper.setTo(mailSender);
 			
@@ -100,5 +124,10 @@ public class MailService {
 			LOG.error("Notification email could not been sent: {}", e.getMessage());
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void setEnvironment(Environment environment) {
+		this.environment = environment;
 	}
 }
