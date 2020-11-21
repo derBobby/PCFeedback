@@ -94,6 +94,12 @@
 								<span th:errors="*{ratingQuestionCount}" class="text-warning"></span>
 							</div>
 							
+							<div class="form-group text-left">
+							    <label for="notificationMail">E-Mailadresse optional für Teilnahmebenachrichtigungen:</label>
+								<input th:field="*{notificationMail}" class="form-control" placeholder="" type="email" th:disabled="*{active}" />
+								<span th:errors="*{notificationMail}" class="text-warning"></span>
+							</div>
+							
 							<h4 class="mt-4 text-left">Bewertungsobjekte</h4>
 
 							<div th:remove="tag" th:each="ratingObject, iterStat : *{ratingObjectList}" th:object="${ratingObject}">

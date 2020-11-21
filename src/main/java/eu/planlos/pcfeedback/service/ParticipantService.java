@@ -9,7 +9,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -27,8 +26,7 @@ public class ParticipantService implements EnvironmentAware {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ParticipantService.class);
 
-	@Value("${eu.planlos.pcfeedback.winner-count}")
-	private int winnerCount;
+	private static final int WINNER_COUNT = 3;
 	
 	@Autowired
 	private ParticipantRepository participantRepo;
@@ -154,7 +152,7 @@ public class ParticipantService implements EnvironmentAware {
 		Collections.shuffle(allParticipants);
 		
 		int pCount = allParticipants.size();
-		int keepCount = pCount < winnerCount ? pCount : winnerCount;
+		int keepCount = pCount < WINNER_COUNT ? pCount : WINNER_COUNT;
 		
 		allParticipants.subList(keepCount, allParticipants.size()).clear();
 		

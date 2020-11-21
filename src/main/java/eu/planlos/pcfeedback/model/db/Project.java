@@ -62,9 +62,12 @@ public class Project implements Serializable {
 
 	@Column
 	private Instant startInstant;
-	
+
 	@Column
 	private Instant endInstant;
+	
+	@Column
+	private String notificationMail;
 
 	@Transient
 	@DateTimeFormat(pattern = "dd.MM.YYYY HH:mm")
@@ -242,5 +245,13 @@ public class Project implements Serializable {
 
 	public void setRatingQuestionCount(int ratingQuestionCount) {
 		this.ratingQuestionCount = ratingQuestionCount;
+	}
+
+	public String getNotificationMail() {
+		return notificationMail;
+	}
+
+	public void setNotificationMail(String notificationMail) {
+		this.notificationMail = notificationMail;
 	}
 }

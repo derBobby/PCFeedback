@@ -32,6 +32,7 @@ import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.service.FeedbackValidationService;
+import eu.planlos.pcfeedback.service.MailService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
@@ -68,6 +69,9 @@ public class FeedbackController {
 
 	@Autowired
 	private RatingQuestionService rqs;
+
+	@Autowired
+	private MailService mailService;
 	
 	/**
 	 * User is redirected to this controller after successfully writing participant info to session.
@@ -197,6 +201,15 @@ public class FeedbackController {
 			//Save the result for later plausibilisation/correction
 			ParticipationResult pr = new ParticipationResult(project, participant, feedbackMap, freeText);
 			participationResultService.saveParticipationResult(pr);
+			
+			//Send notification mail
+			String recepient = project.getNotificationMail();
+			if(recepient != null) {
+				LOG.debug("Sending notification mail");
+				mailService.notifyParticipation(project);
+			} else {
+				LOG.debug("Not sending notification mail");
+			}
 			
 			//Save user agent for later analysis
 			userAgentService.saveUserAgent(project, userAgentText, participant.getGender());
