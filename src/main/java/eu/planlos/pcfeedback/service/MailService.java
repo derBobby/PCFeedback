@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -92,9 +91,16 @@ public class MailService implements EnvironmentAware {
 	}
 
 	@PostConstruct
-	@Profile(value = {"DEV", "REV"})
 	private void printCredentials() {
-		LOG.debug("Setup email account as user='{}' password='{}' socket='{}:{}'", springMailUsername, springMailPassword, springMailHost, springMailPort);
+		/*
+		 * URLs for DEV profile
+		 */
+		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
+
+		if (profiles.contains(ApplicationProfileHelper.DEV_PROFILE)
+				|| profiles.contains(ApplicationProfileHelper.REV_PROFILE)) {
+			LOG.debug("Setup email account as user='{}' password='{}' socket='{}:{}'", springMailUsername, springMailPassword, springMailHost, springMailPort);
+		}
 	}
 	
 	@PostConstruct
