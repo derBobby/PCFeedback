@@ -49,6 +49,9 @@ public class Project implements Serializable {
 	@Column(nullable = false)
 	private boolean isPricegame;
 	
+	@Column(nullable = false)
+	private boolean askFreetext;
+	
 	@Column(nullable=false)
 	private boolean active;
 	
@@ -237,6 +240,14 @@ public class Project implements Serializable {
 
 	public void setIsPricegame(boolean isPricegame) {
 		this.isPricegame = isPricegame;
+	}
+
+	public boolean getAskFreetext() {
+		return askFreetext;
+	}
+
+	public void setAskFreetext(boolean askFreetext) {
+		this.askFreetext = askFreetext;
 	}
 
 	public int getRatingQuestionCount() {

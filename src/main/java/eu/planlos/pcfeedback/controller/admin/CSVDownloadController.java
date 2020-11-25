@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,8 @@ import eu.planlos.pcfeedback.service.ProjectService;
 @Controller
 public class CSVDownloadController {
 
+	private static final Logger LOG = LoggerFactory.getLogger(CSVDownloadController.class);
+	
 	@Autowired
 	private CSVExporterService expService;
 	
@@ -63,15 +67,22 @@ public class CSVDownloadController {
 		Project project = pService.findProject(projectName);
 
 	    expService.writeRatingQuestionCSV(response.getWriter(), project, Gender.FEMALE);
-	}	
+	}
 	
 	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_FREETEXT + "{projectName}")
 	@ResponseBody
 	public void feedbackFreeTextCSV(HttpServletResponse response, @PathVariable("projectName") String projectName) throws IOException {
-		
-		setCsvHeader(response, "Feedback_Freitext.csv");
+			
 		Project project = pService.findProject(projectName);
 
+		//TODO validate project
+		
+		if(! project.getAskFreetext()) {
+			LOG.error("Project name='{}' has no free text. -> sending 404", projectName);
+			response.sendError(404, String.format("Projekt %s ist nicht für Freitext konfiguriert", projectName));	
+		}
+		
+		setCsvHeader(response, "Feedback_Freitext.csv");
 	    expService.writeFreeTextCSV(response.getWriter(), project);
 	}
 	

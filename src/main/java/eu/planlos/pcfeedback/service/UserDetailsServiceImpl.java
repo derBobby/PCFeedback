@@ -2,6 +2,7 @@ package eu.planlos.pcfeedback.service;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -9,7 +10,8 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -19,10 +21,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 import eu.planlos.pcfeedback.constants.ApplicationRoleHelper;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAware {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
@@ -31,6 +34,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Value("${eu.planlos.pcfeedback.admin.password}")
 	private String adminPassword;
+	
+	private Environment environment;
 	
 	@Override
 	/**
@@ -52,8 +57,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 	
 	@PostConstruct
-	@Profile(value = {"DEV", "REV"})
 	private void printCredentials() {
-		LOG.debug("Setup admin user as user='{}' password='{}'", adminUser, adminPassword);
+		/*
+		 * URLs for DEV profile
+		 */
+		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
+
+		if (profiles.contains(ApplicationProfileHelper.DEV_PROFILE)
+				|| profiles.contains(ApplicationProfileHelper.REV_PROFILE)) {
+			LOG.debug("Setup admin user as user='{}' password='{}'", adminUser, adminPassword);
+		}
+	}
+
+	@Override
+	public void setEnvironment(Environment environment) {
+		this.environment = environment;
 	}
 }

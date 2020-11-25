@@ -1,9 +1,12 @@
 package eu.planlos.pcfeedback.controller.feedback;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -124,13 +127,15 @@ public class FeedbackController {
 	 * @param project
 	 * @param participant
 	 * @return
+	 * @throws IOException 
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_SUBMIT, method = RequestMethod.POST)
-	public String feedbackSubmit(Model model,
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_QUESTION_SUBMIT, method = RequestMethod.POST)
+	public String questionSubmit(Model model,
+			ServletResponse response,
 			HttpSession session,
 			@ModelAttribute FeedbackContainer fbc,
 			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
-			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant) {
+			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant) throws IOException {
 
 		String resource = ApplicationPathHelper.RES_FEEDBACK_FREETEXT;
 		
@@ -140,7 +145,13 @@ public class FeedbackController {
 			validationService.isValidFeedback(project, feedbackMap);
 			LOG.debug("Adding feedback to session");
 			session.setAttribute(SessionAttributeHelper.FEEDBACK, fbc);
-			
+						
+			if(! project.getAskFreetext()) {
+				HttpServletResponse res = (HttpServletResponse) response;
+				res.sendRedirect(ApplicationPathHelper.URL_FEEDBACK_RESULT_SUBMIT);
+				return null;
+			}
+					
 		} catch (NoFeedbackException | InvalidFeedbackException e) {
 
 			try {
@@ -178,14 +189,39 @@ public class FeedbackController {
 	 * @param fbContainer
 	 * @return
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_FREETEXT_SUBMIT, method = RequestMethod.POST)
-	public String freeTextSubmit(Model model,
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_RESULT_SUBMIT, method = RequestMethod.POST)
+	public String resultSubmit(Model model,
 			@RequestHeader("User-Agent") String userAgentText,
 			@RequestParam String freeText,
 			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
 			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant,
 			@ModelAttribute(SessionAttributeHelper.FEEDBACK) FeedbackContainer fbContainer) {
+		
+		return processEndResult(model, userAgentText, freeText, project, participant, fbContainer);
+	}
+	
+	/**
+	 * Method which saves all results. Takes participant and feedback from session
+	 * @param model
+	 * @param userAgentText
+	 * @param freeText
+	 * @param project
+	 * @param participant
+	 * @param fbContainer
+	 * @return
+	 */
+	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_RESULT_SUBMIT, method = RequestMethod.GET)
+	public String resultSubmit(Model model,
+			@RequestHeader("User-Agent") String userAgentText,
+			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
+			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant,
+			@ModelAttribute(SessionAttributeHelper.FEEDBACK) FeedbackContainer fbContainer) {
+		
+		return processEndResult(model, userAgentText, null, project, participant, fbContainer);
+	}
 
+	private String processEndResult(Model model, String userAgentText, String freeText, Project project,
+			Participant participant, FeedbackContainer fbContainer) {
 		Map<Long, Integer> feedbackMap = fbContainer.getFeedbackMap();
 				
 		String resource = "redirect:" + ApplicationPathHelper.URL_FEEDBACK_END;
@@ -204,7 +240,7 @@ public class FeedbackController {
 			
 			//Send notification mail
 			String recepient = project.getNotificationMail();
-			if(recepient != null) {
+			if(recepient != null && ! recepient.equals("")) {
 				LOG.debug("Sending notification mail");
 				mailService.notifyParticipation(project);
 			} else {
@@ -227,7 +263,6 @@ public class FeedbackController {
 				mfs.fillGlobal(model);
 			}
 		}
-		
 		return resource;
 	}
 

@@ -32,9 +32,9 @@ public class ApplicationPathHelper {
 	public static final String URL_HOME 						= URL_AREA_PUBLIC;
 	public static final String URL_PROJECTHOME 					= URL_AREA_PUBLIC + "project" + URL_DELIMETER;
 	public static final String URL_FEEDBACK_START 				= URL_AREA_PUBLIC + "feedbackstart";
-	public static final String URL_FEEDBACK_FREETEXT_SUBMIT 	= URL_AREA_PUBLIC + "feedbacksubmit";
+	public static final String URL_FEEDBACK_RESULT_SUBMIT 		= URL_AREA_PUBLIC + "feedbacksubmit";
 	public static final String URL_FEEDBACK_QUESTION		 	= URL_AREA_PUBLIC + "feedbackquestion";
-	public static final String URL_FEEDBACK_SUBMIT				= URL_AREA_PUBLIC + "feedbackfreetext";
+	public static final String URL_FEEDBACK_QUESTION_SUBMIT		= URL_AREA_PUBLIC + "feedbackfreetext";
 	public static final String URL_FEEDBACK_END		 			= URL_AREA_PUBLIC + "feedbackend";
 	public static final String URL_PRICEGAME 					= URL_AREA_PUBLIC + "gewinnspielhinweise" + URL_DELIMETER;
 	public static final String RES_HOME 						= "home";

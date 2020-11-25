@@ -32,9 +32,9 @@ public class ProjectFilterConfiguration {
 	    registrationBean.addUrlPatterns(
 	    		ApplicationPathHelper.URL_FEEDBACK_START,
 	    		ApplicationPathHelper.URL_FEEDBACK_QUESTION,
-	    		ApplicationPathHelper.URL_FEEDBACK_FREETEXT_SUBMIT,
+	    		ApplicationPathHelper.URL_FEEDBACK_RESULT_SUBMIT,
 	    		ApplicationPathHelper.URL_FEEDBACK_END,
-	    		ApplicationPathHelper.URL_FEEDBACK_SUBMIT
+	    		ApplicationPathHelper.URL_FEEDBACK_QUESTION_SUBMIT
 	    	);
 	         
 	    return registrationBean;    

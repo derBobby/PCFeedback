@@ -33,7 +33,7 @@
 						<span class="fas fa-file-download">&nbsp;&nbsp;Feedback W</span>
 					</a>
        			</div>
-       			<div class="column border-dark p-3 mb-3">
+       			<div class="column border-dark p-3 mb-3" th:if="${project.askFreetext}">
         			<a th:href="@{${URL_ADMIN_CSVFEEDBACK_FREETEXT}+${project.projectName}}" class="btn btn-secondary">
 						<span class="fas fa-file-download">&nbsp;&nbsp;Freitext</span>
 					</a>
@@ -192,7 +192,7 @@
 			
 			<!-- ~~~~~~~~~~~~~~~ Free text ~~~~~~~~~~~~~~~ -->
 			
-       		<div class="row justify-content-center">
+       		<div class="row justify-content-center" th:if="${project.askFreetext}">
         		<div class="col-12 border-dark p-3 mb-3">
 					<div class="card">
 						<div class="card-header">
