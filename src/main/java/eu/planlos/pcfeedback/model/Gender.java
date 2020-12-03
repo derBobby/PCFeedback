@@ -1,7 +1,7 @@
 package eu.planlos.pcfeedback.model;
 
 public enum Gender {
-	MALE("männlich"), FEMALE("weiblich");
+	MALE("m"), FEMALE("w");
 
 	private String gender;
 

@@ -6,16 +6,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import eu.planlos.pcfeedback.converter.StringToZonedDateTimeConverter;
+import eu.planlos.pcfeedback.converter.StringToGenderConverter;
 
 @Configuration
-public class ZonedDateTimeConfig implements WebMvcConfigurer {
+public class GenderConverterConfig implements WebMvcConfigurer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ZonedDateTimeConfig.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GenderConverterConfig.class);
 	
     @Override
     public void addFormatters (FormatterRegistry registry) {
-        registry.addConverter(new StringToZonedDateTimeConverter());
-        LOG.debug("Configuration loaded: ZonedDateTimeConfig");
+        registry.addConverter(new StringToGenderConverter());
+        LOG.debug("Configuration loaded: GenderConverterConfig");
     }
 }
