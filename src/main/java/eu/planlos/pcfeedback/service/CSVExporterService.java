@@ -28,96 +28,100 @@ public class CSVExporterService {
 	private static final String[] FILE_PARTICIPANT_HEADER = { "Vorname","Nachname","Geschlecht","Teilnahmezeitpunkt" };
 	private static final String[] FILE_FREETEXT_HEADER = { "M/W","Text" };
 	
-//	public void writeParticipantsCSV(List<Participant> pList, PrintWriter writer) {
-//		
-//		CSVFormat csvFile = csvFormatForHeader(FILE_PARTICIPANT_HEADER);
-//		CSVPrinter csvPrinter = null;
-//
-//		try {
-//			csvPrinter = new CSVPrinter(new BufferedWriter(writer), csvFile);
-//			
-//			LOG.debug("Write participants");
-//			for (Participant participant : pList) {
-//				
-//				List<Object> participantRecord = createParticipantRecord(participant);
-//				
-//				csvPrinter.printRecord(participantRecord);
-//				csvPrinter.flush();
-//			}
-//			
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				writer.flush();
-//				writer.close();
-//				csvPrinter.close();
-//			} catch (IOException e) {
-//				LOG.error("Error while flushing/closing fileWriter/csvPrinter !!!");
-//			}
-//		}
-//	}
-//
-//	public void writeRatingQuestionCSV(List<RatingQuestion> rqList, PrintWriter writer) {
-//				
-//		CSVFormat csvFile = csvFormatForHeader(FILE_RATINGQUESTION_HEADER);
-//		CSVPrinter csvPrinter = null;
-//
-//		try {
-//			LOG.debug("Write ratingQuestions");
-//
-//			csvPrinter = new CSVPrinter(new BufferedWriter(writer), csvFile);
-//
-//			for (RatingQuestion ratingQuestion : rqList) {
-//				
-//				List<Object> ratingQuestionRecord = createRatingQuestionRecord(ratingQuestion);
-//				
-//				csvPrinter.printRecord(ratingQuestionRecord);
-//				csvPrinter.flush();
-//			}
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				writer.flush();
-//				writer.close();
-//				csvPrinter.close();
-//			} catch (IOException e) {
-//				LOG.error("Error while flushing/closing fileWriter/csvPrinter !!!");
-//			}
-//		}
-//	}
-//	
-//	public void writeFreeTextCSV(List<ParticipationResult> prList, PrintWriter writer) {
-//		
-//		CSVFormat csvFile = csvFormatForHeader(FILE_FREETEXT_HEADER);
-//		CSVPrinter csvPrinter = null;
-//
-//		try {
-//			LOG.debug("Write free texts");
-//
-//			csvPrinter = new CSVPrinter(new BufferedWriter(writer), csvFile);
-//			for (ParticipationResult pr : prList) {
-//				
-//				List<Object> freeTextRecord = createFreeTextRecord(pr);
-//				
-//				csvPrinter.printRecord(freeTextRecord);
-//				csvPrinter.flush();
-//			}
-//			
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				writer.flush();
-//				writer.close();
-//				csvPrinter.close();
-//			} catch (IOException e) {
-//				LOG.error("Error while flushing/closing fileWriter/csvPrinter !!!");
-//			}
-//		}		
-//	}
+
+	@Deprecated
+	public void writeParticipantsCSV(List<Participant> pList, PrintWriter writer) {
+		
+		CSVFormat csvFile = csvFormatForHeader(FILE_PARTICIPANT_HEADER);
+		CSVPrinter csvPrinter = null;
+
+		try {
+			csvPrinter = new CSVPrinter(new BufferedWriter(writer), csvFile);
+			
+			LOG.debug("Write participants");
+			for (Participant participant : pList) {
+				
+				List<Object> participantRecord = createParticipantRecord(participant);
+				
+				csvPrinter.printRecord(participantRecord);
+				csvPrinter.flush();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				writer.flush();
+				writer.close();
+				csvPrinter.close();
+			} catch (IOException e) {
+				LOG.error("Error while flushing/closing fileWriter/csvPrinter !!!");
+			}
+		}
+	}
+
+	@Deprecated
+	public void writeRatingQuestionCSV(List<RatingQuestion> rqList, PrintWriter writer) {
+				
+		CSVFormat csvFile = csvFormatForHeader(FILE_RATINGQUESTION_HEADER);
+		CSVPrinter csvPrinter = null;
+
+		try {
+			LOG.debug("Write ratingQuestions");
+
+			csvPrinter = new CSVPrinter(new BufferedWriter(writer), csvFile);
+
+			for (RatingQuestion ratingQuestion : rqList) {
+				
+				List<Object> ratingQuestionRecord = createRatingQuestionRecord(ratingQuestion);
+				
+				csvPrinter.printRecord(ratingQuestionRecord);
+				csvPrinter.flush();
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				writer.flush();
+				writer.close();
+				csvPrinter.close();
+			} catch (IOException e) {
+				LOG.error("Error while flushing/closing fileWriter/csvPrinter !!!");
+			}
+		}
+	}
+	
+	@Deprecated
+	public void writeFreeTextCSV(List<ParticipationResult> prList, PrintWriter writer) {
+		
+		CSVFormat csvFile = csvFormatForHeader(FILE_FREETEXT_HEADER);
+		CSVPrinter csvPrinter = null;
+
+		try {
+			LOG.debug("Write free texts");
+
+			csvPrinter = new CSVPrinter(new BufferedWriter(writer), csvFile);
+			for (ParticipationResult pr : prList) {
+				
+				List<Object> freeTextRecord = createFreeTextRecord(pr);
+				
+				csvPrinter.printRecord(freeTextRecord);
+				csvPrinter.flush();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				writer.flush();
+				writer.close();
+				csvPrinter.close();
+			} catch (IOException e) {
+				LOG.error("Error while flushing/closing fileWriter/csvPrinter !!!");
+			}
+		}		
+	}
 	
 	public void writeCSV(List<?> objectList, PrintWriter writer) {
 		

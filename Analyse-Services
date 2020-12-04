@@ -1,0 +1,49 @@
+CSVExporterService
+==================
+
+> Habe hier meine ersten Invocation-Experimente gemacht
+- Die drei @Deprecated Methoden machen das gleiche mit unterschiedlichen Objekten
+- Der "overhead mit try catch flush close" war mir zu viel
+- Die Funktion habe ich in writeCSV zusammengefasst
+- Ist das ein echter Usecase für Invocation?
+- Falls nicht, wie würde man die Dinge mit weniger Duplikation hinbekommen?
+
+
+
+
+EditParticipationService
+========================
+
+> Gutes Beispiel für "hier nimm Services und Repos und tue Dinge"
+- Bauchgefühl: Autowire von Service UND Repos sieht komisch aus
+- Wäre der EditParticipationService anders zu schneiden oder in einen anderen Service zu verbringen?
+
+
+
+
+FeedbackValidationService
+=========================
+
+> Gutes Beispiel für: Muss das ein Service sein?
+- Hat selbst keine Abhängigkeiten
+- Sehr geringer Funktionsumfang
+- Gibts da nicht eine Möglichkeit Spring einen Validator mitzugeben, und BindingResult zu verwenden?
+- bsp: FeedbackStartController.participantSubmit()
+
+
+
+
+MailService
+===========
+
+> In den Studi-Projekten wurde @Async viel genutzt, das wurde bemängelt.
+- Hier richtig verwendet? Sinn: Mailversand soll Ablauf nicht blockieren
+
+> printCredentials() prinzipiell problematisch, beim Einsatz für DEV aber hilfreich.
+- OK oder weg? ;-)
+
+> notifyStart() und notifyParticipation()
+- Geht das einfacher?
+
+
+

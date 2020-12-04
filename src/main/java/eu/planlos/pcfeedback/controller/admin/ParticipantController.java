@@ -17,10 +17,9 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.exceptions.ParticipantNotFoundException;
 import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.Project;
-import eu.planlos.pcfeedback.service.DeleteParticipationService;
-import eu.planlos.pcfeedback.service.EditParticipationService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
+import eu.planlos.pcfeedback.service.ParticipationService;
 
 @Controller
 public class ParticipantController {
@@ -31,10 +30,7 @@ public class ParticipantController {
 	private ModelFillerService mfs;
 
 	@Autowired
-	private EditParticipationService eps;
-	
-	@Autowired
-	private DeleteParticipationService dps;
+	private ParticipationService eps;
 
 	@Autowired
 	private ParticipantService ps;
@@ -99,7 +95,7 @@ public class ParticipantController {
 		try {
 			participant = ps.findByIdParticipant(idParticipant);
 			Project project = participant.getProject();
-			dps.deleteParticipant(participant);
+			eps.deleteParticipant(participant);
 			return "redirect:" + ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + project.getProjectName();
 			
 		} catch (ParticipantNotFoundException e) {

@@ -10,8 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.ApplicationRoleHelper;
-import eu.planlos.pcfeedback.service.LoginAccessDeniedHandler;
-import eu.planlos.pcfeedback.service.UserDetailsServiceImpl;
+import eu.planlos.pcfeedback.web.security.LoginAccessDeniedHandler;
+import eu.planlos.pcfeedback.web.security.UserDetailsServiceImpl;
 
 //Schalter für SimpleAuthentication
 //@EnableGlobalMethodSecurity(securedEnabled = true)

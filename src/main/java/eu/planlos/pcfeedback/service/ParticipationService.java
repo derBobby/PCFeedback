@@ -17,9 +17,9 @@ import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 
 @Service
-public class EditParticipationService {
+public class ParticipationService {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(EditParticipationService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ParticipationService.class);
 	
 	@Autowired
 	private ParticipantService pService;
@@ -79,5 +79,28 @@ public class EditParticipationService {
 		prService.saveParticipationResult(participationResult);
 		
 		return true;
+	}
+	
+	/**
+	 * Methods either saves Participant, if gender ist kept or does pretty much everything if gender is changed.
+	 * Means removing votes from old RatingQuestion and adding votes to new RatingQuestion.
+	 * Since RatingQuestion has member Gender.
+	 * @param participant
+	 * @return Returns true if gender is changed
+	 * @throws ParticipantNotFoundException
+	 */
+	public void deleteParticipant(Participant participant) throws ParticipantNotFoundException {
+		
+		ParticipationResult participationResult = prService.findByParticipant(participant);
+		Map<Long, Integer> feedbackMap = participationResult.getFeedbackMap();
+		
+		LOG.debug("Removing participants personal feedback entry");
+		rqService.removeFeedback(feedbackMap);
+		
+		LOG.debug("Deleting...");
+		prService.deleteParticipationResult(participationResult);
+		
+		LOG.debug("Removing participant");
+		pService.delete(participant);
 	}
 }

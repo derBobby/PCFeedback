@@ -1,0 +1,79 @@
+Package-Struktur
+================
+
+> Controller gut sortiert:
+- Admin
+- Feedbackprozess an sich
+- Sonstige Controller
+
+> Converter und Configs zusammen in ein Package?
+
+> Package mit globalen Konstanten ws. sinnvoll
+
+
+
+
+Exceptions
+==========
+
+> Verwendung relativ vieler eigener Exception-Klassen
+- Macht man das so?
+- Kann man das anders handhaben?
+- Statt zu validieren und ohne Erklärung nach "Home" zu routen doch ein 404 werfen?
+
+> Beispiel wäre Validierung von Participant beim Submit im FeedbackController
+- bsp 1: ParticipantIsMissingEmailException
+- bsp 2: ParticipantIsMissingMobileException
+
+> Schreibt man die Exception-Klassen so?
+
+
+
+
+Filter
+======
+
+> Sollten Filter in der Art verwendet werden? Oder ist das Zweckentfremdung?
+- "Nur weil es geht muss es nicht richtig sein!"
+- bsp: RequestResponseProjectFilter
+- Ist der Versuch validierung aus den einzelnen Controllern vorwegzunehmen
+
+
+
+
+Model
+=====
+
+> In Mongo würde man vermutlich manche Dinge zusammenfassen, oder?
+- UserAgent als Bestandteil vom Participant
+- ParticipationResult und Participant zu einem
+
+> Für JPA/MySQL gut genug geschnitten? Welche Änderung macht Sinn?
+
+> Wird FeedbackContainer eigentlich benötigt?
+- Kann ich mir den sparen, weil nur eine Map enthalten ist?
+- Oder FeedbackContainer extends Map<>, damit man nicht die falsche Map an eine Methode übergeben kann?
+
+> LoginFormContainer gleiche Frage.
+- Weglassen und stattdessen einfach zwei Strings weitergeben?
+- Kann man zwei String als Post-Parameter setzen oder muss das EIN Objekt sein?
+
+
+
+
+Methoden und Namenskonventionen
+===============================
+
+> In Java werden boolean getter formuliert als isVarname()
+- Thymeleaf fordert aber explizit getVarname(), um aus dem Template,zugreifen zu können
+- Project.isPricegame() und Project.getPricegame() auf eines reduzieren oder dupliziert lassen?
+
+
+
+
+ZonedDateTime
+=============
+
+> Warum sind Daten und Zeiten in Java so kacke zu handhaben?
+- Siehe ZonedDateTimeHelper
+- Ich glaube ich habe so etwas ähnliches in wesentlich größer schon mal gesehen ;-)

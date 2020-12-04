@@ -56,8 +56,6 @@ public class MailService implements EnvironmentAware {
 		
 		try {
 			
-			
-			
 			mailHelper = new MimeMessageHelper(mail, true);
 			mailHelper.setSubject(String.format("%sPCFeedback - Update Benachrichtigung", subjectPrefix()));
 			mailHelper.setFrom(mailSender);
