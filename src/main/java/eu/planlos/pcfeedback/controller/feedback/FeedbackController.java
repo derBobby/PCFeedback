@@ -71,9 +71,6 @@ public class FeedbackController {
 	private ParticipationResultService participationResultService;
 
 	@Autowired
-	private RatingQuestionService rqs;
-
-	@Autowired
 	private MailService mailService;
 	
 	/**
@@ -287,7 +284,7 @@ public class FeedbackController {
 		}
 		
 		long idRatingQuestion = feedbackMap.keySet().iterator().next();
-		RatingQuestion ratingQuestion = rqs.findByIdRatingQuestion(idRatingQuestion);
+		RatingQuestion ratingQuestion = ratingQuestionService.findByIdRatingQuestion(idRatingQuestion);
 		
 		long project3 = ratingQuestion.getProject().getIdProject();
 		

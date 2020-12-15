@@ -8,15 +8,18 @@ CSVExporterService
 - Ist das ein echter Usecase für Invocation?
 - Falls nicht, wie würde man die Dinge mit weniger Duplikation hinbekommen?
 
+> Alternative Idee
+- Interface mit implementierter default writeCSV()-Methode
+- Die drei abgeleiteten Klassen implementieren eine createRecord() Methode
+- Damit dreifache Zahl Klassen, aber aufgeräumter und keine "Invocation-Magie"
 
 
-
-EditParticipationService
+ParticipationService
 ========================
 
 > Gutes Beispiel für "hier nimm Services und Repos und tue Dinge"
 - Bauchgefühl: Autowire von Service UND Repos sieht komisch aus
-- Wäre der EditParticipationService anders zu schneiden oder in einen anderen Service zu verbringen?
+- Sinnvoll den Service als "Mittelsmann" zwischen den Autowires und dem controller zu entfernen?
 
 
 
