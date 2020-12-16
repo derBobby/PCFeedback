@@ -65,6 +65,10 @@ public class Participant implements Serializable {
 	@Column(nullable=false)
 	private Instant participationTime;
 	
+	@Column(nullable = false)
+	@NotBlank
+	private String userAgent;
+	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@NotNull
 	@JoinColumn(name="project", nullable=false)
@@ -76,29 +80,6 @@ public class Participant implements Serializable {
 	public Participant(Project project) {
 		this.project = project;
 		setParticipationTime();
-	}
-
-	public Participant(String firstname, String name, String email, String mobile, Gender gender, boolean priceGameStatementAccepted, boolean dataPrivacyStatementAccepted) {
-		this.firstname = firstname;
-		this.name = name;
-		this.email = email;
-		this.mobile = mobile;
-		this.gender = gender;
-		this.priceGameStatementAccepted = priceGameStatementAccepted;
-		this.dataPrivacyStatementAccepted = dataPrivacyStatementAccepted;
-		this.participationTime = Instant.now();
-	}
-
-	public Participant(Project project, String firstname, String name, String email, String mobile, Gender gender, boolean priceGameStatementAccepted, boolean dataPrivacyStatementAccepted) {
-		this.project = project;
-		this.firstname = firstname;
-		this.name = name;
-		this.email = email;
-		this.mobile = mobile;
-		this.gender = gender;
-		this.priceGameStatementAccepted = priceGameStatementAccepted;
-		this.dataPrivacyStatementAccepted = dataPrivacyStatementAccepted;
-		this.participationTime = Instant.now();
 	}
 	
 	public Long getIdParticipant() {
@@ -163,6 +144,14 @@ public class Participant implements Serializable {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+	
+	public String getUserAgent() {
+		return userAgent;
+	}
+
+	public void setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
 	}
 
 	public Instant getParticipationTime() {

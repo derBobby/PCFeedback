@@ -33,7 +33,6 @@ import eu.planlos.pcfeedback.service.ProjectService;
 import eu.planlos.pcfeedback.service.RatingObjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 import eu.planlos.pcfeedback.service.UiTextService;
-import eu.planlos.pcfeedback.service.UserAgentService;
 
 @Controller
 public class ProjectController {
@@ -48,9 +47,6 @@ public class ProjectController {
 
 	@Autowired
 	private ParticipationResultService prs;
-	
-	@Autowired
-	private UserAgentService uaService;
 	
 	@Autowired
 	private UiTextService uts;
@@ -213,7 +209,6 @@ public class ProjectController {
 		participantService.resetProject(project);
 		ps.resetProject(project);
 		rqs.resetProject(project);
-		uaService.resetProject(project);
 		
 		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
 	}	
@@ -234,7 +229,6 @@ public class ProjectController {
 		prs.resetProject(project);
 		participantService.resetProject(project);
 		rqs.resetProject(project);
-		uaService.resetProject(project);
 		uts.deleteByProject(project);
 		
 		List<RatingObject> roList = project.getRatingObjectList();

@@ -40,7 +40,6 @@ import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
-import eu.planlos.pcfeedback.service.UserAgentService;
 
 @Controller
 @SessionAttributes(names = {SessionAttributeHelper.PARTICIPANT, SessionAttributeHelper.PROJECT, SessionAttributeHelper.FEEDBACK})
@@ -60,9 +59,6 @@ public class FeedbackController {
 	
 	@Autowired
 	private ParticipantService participantService;
-
-	@Autowired
-	private UserAgentService userAgentService;
 	
 	@Autowired
 	private FeedbackValidationService validationService;
@@ -179,29 +175,30 @@ public class FeedbackController {
 	/**
 	 * Method which saves all results. Takes participant and feedback from session
 	 * @param model
-	 * @param userAgentText
-	 * @param freeText
+	 * @param userAgent
 	 * @param project
 	 * @param participant
 	 * @param fbContainer
+	 * @param freeText
 	 * @return
 	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_RESULT_SUBMIT, method = RequestMethod.POST)
 	public String resultSubmit(Model model,
-			@RequestHeader("User-Agent") String userAgentText,
-			@RequestParam String freeText,
+			@RequestHeader("User-Agent") String userAgent,
 			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
 			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant,
-			@ModelAttribute(SessionAttributeHelper.FEEDBACK) FeedbackContainer fbContainer) {
+			@ModelAttribute(SessionAttributeHelper.FEEDBACK) FeedbackContainer fbContainer,
+			@RequestParam String freeText) {
 		
-		return processEndResult(model, userAgentText, freeText, project, participant, fbContainer);
+		participant.setUserAgent(userAgent);
+		
+		return processEndResult(model, freeText, project, participant, fbContainer);
 	}
 	
 	/**
 	 * Method which saves all results. Takes participant and feedback from session
 	 * @param model
-	 * @param userAgentText
-	 * @param freeText
+	 * @param userAgent
 	 * @param project
 	 * @param participant
 	 * @param fbContainer
@@ -209,15 +206,17 @@ public class FeedbackController {
 	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_RESULT_SUBMIT, method = RequestMethod.GET)
 	public String resultSubmit(Model model,
-			@RequestHeader("User-Agent") String userAgentText,
+			@RequestHeader("User-Agent") String userAgent,
 			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
 			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant,
 			@ModelAttribute(SessionAttributeHelper.FEEDBACK) FeedbackContainer fbContainer) {
 		
-		return processEndResult(model, userAgentText, null, project, participant, fbContainer);
+		participant.setUserAgent(userAgent);
+		
+		return processEndResult(model, null, project, participant, fbContainer);
 	}
 
-	private String processEndResult(Model model, String userAgentText, String freeText, Project project,
+	private String processEndResult(Model model, String freeText, Project project,
 			Participant participant, FeedbackContainer fbContainer) {
 		Map<Long, Integer> feedbackMap = fbContainer.getFeedbackMap();
 				
@@ -243,9 +242,6 @@ public class FeedbackController {
 			} else {
 				LOG.debug("Not sending notification mail");
 			}
-			
-			//Save user agent for later analysis
-			userAgentService.saveUserAgent(project, userAgentText, participant.getGender());
 			
 		} catch (ParticipantAlreadyExistingException e) {
 			LOG.error("This should not happen, because session is destroyed on submitting feedback");

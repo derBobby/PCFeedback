@@ -73,7 +73,7 @@ public class DataCreationService {
 	private void createSampleData(String projectName, boolean needMail, boolean needMobile, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 
 		ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 1, 14, 30, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
-		ZonedDateTime endTime = ZonedDateTime.of(2020, 12, 15, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
+		ZonedDateTime endTime = ZonedDateTime.of(2020, 12, 30, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
 		
 		int neededQuestionCount = 5;
 		

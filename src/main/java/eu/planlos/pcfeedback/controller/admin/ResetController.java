@@ -10,7 +10,6 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
-import eu.planlos.pcfeedback.service.UserAgentService;
 
 @RestController
 public class ResetController {
@@ -22,9 +21,6 @@ public class ResetController {
 
 	@Autowired
 	private RatingQuestionService rqService;
-
-	@Autowired
-	private UserAgentService uaService;
 	
 	@Autowired
 	private ParticipationResultService prService;
@@ -34,7 +30,6 @@ public class ResetController {
 		
 		LOG.error("#----------#   DATABASE IS BEING RESET BY AMDIN !!!   #----------#");
 		
-		uaService.resetDB();
 		prService.resetDB();
 		pService.resetDB();
 		rqService.resetDB();

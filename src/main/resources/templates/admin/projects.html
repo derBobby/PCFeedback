@@ -55,7 +55,7 @@
 							<a th:href="@{${URL_ADMIN_SHOWFEEDBACK}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showfeedback'" th:if="*{active}">
 								<i class="fas fa-users"></i>
 							</a>
-							<a th:href="@{${URL_ADMIN_SHOWUSERAGENTS}+*{projectName}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showuseragents'" th:if="*{active}">
+							<a th:href="@{${URL_ADMIN_SHOWUSERAGENTS}+*{idProject}}" class="btn btn-secondary mt-1" role="button" th:id="*{idProject}+'showuseragents'" th:if="*{active}">
 								<i class="fas fa-user-tie"></i>
 							</a>
 							<a href="#" class="btn btn-warning mt-1" role="button" data-toggle="modal" th:attr="data-target='#resetModal'+*{idProject}" th:id="*{idProject}+'projectreset'" th:if="*{active}" >

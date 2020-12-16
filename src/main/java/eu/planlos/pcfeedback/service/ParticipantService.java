@@ -114,16 +114,14 @@ public class ParticipantService implements EnvironmentAware {
 	 */
 	public Participant createParticipantForForm(Project project) {
 		
-		Participant participant;
+		Participant participant = new Participant();
+		participant.setProject(project);
 		
 		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
 		if(profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
 			
-			String text = ((Long) System.currentTimeMillis()).toString();
-			participant = new Participant(project, text, text, text +"@example.com", text, Gender.MALE, true, true);
+			fillDummyParticipant(participant);
 
-		} else {
-			participant = new Participant(project);
 		}
 
 		return participant;
@@ -136,8 +134,25 @@ public class ParticipantService implements EnvironmentAware {
 	 */
 	public Participant createParticipantForDB(Project project, Gender gender) {
 		
+		Participant participant = new Participant();
+		participant.setProject(project);
+		
+		fillDummyParticipant(participant);
+		
+		return participant;
+	}
+	
+	private void fillDummyParticipant(Participant participant) {
+		
 		String text = ((Long) System.currentTimeMillis()).toString();
-		return new Participant(project, text, text, text +"@example.com", text, gender, false, false);
+		participant.setFirstname(text);
+		participant.setName(text);
+		participant.setEmail(text);
+		participant.setMobile(text);
+		participant.setGender(Gender.MALE);
+		participant.setPriceGameStatementAccepted(true);
+		participant.setDataPrivacyStatementAccepted(true);
+		participant.setUserAgent(text);
 	}
 
 	@Override

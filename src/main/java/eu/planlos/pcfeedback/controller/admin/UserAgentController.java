@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.Project;
-import eu.planlos.pcfeedback.model.db.UserAgent;
 import eu.planlos.pcfeedback.service.ModelFillerService;
+import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ProjectService;
-import eu.planlos.pcfeedback.service.UserAgentService;
 
 @Controller
 public class UserAgentController {
@@ -27,20 +27,23 @@ public class UserAgentController {
 	private ModelFillerService mfs;
 	
 	@Autowired
-	private UserAgentService userAgentService;
-	
-	@Autowired
-	private ProjectService pService;
-	
-	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS + "{projectName}", method = RequestMethod.GET)
-	public String showUserAgents(Model model, @PathVariable("projectName") String projectName) {
+	private ProjectService projectService;
 
-		Project project = pService.findProject(projectName);
+	@Autowired
+	private ParticipantService participantService;
+	
+	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS + "{idProject}", method = RequestMethod.GET)
+	public String showUserAgents(Model model, @PathVariable("idProject") Long idProject) {
+
+		//TODO test idProject
 		
-		LOG.debug("Loading User-Agents");
-		List<UserAgent> userAgentList = userAgentService.findAllForProject(project);
+		LOG.debug("Getting project from id");
+		Project project = projectService.findProject(idProject);
 		
-		model.addAttribute("userAgentList", userAgentList);
+		LOG.debug("Loading participants");
+		List<Participant> participantList = participantService.getAllParticipantsForProject(project);
+				
+		model.addAttribute("participantList", participantList);
 
 		mfs.fillGlobal(model);
 		
