@@ -18,6 +18,8 @@
 							
 							<input type="hidden" th:field="*{participationTime}" />
 							
+							<input type="hidden" th:field="*{userAgent}" />
+							
 							<div class="form-group">
 								<input th:field="*{firstname}" class="form-control" placeholder="Vorname" />
 								<span th:errors="*{firstname}" class="text-warning"></span>
@@ -68,7 +70,7 @@
 							<div class="form-group mb-0">
 								<div>
 									<button type="submit" id="submit" class="btn btn-primary">
-										Zum Feedback!<br /><i class="fas fa-step-forward"></i>
+										Speichern<br /><i class="fas fa-save"></i>
 									</button>
 								</div>
 							</div>

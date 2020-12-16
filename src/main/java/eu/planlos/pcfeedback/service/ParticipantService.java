@@ -136,6 +136,7 @@ public class ParticipantService implements EnvironmentAware {
 		
 		Participant participant = new Participant();
 		participant.setProject(project);
+		participant.setGender(gender);
 		
 		fillDummyParticipant(participant);
 		
@@ -149,7 +150,6 @@ public class ParticipantService implements EnvironmentAware {
 		participant.setName(text);
 		participant.setEmail(text);
 		participant.setMobile(text);
-		participant.setGender(Gender.MALE);
 		participant.setPriceGameStatementAccepted(true);
 		participant.setDataPrivacyStatementAccepted(true);
 		participant.setUserAgent(text);
