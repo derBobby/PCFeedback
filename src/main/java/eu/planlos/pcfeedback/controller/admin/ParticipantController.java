@@ -95,7 +95,7 @@ public class ParticipantController {
 		try {
 			participant = ps.findByIdParticipant(idParticipant);
 			Project project = participant.getProject();
-			eps.deleteParticipant(participant);
+			eps.deleteParticipation(participant);
 			return "redirect:" + ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + project.getProjectName();
 			
 		} catch (ParticipantNotFoundException e) {

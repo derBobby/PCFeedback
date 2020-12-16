@@ -34,12 +34,14 @@ import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
+import eu.planlos.pcfeedback.model.db.UiText;
 import eu.planlos.pcfeedback.service.FeedbackValidationService;
 import eu.planlos.pcfeedback.service.MailService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
+import eu.planlos.pcfeedback.service.UiTextService;
 
 @Controller
 @SessionAttributes(names = {SessionAttributeHelper.PARTICIPANT, SessionAttributeHelper.PROJECT, SessionAttributeHelper.FEEDBACK})
@@ -68,6 +70,9 @@ public class FeedbackController {
 
 	@Autowired
 	private MailService mailService;
+
+	@Autowired
+	private UiTextService uts;
 	
 	/**
 	 * User is redirected to this controller after successfully writing participant info to session.
@@ -107,7 +112,9 @@ public class FeedbackController {
 				
 		model.addAttribute("ratingQuestionList", ratingQuestionList);
 
-		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_QUESTION);
+		UiText uiText = uts.getUiText(project, UiTextKey.MSG_FEEDBACK_QUESTION);
+		
+		mfs.fillUiText(model, uiText);
 		mfs.fillGlobal(model);
 		return ApplicationPathHelper.RES_FEEDBACK_QUESTION;
 	}
@@ -156,7 +163,8 @@ public class FeedbackController {
 				model.addAttribute("feedbackError", e.getMessage());
 				model.addAttribute("chosenList", feedbackMap);
 				
-				mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_QUESTION);
+				UiText uiText = uts.getUiText(project, UiTextKey.MSG_FEEDBACK_QUESTION);
+				mfs.fillUiText(model, uiText);
 				
 				resource = ApplicationPathHelper.RES_FEEDBACK_QUESTION;
 				
@@ -167,7 +175,8 @@ public class FeedbackController {
 			
 		}
 		model.addAttribute("freeTextMaxLength", FREETEXTMAXLENGTH);
-		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_FREETEXT);
+		UiText uiText = uts.getUiText(project, UiTextKey.MSG_FEEDBACK_FREETEXT);
+		mfs.fillUiText(model, uiText);
 		mfs.fillGlobal(model);		
 		return resource;
 	}

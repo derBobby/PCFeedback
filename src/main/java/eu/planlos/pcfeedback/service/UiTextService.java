@@ -32,10 +32,10 @@ public class UiTextService {
 		uiTextRepo.save(uiText);
 	}
 
-	public String getText(Project project, UiTextKey uiTextKey) {
+	public UiText getUiText(Project project, UiTextKey uiTextKey) {
 		LOG.debug("Searching UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
-		UiText uit = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
-		return uit.getText();
+		UiText uiText = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
+		return uiText;
 	}
 	
 	public void initializeUiText(Project project) {

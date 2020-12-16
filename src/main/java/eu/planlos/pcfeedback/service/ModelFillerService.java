@@ -15,12 +15,12 @@ import org.springframework.ui.Model;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
-import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
+import eu.planlos.pcfeedback.model.db.UiText;
 import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
 
 @Service
@@ -30,9 +30,6 @@ public class ModelFillerService implements EnvironmentAware {
 	
 	@Autowired
 	private Environment environment;
-
-	@Autowired
-	private UiTextService ums;
 
 	public void fillGlobal(Model model) {
 				
@@ -124,10 +121,9 @@ public class ModelFillerService implements EnvironmentAware {
 		this.environment = environment;
 	}
 
-	public void fillUiText(Model model, Project project, UiTextKey uiTextKey) {
+	public void fillUiText(Model model, UiText uiText) {
 
-		model.addAttribute(uiTextKey.toString(), ums.getText(project, uiTextKey));
-		model.addAttribute("projectName", project.getProjectName());
+		model.addAttribute(uiText.getUiTextKey().toString(), uiText.getText());
 	}
 
 	/**

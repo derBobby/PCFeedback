@@ -29,8 +29,8 @@ import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.ProjectService;
+import eu.planlos.pcfeedback.service.RatingQuestionEvaluator;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
-import eu.planlos.pcfeedback.service.ResultService;
 
 @Controller
 public class ResultsController {
@@ -50,14 +50,13 @@ public class ResultsController {
 	private ParticipationResultService prService;
 	
 	@Autowired
-	private ResultService rService;
-	
-	@Autowired
 	private ModelFillerService mfs;
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + "{projectName}", method = RequestMethod.GET)
 	public String showResults(ServletResponse response, @PathVariable(name = "projectName") String projectName, Model model) throws RatingQuestionsNotExistentException, IOException {
 
+		RatingQuestionEvaluator evaluator = new RatingQuestionEvaluator();
+		
 		HttpServletResponse res = (HttpServletResponse) response;
 
 		Project project = psService.findProject(projectName);
@@ -83,13 +82,13 @@ public class ResultsController {
 		List<ParticipationResult> prList = prService.findAllByProject(project);
 
 		LOG.debug("Creating results");
-		Map<RatingObject, BigDecimal> maleResultMap = rService.rateWithGender(project, Gender.MALE);
+		Map<RatingObject, BigDecimal> maleResultMap = evaluator.rateWithGender(rqListMale);
 
 		LOG.debug("Creating results");
-		Map<RatingObject, BigDecimal> femaleResultMap = rService.rateWithGender(project, Gender.FEMALE);
-
+		Map<RatingObject, BigDecimal> femaleResultMap = evaluator.rateWithGender(rqListFemale);
+		
 		LOG.debug("Creating results");
-		Map<RatingObject, BigDecimal> overallResultMap = rService.rateWithoutGender(project);
+		Map<RatingObject, BigDecimal> overallResultMap = evaluator.rateWithoutGender(rqListMale, rqListFemale);
 		
 		mfs.fillGlobal(model);
 		mfs.fillResults(model, project, randomParticipantList, participantList, rqListMale, rqListFemale, prList, maleResultMap, femaleResultMap, overallResultMap);

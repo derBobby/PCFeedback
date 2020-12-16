@@ -11,21 +11,13 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
 
-@Service
-public class ResultService {
+public class RatingQuestionEvaluator {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ResultService.class);
-
-	@Autowired
-	private RatingQuestionService rqs;
+	private static final Logger LOG = LoggerFactory.getLogger(RatingQuestionEvaluator.class);
 	
 	/*
 	 * Rating happens in the following steps:
@@ -38,15 +30,11 @@ public class ResultService {
 	 * 3)	Order the sums for each RO descending
 	 * 
 	 */
-	public Map<RatingObject, BigDecimal> rateWithGender(Project project, Gender gender) {
+	public Map<RatingObject, BigDecimal> rateWithGender(List<RatingQuestion> rqList) {
 		
-		List<RatingQuestion> rqList = new ArrayList<>();
 		Map<RatingObject, BigDecimal> targetRatingMap = new HashMap<RatingObject, BigDecimal>();
 		LinkedHashMap<RatingObject, BigDecimal> sortedRatingMap = new LinkedHashMap<>();
-
-		LOG.debug("Loading ratingQuestions to rate them, gender={}", gender);
-		rqList.addAll(rqs.loadByProjectAndGender(project, gender));
-
+		
 		// 1)
 		rate(rqList);
 		
@@ -67,21 +55,21 @@ public class ResultService {
 	 * 1-3)	identical to rateWithoutGender
 	 * 
 	 */
-	public Map<RatingObject, BigDecimal> rateWithoutGender(Project project) {
+	public Map<RatingObject, BigDecimal> rateWithoutGender(List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
 		
-		List<RatingQuestion> rqList = new ArrayList<>();
-		
+		List<RatingQuestion> rqListAll = new ArrayList<>();
+
 		Map<RatingObject, BigDecimal> targetRatingMap = new HashMap<RatingObject, BigDecimal>();
 		LinkedHashMap<RatingObject, BigDecimal> sortedRatingMap = new LinkedHashMap<>();
 
 		// 0)
-		aggregateGenders(project, rqList);
+		aggregateGenders(rqListAll, rqListMale, rqListFemale);
 
 		// 1)
-		rate(rqList);
+		rate(rqListAll);
 		
 		// 2)
-		fillResultMapFor(targetRatingMap, rqList);
+		fillResultMapFor(targetRatingMap, rqListAll);
 		
 		// 3)
 		order(targetRatingMap, sortedRatingMap);
@@ -90,18 +78,10 @@ public class ResultService {
 		return sortedRatingMap;
 	}
 		
-	private void aggregateGenders(Project project, List<RatingQuestion> rqList) {
-		
-		List<RatingQuestion> rqListMale = new ArrayList<>();
-		List<RatingQuestion> rqListFemale = new ArrayList<>();
-		
-		LOG.debug("Loading ratingQuestions to rate them for both genders");
-		
-		rqListMale.addAll(rqs.loadByProjectAndGender(project, Gender.MALE));
-		rqListFemale.addAll(rqs.loadByProjectAndGender(project, Gender.FEMALE));
-
+	private void aggregateGenders(List<RatingQuestion> rqListAll, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
+	
 		for(RatingQuestion rqMale : rqListMale) {
-			aggregateGendersInnerLoop(rqList, rqListFemale, rqMale);
+			aggregateGendersInnerLoop(rqListAll, rqListFemale, rqMale);
 		}
 		
 		LOG.debug("Questions female-male have been aggregated for genders");
@@ -137,12 +117,6 @@ public class ResultService {
 		}
 		
 		LOG.error("No matching female-male question pair found. This should never happen");
-	}
-
-	private void order(Map<RatingObject, BigDecimal> unsortedMap, LinkedHashMap<RatingObject, BigDecimal> sortedMap) {
-
-		unsortedMap.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-				.forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
 	}
 
 	private void rate(List<RatingQuestion> rqList) {
@@ -203,5 +177,11 @@ public class ResultService {
 
 		BigDecimal addedValueOne = baseToAddTo.add(rating);
 		targetRatingMap.put(ratingObject, addedValueOne);
+	}
+
+	private void order(Map<RatingObject, BigDecimal> unsortedMap, LinkedHashMap<RatingObject, BigDecimal> sortedMap) {
+
+		unsortedMap.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+				.forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
 	}
 }

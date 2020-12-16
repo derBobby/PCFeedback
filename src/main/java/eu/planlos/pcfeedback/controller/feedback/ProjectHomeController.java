@@ -18,8 +18,10 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.UiText;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ProjectService;
+import eu.planlos.pcfeedback.service.UiTextService;
 
 @Controller
 public class ProjectHomeController {
@@ -32,6 +34,8 @@ public class ProjectHomeController {
 	@Autowired
 	private ProjectService ps;
 	
+	@Autowired
+	private UiTextService uts;
 	/**
 	 * Sets chosen project in session and load project home page</br>
 	 * Kind of <b>Step 0</b> in the feedback process.
@@ -55,7 +59,8 @@ public class ProjectHomeController {
 			}
 			session.setAttribute(SessionAttributeHelper.PROJECT, project);
 			
-			mfs.fillUiText(model, project, UiTextKey.MSG_PROJECTHOME);
+			UiText uiText = uts.getUiText(project, UiTextKey.MSG_PROJECTHOME);
+			mfs.fillUiText(model, uiText);
 			mfs.fillGlobal(model);
 			return ApplicationPathHelper.RES_PROJECTHOME;
 		}

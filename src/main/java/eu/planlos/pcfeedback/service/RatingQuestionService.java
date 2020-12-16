@@ -276,4 +276,9 @@ public class RatingQuestionService {
 	public List<RatingQuestion> loadByProject(Project project) {
 		return rqRepository.findByProject(project);
 	}
+
+	public RatingQuestion findByGenderAndObjectOneAndObjectTwo(Gender wantedGender, RatingObject ratingObjectOne,
+			RatingObject ratingObjectTwo) {
+		return rqRepository.findByGenderAndObjectOneAndObjectTwo(wantedGender, ratingObjectOne, ratingObjectTwo);
+	}
 }

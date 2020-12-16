@@ -16,7 +16,9 @@ import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.UiText;
 import eu.planlos.pcfeedback.service.ModelFillerService;
+import eu.planlos.pcfeedback.service.UiTextService;
 
 @Controller
 @SessionAttributes(names = {SessionAttributeHelper.PARTICIPANT, SessionAttributeHelper.PROJECT})
@@ -26,6 +28,9 @@ public class FeedbackEndController {
 	
 	@Autowired
 	private ModelFillerService mfs;
+	
+	@Autowired
+	private UiTextService uts;
 	
 	/**
 	 * After feedback is saved user gets redirected to end page.
@@ -53,8 +58,10 @@ public class FeedbackEndController {
 		session.setAttribute(SessionAttributeHelper.PARTICIPANT, null);
 		session.setAttribute(SessionAttributeHelper.PROJECT, null);
 		
-		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_END);
+		UiText uiText = uts.getUiText(project, UiTextKey.MSG_FEEDBACK_END);
+		mfs.fillUiText(model, uiText);
 		mfs.fillGlobal(model);
+		model.addAttribute("projectName", project.getProjectName());
 		return ApplicationPathHelper.RES_FEEDBACK_END;
 	}
 }

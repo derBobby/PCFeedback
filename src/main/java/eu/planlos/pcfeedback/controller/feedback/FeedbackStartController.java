@@ -23,8 +23,10 @@ import eu.planlos.pcfeedback.exceptions.ParticipantIsMissingMobileException;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.UiText;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
+import eu.planlos.pcfeedback.service.UiTextService;
 
 @Controller
 @SessionAttributes(names = {"participant", "project"})
@@ -37,6 +39,9 @@ public class FeedbackStartController {
 
 	@Autowired
 	private ParticipantService participantService;
+	
+	@Autowired
+	private UiTextService uts;
 
 	/**
 	 * Creates form for participant with empty participant object
@@ -57,7 +62,8 @@ public class FeedbackStartController {
 		LOG.debug("Adding new participant to form: project={}", project.getProjectName());
 		model.addAttribute(participant);
 
-		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
+		UiText uiText = uts.getUiText(project, UiTextKey.MSG_FEEDBACK_START);
+		mfs.fillUiText(model, uiText);
 		mfs.fillGlobal(model);
 		return ApplicationPathHelper.RES_FEEDBACK_START;
 	}
@@ -128,7 +134,8 @@ public class FeedbackStartController {
 	}
 
 	private String backToForm(Model model, Project project) {
-		mfs.fillUiText(model, project, UiTextKey.MSG_FEEDBACK_START);
+		UiText uiText = uts.getUiText(project, UiTextKey.MSG_FEEDBACK_START);
+		mfs.fillUiText(model, uiText);
 		mfs.fillGlobal(model);
 		return ApplicationPathHelper.RES_FEEDBACK_START;		
 	}

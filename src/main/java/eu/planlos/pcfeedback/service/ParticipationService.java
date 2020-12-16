@@ -14,7 +14,6 @@ import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
-import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
 
 @Service
 public class ParticipationService {
@@ -26,9 +25,6 @@ public class ParticipationService {
 	
 	@Autowired
 	private RatingQuestionService rqService;
-
-	@Autowired
-	private RatingQuestionRepository rqRepository;
 	
 	@Autowired
 	private ParticipationResultService prService;
@@ -62,11 +58,11 @@ public class ParticipationService {
 			Long idRatingQuestion = entry.getKey();
 		    Integer votedObject = entry.getValue();
 		    
-		    RatingQuestion oldRatingQuestion = rqRepository.findById(idRatingQuestion).get();
+		    RatingQuestion oldRatingQuestion = rqService.findByIdRatingQuestion(idRatingQuestion);
 		    RatingObject ratingObjectOne = oldRatingQuestion.getObjectOne();
 		    RatingObject ratingObjectTwo = oldRatingQuestion.getObjectTwo();
 		    
-		    RatingQuestion newRatingQuestion = rqRepository.findByGenderAndObjectOneAndObjectTwo(wantedGender, ratingObjectOne, ratingObjectTwo);
+		    RatingQuestion newRatingQuestion = rqService.findByGenderAndObjectOneAndObjectTwo(wantedGender, ratingObjectOne, ratingObjectTwo);
 		    
 		    newFeedbackMap.put(newRatingQuestion.getIdRatingQuestion(), votedObject);
 		}
@@ -89,7 +85,7 @@ public class ParticipationService {
 	 * @return Returns true if gender is changed
 	 * @throws ParticipantNotFoundException
 	 */
-	public void deleteParticipant(Participant participant) throws ParticipantNotFoundException {
+	public void deleteParticipation(Participant participant) throws ParticipantNotFoundException {
 		
 		ParticipationResult participationResult = prService.findByParticipant(participant);
 		Map<Long, Integer> feedbackMap = participationResult.getFeedbackMap();

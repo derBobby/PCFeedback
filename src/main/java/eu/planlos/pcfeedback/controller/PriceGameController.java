@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Project;
+import eu.planlos.pcfeedback.model.db.UiText;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ProjectService;
+import eu.planlos.pcfeedback.service.UiTextService;
 
 @Controller
 public class PriceGameController {
@@ -21,6 +23,9 @@ public class PriceGameController {
 	@Autowired
 	private ModelFillerService mfs;
 	
+	@Autowired
+	private UiTextService uts;
+
 	/**
 	 * Provides the price game site
 	 * @param model
@@ -30,8 +35,10 @@ public class PriceGameController {
 	public String priceGame(Model model, @PathVariable(name = "projectName") String projectName) {
 	
 		Project project = ps.findProject(projectName);
-		
-		mfs.fillUiText(model, project, UiTextKey.MSG_PRICEGAME);
+		UiText uiText = uts.getUiText(project, UiTextKey.MSG_PRICEGAME);
+				
+		model.addAttribute("projectName", projectName);
+		mfs.fillUiText(model, uiText);
 		mfs.fillGlobal(model);
 		
 		return ApplicationPathHelper.RES_PRICEGAME;
