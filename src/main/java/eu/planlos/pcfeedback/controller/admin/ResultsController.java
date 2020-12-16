@@ -25,12 +25,12 @@ import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
+import eu.planlos.pcfeedback.service.EvaluationService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.ProjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
-import eu.planlos.pcfeedback.service.ResultService;
 
 @Controller
 public class ResultsController {
@@ -50,7 +50,7 @@ public class ResultsController {
 	private ParticipationResultService prService;
 	
 	@Autowired
-	private ResultService rService;
+	private EvaluationService rService;
 	
 	@Autowired
 	private ModelFillerService mfs;
@@ -83,13 +83,13 @@ public class ResultsController {
 		List<ParticipationResult> prList = prService.findAllByProject(project);
 
 		LOG.debug("Creating results");
-		Map<RatingObject, BigDecimal> maleResultMap = rService.rateWithGender(project, Gender.MALE);
+		Map<RatingObject, BigDecimal> maleResultMap = rService.rateWithGender(rqListMale);
 
 		LOG.debug("Creating results");
-		Map<RatingObject, BigDecimal> femaleResultMap = rService.rateWithGender(project, Gender.FEMALE);
-
+		Map<RatingObject, BigDecimal> femaleResultMap = rService.rateWithGender(rqListFemale);
+		
 		LOG.debug("Creating results");
-		Map<RatingObject, BigDecimal> overallResultMap = rService.rateWithoutGender(project);
+		Map<RatingObject, BigDecimal> overallResultMap = rService.rateWithoutGender(rqListMale, rqListFemale);
 		
 		mfs.fillGlobal(model);
 		mfs.fillResults(model, project, randomParticipantList, participantList, rqListMale, rqListFemale, prList, maleResultMap, femaleResultMap, overallResultMap);
