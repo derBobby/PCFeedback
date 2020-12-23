@@ -1,12 +1,17 @@
 {"properties": [
   {
-    "name": "eu.planlos.pcfeedback.adminpassword",
+    "name": "eu.planlos.pcfeedback.admin.password",
     "type": "java.lang.String",
     "description": "Password which is used to authenticate the admin user"
   },
   {
-    "name": "eu.planlos.pcfeedback.adminuser",
+    "name": "eu.planlos.pcfeedback.admin.user",
     "type": "java.lang.String",
     "description": "Username which is used to authenticate the admin user"
-  }
+  },
+  {
+    "name": "eu.planlos.pcfeedback.mail.sender",
+    "type": "java.lang.String",
+    "description": "From address for mail sending"
+  },
 ]}
