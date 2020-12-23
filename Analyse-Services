@@ -14,26 +14,6 @@ CSVExporterService
 - Damit dreifache Zahl Klassen, aber aufgeräumter und keine "Invocation-Magie"
 
 
-ParticipationService
-========================
-
-> Gutes Beispiel für "hier nimm Services und Repos und tue Dinge"
-- Bauchgefühl: Autowire von Service UND Repos sieht komisch aus
-- Sinnvoll den Service als "Mittelsmann" zwischen den Autowires und dem controller zu entfernen?
-
-
-
-
-FeedbackValidationService
-=========================
-
-> Gutes Beispiel für: Muss das ein Service sein?
-- Hat selbst keine Abhängigkeiten
-- Sehr geringer Funktionsumfang
-- Gibts da nicht eine Möglichkeit Spring einen Validator mitzugeben, und BindingResult zu verwenden?
-- bsp: FeedbackStartController.participantSubmit()
-
-
 
 
 MailService
@@ -41,9 +21,6 @@ MailService
 
 > In den Studi-Projekten wurde @Async viel genutzt, das wurde bemängelt.
 - Hier richtig verwendet? Sinn: Mailversand soll Ablauf nicht blockieren
-
-> printCredentials() prinzipiell problematisch, beim Einsatz für DEV aber hilfreich.
-- OK oder weg? ;-)
 
 > notifyStart() und notifyParticipation()
 - Geht das einfacher?
