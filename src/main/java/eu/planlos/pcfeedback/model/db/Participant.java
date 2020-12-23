@@ -65,8 +65,7 @@ public class Participant implements Serializable {
 	@Column(nullable=false)
 	private Instant participationTime;
 	
-	@Column(nullable = false)
-	@NotBlank
+	@Column(nullable = true)
 	private String userAgent;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
