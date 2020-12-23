@@ -90,6 +90,11 @@ public class FeedbackStartController {
 		if (bindingResult.hasErrors()) {
 			LOG.debug("Input from form not valid");
 
+			LOG.error("{}", bindingResult.getFieldError());
+			LOG.error("{}", bindingResult.getFieldError().getField());
+			LOG.error("{}", bindingResult.getFieldError().getDefaultMessage());
+			LOG.error("{}", bindingResult.getFieldError().getRejectedValue());
+			
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
 			if (genderFieldError != null) {
 				LOG.debug("Gender is missing");
