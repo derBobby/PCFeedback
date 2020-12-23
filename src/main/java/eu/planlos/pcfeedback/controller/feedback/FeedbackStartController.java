@@ -88,9 +88,9 @@ public class FeedbackStartController {
 
 		// validate model input
 		if (bindingResult.hasErrors()) {
-			LOG.debug("Input from form not valid, details see next line");
+			LOG.debug("Input from form not valid, details see next line:");
 			LOG.debug("{}", bindingResult.getFieldError());
-			
+	
 			FieldError genderFieldError = bindingResult.getFieldError("gender");
 			if (genderFieldError != null) {
 				LOG.debug("Gender is missing");
