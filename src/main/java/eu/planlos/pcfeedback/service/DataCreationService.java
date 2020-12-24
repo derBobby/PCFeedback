@@ -60,18 +60,19 @@ public class DataCreationService {
 			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 		
 		LOG.debug("Initializing database");
-		createSampleData("Demo-Projekt", false, false, true);
-		createSampleData("Demo-Projekt 1", false, true, true);
-		createSampleData("Demo-Projekt 2", true, false, true);
-		createSampleData("Demo-Projekt 3", true, true, true);
-//		createSampleData("Demo-Projekt 4", true);
-//		createSampleData("Demo-Projekt 5", false);
-//		createSampleData("Demo-Projekt 6", false);
+		createSampleProject("Demo-Projekt", false, false, true);
+		createSampleProject("Demo-Projekt 1", false, true, true);
+		createSampleProject("Demo-Projekt 2", true, false, true);
+		createSampleProject("Demo-Projekt 3", true, true, true);
+//		createSampleProject("Demo-Projekt 4", true);
+//		createSampleProject("Demo-Projekt 5", false);
+//		createSampleProject("Demo-Projekt 6", false);
 		LOG.debug("Initializing database ... DONE");		
 	}
 
-	private void createSampleData(String projectName, boolean needMail, boolean needMobile, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
+	private void createSampleProject(String projectName, boolean needMail, boolean needMobile, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 
+		LOG.debug("###### Creating sample project: {}", projectName);
 		ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 1, 14, 30, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
 		ZonedDateTime endTime = ZonedDateTime.of(2020, 12, 30, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
 		
@@ -217,6 +218,7 @@ public class DataCreationService {
 			
 			// Create and save Participant itself
 			Participant participant = participantService.createParticipantForDB(project, gender);
+			LOG.debug("# Creating sample participant: {} {}", participant.getFirstname(), participant.getName());
 			participantService.save(participant);
 			
 			// Create and save ParticipationResult

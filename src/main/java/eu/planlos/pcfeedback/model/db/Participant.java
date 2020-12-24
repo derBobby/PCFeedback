@@ -78,7 +78,6 @@ public class Participant implements Serializable {
 	
 	public Participant(Project project) {
 		this.project = project;
-		setParticipationTime();
 	}
 	
 	public Long getIdParticipant() {

@@ -52,12 +52,12 @@
 							<div class="form-group" th:if="*{project.isPricegame}">
 								<input type="checkbox" id="priceGameStatementAccepted" th:field="*{priceGameStatementAccepted}" class="form-check-input" required="required" />
 								<label for="priceGameStatementAccepted"><a target="_blank" th:href="@{${URL_PRICEGAME}+*{project.projectName}}">Gewinnspielhinweise</a> gelesen und akzeptiert.</label>
-								<span th:errors="*{priceGameStatementAccepted}" class="text-warning"></span>
+								<br/><span th:errors="*{priceGameStatementAccepted}" class="text-warning"></span>
 							</div>
 							<div class="form-group">
 								<input type="checkbox" id="dataPrivacyStatementAccepted" th:field="*{dataPrivacyStatementAccepted}" class="form-check-input" required="required" />
 								<label for="dataPrivacyStatementAccepted"><a target="_blank" th:href="@{${URL_DATENSCHUTZ}}">Datenschutzerklärung</a> gelesen und akzeptiert.</label>
-								<span th:errors="*{dataPrivacyStatementAccepted}" class="text-warning"></span>
+								<br/><span th:errors="*{dataPrivacyStatementAccepted}" class="text-warning"></span>
 							</div>
 
 							<!--  TODO simplify this -->

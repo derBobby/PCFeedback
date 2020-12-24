@@ -119,9 +119,10 @@ public class ParticipantService implements EnvironmentAware {
 		
 		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
 		if(profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
-			
 			fillDummyParticipant(participant);
-
+		} else {
+			participant.setDataPrivacyStatementAccepted(false);
+			participant.setPriceGameStatementAccepted(false);
 		}
 
 		return participant;
@@ -150,9 +151,8 @@ public class ParticipantService implements EnvironmentAware {
 		participant.setName(text);
 		participant.setEmail(text);
 		participant.setMobile(text);
-		participant.setPriceGameStatementAccepted(true);
 		participant.setDataPrivacyStatementAccepted(true);
-		participant.setUserAgent(text);
+		participant.setPriceGameStatementAccepted(true);
 	}
 
 	@Override

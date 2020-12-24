@@ -95,7 +95,7 @@
 
 							<div class="form-group text-left">
 							    <label for="ratingQuestionCount">Anzahl zu bewertender Paare pro Teilnehmer</label>
-								<input th:field="*{ratingQuestionCount}" class="form-control" placeholder="" required="required" type="number" th:disabled="*{active}" />
+								<input th:field="*{ratingQuestionCount}" class="form-control" placeholder="" required="required" type="number" min="1" th:disabled="*{active}" />
 								<span th:errors="*{ratingQuestionCount}" class="text-warning"></span>
 							</div>
 							

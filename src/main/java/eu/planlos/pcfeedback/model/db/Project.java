@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -56,6 +57,7 @@ public class Project implements Serializable {
 	private boolean active;
 	
 	@Column(nullable=false)
+	@DecimalMin(value = "1")
 	private int ratingQuestionCount;
 	
 	private boolean online;

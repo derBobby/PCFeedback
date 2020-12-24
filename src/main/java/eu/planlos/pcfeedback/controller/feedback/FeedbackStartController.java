@@ -105,6 +105,8 @@ public class FeedbackStartController {
 
 			validateOptionalEmail(project, participant);
 			validateOptionalMobile(project, participant);
+			validateOptionalPriceGameStatementAccepted(project, participant);
+			validateDataPrivacyStatementAccepted(participant);
 			
 			LOG.debug("Form input is valid");
 
@@ -130,6 +132,15 @@ public class FeedbackStartController {
 		} catch (ParticipantIsMissingEmailException e) {
 			LOG.error("Participant has no email address set");
 			bindingResult.addError(new FieldError("participant", "email", e.getMessage()));
+			return backToForm(model, project);
+			
+		} catch (DataPrivacyStatementNotAcceptedException e) {
+			LOG.error("Data privacy statement was not accepted");
+			bindingResult.addError(new FieldError("participant", "dataPrivacyStatementAccepted", e.getMessage()));
+			return backToForm(model, project);
+		} catch (PriceGameStatementNotAcceptedException e) {
+			LOG.error("Price game statement was not accepted");
+			bindingResult.addError(new FieldError("participant", "priceGameStatementAccepted", e.getMessage()));
 			return backToForm(model, project);
 		}
 	}
@@ -161,5 +172,25 @@ public class FeedbackStartController {
 			throw new ParticipantIsMissingMobileException("Mobilnummmer ist ein Pflichtfeld");
 		}		
 		LOG.debug("Mobile not necessary or was given");
+	}
+
+	private void validateOptionalPriceGameStatementAccepted(Project project, @Valid Participant participant) throws PriceGameStatementNotAcceptedException {
+
+		boolean priceGameStatementAccepted = participant.isPriceGameStatementAccepted();
+		
+		if(project.isPricegame() &&
+				! priceGameStatementAccepted) {
+			throw new PriceGameStatementNotAcceptedException("Die Gewinnspielbedingungen wurden nicht akzeptiert");
+		}		
+		LOG.debug("Price game statement not necessary or was given");
+	}
+
+	private void validateDataPrivacyStatementAccepted(@Valid Participant participant) throws DataPrivacyStatementNotAcceptedException {
+		boolean dataPrivacyStatementAccepted = participant.isDataPrivacyStatementAccepted();
+		
+		if(! dataPrivacyStatementAccepted) {
+			throw new DataPrivacyStatementNotAcceptedException("Die Datenschutzerklärung wurde nicht akzeptiert");
+		}
+		LOG.debug("Data privacy statement not necessary or was given");
 	}
 }
