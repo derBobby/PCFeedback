@@ -119,8 +119,10 @@ public class ParticipantService implements EnvironmentAware {
 		
 		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
 		if(profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
+			LOG.debug("Filling participant with dummy data");
 			fillDummyParticipant(participant);
 		} else {
+			LOG.debug("Setting statement acceptance to false");
 			participant.setDataPrivacyStatementAccepted(false);
 			participant.setPriceGameStatementAccepted(false);
 		}

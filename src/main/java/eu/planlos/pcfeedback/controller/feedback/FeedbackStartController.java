@@ -103,6 +103,8 @@ public class FeedbackStartController {
 
 		try {
 
+			printDebug(participant);
+			
 			validateOptionalEmail(project, participant);
 			validateOptionalMobile(project, participant);
 			validateOptionalPriceGameStatementAccepted(project, participant);
@@ -138,6 +140,7 @@ public class FeedbackStartController {
 			LOG.error("Data privacy statement was not accepted");
 			bindingResult.addError(new FieldError("participant", "dataPrivacyStatementAccepted", e.getMessage()));
 			return backToForm(model, project);
+			
 		} catch (PriceGameStatementNotAcceptedException e) {
 			LOG.error("Price game statement was not accepted");
 			bindingResult.addError(new FieldError("participant", "priceGameStatementAccepted", e.getMessage()));
@@ -192,5 +195,15 @@ public class FeedbackStartController {
 			throw new DataPrivacyStatementNotAcceptedException("Die Datenschutzerklärung wurde nicht akzeptiert");
 		}
 		LOG.debug("Data privacy statement not necessary or was given");
+	}
+	
+	private void printDebug(@Valid Participant participant) {
+		LOG.debug("firstname={}", participant.getFirstname());
+		LOG.debug("name={}", participant.getName());
+		LOG.debug("email={}", participant.getEmail());
+		LOG.debug("mobile={}", participant.getMobile());
+		LOG.debug("user-agent={}", participant.getUserAgent());
+		LOG.debug("dataprivacyStatementAccepted={}", participant.isDataPrivacyStatementAccepted());
+		LOG.debug("priceGameStatementAccepted={}", participant.isPriceGameStatementAccepted());
 	}
 }
