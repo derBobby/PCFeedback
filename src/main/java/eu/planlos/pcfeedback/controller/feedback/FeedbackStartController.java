@@ -185,7 +185,7 @@ public class FeedbackStartController {
 				! priceGameStatementAccepted) {
 			throw new PriceGameStatementNotAcceptedException("Die Gewinnspielbedingungen wurden nicht akzeptiert");
 		}		
-		LOG.debug("Price game statement not necessary or was given");
+		LOG.debug("Price game statement acceptance not necessary or was given");
 	}
 
 	private void validateDataPrivacyStatementAccepted(@Valid Participant participant) throws DataPrivacyStatementNotAcceptedException {
@@ -194,7 +194,7 @@ public class FeedbackStartController {
 		if(! dataPrivacyStatementAccepted) {
 			throw new DataPrivacyStatementNotAcceptedException("Die Datenschutzerklärung wurde nicht akzeptiert");
 		}
-		LOG.debug("Data privacy statement not necessary or was given");
+		LOG.debug("Data privacy statement acceptance was given");
 	}
 	
 	private void printDebug(@Valid Participant participant) {

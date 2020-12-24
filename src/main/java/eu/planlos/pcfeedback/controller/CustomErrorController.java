@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class CustomErrorController implements ErrorController {
         String requestedSite = request.getRequestURI();
 
         // Get error stack trace map object
-        Map<String, Object> body = errorAttributes.getErrorAttributes(webRequest, true);
+        Map<String, Object> body = errorAttributes.getErrorAttributes(webRequest, ErrorAttributeOptions.defaults());
         // Extract stack trace string
         String errorTrace = (String) body.get("trace");
 		
