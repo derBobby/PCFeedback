@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.controller.feedback;
+package eu.planlos.pcfeedback.exceptions;
 
 public class PriceGameStatementNotAcceptedException extends Exception {
 

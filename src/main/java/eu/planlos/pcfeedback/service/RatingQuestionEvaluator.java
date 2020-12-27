@@ -78,7 +78,7 @@ public class RatingQuestionEvaluator {
 		return sortedRatingMap;
 	}
 		
-	private void aggregateGenders(List<RatingQuestion> rqListAll, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
+	public void aggregateGenders(List<RatingQuestion> rqListAll, List<RatingQuestion> rqListMale, List<RatingQuestion> rqListFemale) {
 	
 		for(RatingQuestion rqMale : rqListMale) {
 			aggregateGendersInnerLoop(rqListAll, rqListFemale, rqMale);

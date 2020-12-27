@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
+import eu.planlos.pcfeedback.exceptions.DataPrivacyStatementNotAcceptedException;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.ParticipantIsMissingEmailException;
 import eu.planlos.pcfeedback.exceptions.ParticipantIsMissingMobileException;
+import eu.planlos.pcfeedback.exceptions.PriceGameStatementNotAcceptedException;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.Project;
