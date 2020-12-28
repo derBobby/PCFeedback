@@ -31,9 +31,9 @@
 									<span th:errors="*{needMail}" class="text-warning"></span>
 								</div>
 								<div class="custom-control custom-checkbox">
-								 	<input type="checkbox" class="custom-control-input" th:field="*{isPricegame}" id="isPricegame" th:disabled="*{active}" />
-									<label class="custom-control-label" for="isPricegame">Befragung ist ein Gewinnspiel</label>
-									<span th:errors="*{isPricegame}" class="text-warning"></span>
+								 	<input type="checkbox" class="custom-control-input" th:field="*{pricegame}" id="pricegame" th:disabled="*{active}" />
+									<label class="custom-control-label" for="pricegame">Befragung ist ein Gewinnspiel</label>
+									<span th:errors="*{pricegame}" class="text-warning"></span>
 								</div>
 								<div class="custom-control custom-checkbox">
 								 	<input type="checkbox" class="custom-control-input" th:field="*{askFreetext}" id="askFreetext" th:disabled="*{active}" />
@@ -51,8 +51,8 @@
 									<div class="input-group-prepend" data-target="#datetimepicker1" data-toggle="datetimepicker">
 										<span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
 									</div>
-									<input type="text" th:field="*{startZonedDateTime}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker1" placeholder="Startdatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{active}" />
-									<span th:errors="*{startZonedDateTime}" class="text-warning"></span>
+									<input type="text" th:field="*{projectStart}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker1" placeholder="Startdatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{active}" />
+									<span th:errors="*{projectStart}" class="text-warning"></span>
 								</div>
 							</div>
 							<div class="form-group">
@@ -60,8 +60,8 @@
 									<div class="input-group-prepend" data-target="#datetimepicker2" data-toggle="datetimepicker">
 										<span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
 									</div>
-									<input type="text" th:field="*{endZonedDateTime}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker2" placeholder="Enddatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{active}" />
-									<span th:errors="*{endZonedDateTime}" class="text-warning"></span>
+									<input type="text" th:field="*{projectEnd}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker2" placeholder="Enddatum: TT.MM.JJJJ HH:MM" required="required" th:disabled="*{active}" />
+									<span th:errors="*{projectEnd}" class="text-warning"></span>
 								</div>
 							</div>
 							<script type="text/javascript">

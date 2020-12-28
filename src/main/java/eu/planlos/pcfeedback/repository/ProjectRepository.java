@@ -11,7 +11,6 @@ import eu.planlos.pcfeedback.model.db.Project;
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Long>{
 	public Project findByProjectName(String projectName);
-	public List<Project> findAll();
 	public Project findByIdProject(Long idProject);
-	public List<Project> findAllByActiveAndStartInstantLessThanAndEndInstantGreaterThan(boolean b, Instant now, Instant now2);
+	public List<Project> findAllByActiveAndStartInstantLessThanAndEndInstantGreaterThan(boolean active, Instant now, Instant now2);
 }

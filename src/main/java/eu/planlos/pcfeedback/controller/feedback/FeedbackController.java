@@ -88,7 +88,6 @@ public class FeedbackController {
 			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
 			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant) {
 		
-		
 		//TODO ParticipantFilter?
 		if(participant == null) {
 			LOG.debug("User tried to access feedback without entering participant details");
@@ -103,11 +102,8 @@ public class FeedbackController {
 			ratingQuestionService.addRatingQuestionsForProjectAndGenderToList(ratingQuestionList, project, gender);
 			
 		} catch (RatingQuestionsNotExistentException e) {
-			LOG.error("Fataler Fehler: Konnte Liste von RatingQuestion nicht laden.");
-			LOG.error("project={}, gender={}", project.getProjectName(), gender.name());
-			e.printStackTrace();
-			e.getCause();
-			//TODO What happens here?
+			LOG.error("FATAL - COULD NOT LOAD LIST OF MATCHING RatingQuestion. This should never happen.");
+			LOG.error("FATAL - project={}, gender={}", project.getProjectName(), gender.name());
 		} 
 				
 		model.addAttribute("ratingQuestionList", ratingQuestionList);
@@ -168,8 +164,8 @@ public class FeedbackController {
 				
 				resource = ApplicationPathHelper.RES_FEEDBACK_QUESTION;
 				
-			} catch (RatingQuestionsNotExistentException f) {
-				f.printStackTrace();
+			} catch (RatingQuestionsNotExistentException | InvalidFeedbackException f) {
+				LOG.debug("{}", f.toString());
 				resource = ERROR_TEMPLATE;
 			}
 			
@@ -240,8 +236,8 @@ public class FeedbackController {
 			ratingQuestionService.saveFeedback(feedbackMap);
 			
 			//Save the result for later plausibilisation/correction
-			ParticipationResult pr = new ParticipationResult(project, participant, feedbackMap, freeText);
-			participationResultService.saveParticipationResult(pr);
+			ParticipationResult participationResult = new ParticipationResult(project, participant, feedbackMap, freeText);
+			participationResultService.saveParticipationResult(participationResult);
 			
 			//Send notification mail
 			String recepient = project.getNotificationMail();

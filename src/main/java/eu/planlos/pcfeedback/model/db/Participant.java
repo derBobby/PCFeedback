@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
+import eu.planlos.pcfeedback.util.ZonedDateTimeUtility;
 
 @Entity
 @Table(
@@ -161,7 +161,7 @@ public class Participant implements Serializable {
 	}
 
 	public String getformattedParticipationTimeString() {
-		return ZonedDateTimeHelper.niceCET(participationTime);
+		return ZonedDateTimeUtility.niceCET(participationTime);
 	}
 
 	public final void setParticipationTime() {
@@ -178,7 +178,8 @@ public class Participant implements Serializable {
 	
 	/*
 	 * Functions
-	 */	
+	 */
+	@Override
 	public String toString() {
 		String projectName = null;
 		if(project != null) {
@@ -193,14 +194,18 @@ public class Participant implements Serializable {
 	}
 	
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object object) {
 
-        if (o == this) return true;
-        if (!(o instanceof Participant)) {
+        if (object == this) {
+        	return true;
+        }
+        
+        if (!(object instanceof Participant)) {
             return false;
         }
-        Participant ro = (Participant) o;
-        return this.idParticipant == ro.getIdParticipant();
+        
+        Participant participant = (Participant) object;
+        return this.idParticipant == participant.getIdParticipant();
     }
 
     @Override

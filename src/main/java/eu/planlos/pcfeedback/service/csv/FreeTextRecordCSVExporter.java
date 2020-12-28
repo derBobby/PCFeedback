@@ -23,11 +23,11 @@ public class FreeTextRecordCSVExporter implements ICSVExporter {
 			throw new InvalidObjectException("Invalid object was given.");
 		}
 		
-		ParticipationResult pr = (ParticipationResult) object;
+		ParticipationResult participationResult = (ParticipationResult) object;
 		
-		Long idParticipationResult = pr.getIdParticipationResult();
-		String freeText = pr.getFreeText();
-		Gender gender = pr.getParticipant().getGender();
+		Long idParticipationResult = participationResult.getIdParticipationResult();
+		String freeText = participationResult.getFreeText();
+		Gender gender = participationResult.getParticipant().getGender();
 		
 		List<Object> freeTextRecord = new ArrayList<>();
 		freeTextRecord.add(gender.toString());

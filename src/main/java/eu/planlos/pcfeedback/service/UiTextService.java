@@ -19,7 +19,7 @@ import eu.planlos.pcfeedback.repository.UiTextRepository;
 @Service
 public class UiTextService {
 	
-	private Logger LOG = LoggerFactory.getLogger(UiTextService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UiTextService.class);
 	
 	@Autowired
 	private UiTextRepository uiTextRepo;
@@ -34,8 +34,7 @@ public class UiTextService {
 
 	public UiText getUiText(Project project, UiTextKey uiTextKey) {
 		LOG.debug("Searching UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
-		UiText uiText = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
-		return uiText;
+		return uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
 	}
 	
 	public void initializeUiText(Project project) {

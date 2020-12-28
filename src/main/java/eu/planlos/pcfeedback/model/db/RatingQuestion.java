@@ -27,12 +27,6 @@ import eu.planlos.pcfeedback.model.Gender;
 })
 public class RatingQuestion implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Required for JPA and reflection stuff.
-	 */
-	public RatingQuestion() {
-	}
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -61,6 +55,12 @@ public class RatingQuestion implements Serializable {
 	
 	@Transient
 	private BigDecimal ratingForObjectTwo;
+
+	/**
+	 * Required for JPA and reflection stuff.
+	 */
+	public RatingQuestion() {
+	}
 	
 	/*
 	 * Connection
@@ -177,14 +177,17 @@ public class RatingQuestion implements Serializable {
 	}
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object object) {
 
-        if (o == this) return true;
-        if (!(o instanceof RatingQuestion)) {
+        if (object == this) {
+        	return true;
+        }
+        
+        if (!(object instanceof RatingQuestion)) {
             return false;
         }
-        RatingQuestion ro = (RatingQuestion) o;
-        return this.idRatingQuestion == ro.getIdRatingQuestion();
+        RatingQuestion ratingObject = (RatingQuestion) object;
+        return this.idRatingQuestion == ratingObject.getIdRatingQuestion();
     }
 
     @Override

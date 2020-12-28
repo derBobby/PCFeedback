@@ -21,7 +21,7 @@ import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.model.db.UiText;
-import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
+import eu.planlos.pcfeedback.util.ZonedDateTimeUtility;
 
 @Service
 public class ModelFillerService implements EnvironmentAware {
@@ -57,7 +57,7 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS); //TODO notwendig?
 		model.addAttribute("URL_LOGOUT", ApplicationPathHelper.URL_LOGOUT);
 		
-		model.addAttribute("TIMENOW", ZonedDateTimeHelper.nice(ZonedDateTimeHelper.nowCET()));		
+		model.addAttribute("TIMENOW", ZonedDateTimeUtility.nice(ZonedDateTimeUtility.nowCET()));		
 		
 		/*
 		 * URLs for DEV profile

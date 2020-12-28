@@ -5,10 +5,11 @@ public enum Gender {
 
 	private String gender;
 
-	private Gender(String gender) {
+	Gender(String gender) {
 		this.gender = gender;
 	}
 
+	@Override
 	public String toString() {
 		return this.gender;
 	}

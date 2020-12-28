@@ -33,7 +33,7 @@ public class ParticipantController {
 	private ParticipationService eps;
 
 	@Autowired
-	private ParticipantService ps;
+	private ParticipantService participantService;
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITPARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
 	public String editParticipant(@PathVariable Long idParticipant, Model model) throws ParticipantNotFoundException {
@@ -41,7 +41,7 @@ public class ParticipantController {
 		Participant participant;
 		
 		try {
-			participant = ps.findByIdParticipant(idParticipant);
+			participant = participantService.findByIdParticipant(idParticipant);
 			model.addAttribute(participant);
 			model.addAttribute("URL_ADMIN_EDITPARTICIPANT", ApplicationPathHelper.URL_ADMIN_EDITPARTICIPANT);
 			mfs.fillGlobal(model);
@@ -93,7 +93,7 @@ public class ParticipantController {
 		Participant participant;
 		
 		try {
-			participant = ps.findByIdParticipant(idParticipant);
+			participant = participantService.findByIdParticipant(idParticipant);
 			Project project = participant.getProject();
 			eps.deleteParticipation(participant);
 			return "redirect:" + ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + project.getProjectName();

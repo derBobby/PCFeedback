@@ -12,7 +12,7 @@ public enum UiTextKey {
 	private String uiTextField;
 	private String description;
 	
-	private UiTextKey(String uiTextField, String description) {
+	UiTextKey(String uiTextField, String description) {
 		this.uiTextField = uiTextField;
 		this.description = description;
 	}

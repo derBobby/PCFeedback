@@ -29,10 +29,10 @@ import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
-import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
+import eu.planlos.pcfeedback.util.ZonedDateTimeUtility;
 
 @Service
-@Profile(value = {"DEV", "REV"})
+@Profile({"DEV", "REV"})
 public class DataCreationService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataCreationService.class);
@@ -73,12 +73,12 @@ public class DataCreationService {
 	private void createSampleProject(String projectName, boolean needMail, boolean needMobile, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 
 		LOG.debug("###### Creating sample project: {}", projectName);
-		ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 1, 14, 30, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
-		ZonedDateTime endTime = ZonedDateTime.of(2020, 12, 30, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeHelper.CET));
+		ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 1, 14, 30, 0, 0, ZoneId.of(ZonedDateTimeUtility.CET));
+		ZonedDateTime endTime = ZonedDateTime.of(2020, 12, 30, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeUtility.CET));
 		
 		int neededQuestionCount = 5;
 		
-		List<RatingObject> roList = createRatingObjects(neededQuestionCount);
+		List<RatingObject> roList = createRatingObjects();
 		
 		Project project = new Project(projectName, roList, needMail, needMobile, active, startTime, endTime, neededQuestionCount);
 		projectService.save(project);
@@ -103,7 +103,7 @@ public class DataCreationService {
 		createParticipations(project, Gender.FEMALE, 10);		
 	}
 
-	private List<RatingObject> createRatingObjects(int neededRatingQuestionCount) throws DuplicateRatingObjectException {
+	private List<RatingObject> createRatingObjects() throws DuplicateRatingObjectException {
 		// ~~~~~~~~~~~~ RO ~~~~~~~~~~~~
 		
 		List<RatingObject> roList = new ArrayList<>();
@@ -226,8 +226,8 @@ public class DataCreationService {
 			List<RatingQuestion> ratingQuestions = new ArrayList<>();
 			rqService.addRatingQuestionsForProjectAndGenderToList(ratingQuestions, project, gender);
 			for(RatingQuestion ratingQuestion : ratingQuestions) {
-				long id = ratingQuestion.getIdRatingQuestion();
-				feedbackMap.put(id, gender.equals(Gender.MALE) ? 1 : 2);
+				long idRatingQuestion = ratingQuestion.getIdRatingQuestion();
+				feedbackMap.put(idRatingQuestion, gender.equals(Gender.MALE) ? 1 : 2);
 			}
 			ParticipationResult pResult = new ParticipationResult(project, participant, feedbackMap, Instant.now().toString());
 			participationResultService.saveParticipationResult(pResult);

@@ -125,7 +125,7 @@ public class RatingQuestionEvaluator {
 			
 			int voteCountInt = rq.getCountVoted();
 			if(voteCountInt == 0) {
-				BigDecimal zeroDecimal = new BigDecimal(0);
+				BigDecimal zeroDecimal = BigDecimal.ZERO;
 				rq.setRatingForObjectOne(zeroDecimal);
 				rq.setRatingForObjectTwo(zeroDecimal);
 				continue;
@@ -169,7 +169,7 @@ public class RatingQuestionEvaluator {
 			BigDecimal rating) {
 
 		// Case: The map doesn't contain the RO
-		BigDecimal baseToAddTo = new BigDecimal(0);
+		BigDecimal baseToAddTo = BigDecimal.ZERO;
 		if (targetRatingMap.containsKey(ratingObject)) {
 			// Case: The map contains the RO
 			baseToAddTo = targetRatingMap.get(ratingObject);
@@ -179,7 +179,7 @@ public class RatingQuestionEvaluator {
 		targetRatingMap.put(ratingObject, addedValueOne);
 	}
 
-	private void order(Map<RatingObject, BigDecimal> unsortedMap, LinkedHashMap<RatingObject, BigDecimal> sortedMap) {
+	private void order(Map<RatingObject, BigDecimal> unsortedMap, Map<RatingObject, BigDecimal> sortedMap) {
 
 		unsortedMap.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
 				.forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));

@@ -2,7 +2,6 @@ package eu.planlos.pcfeedback.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
 import eu.planlos.pcfeedback.model.Gender;
@@ -107,7 +107,7 @@ public class RatingQuestionService {
 		RatingQuestion lowestVotedCountQuestion = rqRepository.findFirstByProjectAndCountVotedGreaterThanAndGenderOrderByCountVotedAsc(project, chosenCount, gender);
 		
 		if(lowestVotedCountQuestion == null) {
-			String message = String.format("No rating questions found with more votes than: %s", chosenCount);
+			String message = String.format("FATAL - No rating questions found with more votes than: %s", chosenCount);
 			LOG.error(message);
 			throw new RatingQuestionsNotExistentException(message);
 		}
@@ -115,7 +115,6 @@ public class RatingQuestionService {
 		return lowestVotedCountQuestion.getCountVoted();
 	}
 	
-	//TODO MONGO Transactional working?
 	@Transactional
 	public void saveFeedback(Map<Long, Integer> feedbackMap) {
 			
@@ -133,7 +132,6 @@ public class RatingQuestionService {
 		}
 	}
 	
-	//TODO MONGO Transactional working?
 	@Transactional
 	public void removeFeedback(Map<Long, Integer> feedbackMap) {
 		
@@ -204,11 +202,10 @@ public class RatingQuestionService {
 		return rqList;
 	}
 
-	//TODO what happens here, when??
-	public List<RatingQuestion> reloadForInvalidFeedback(Project project, Gender gender, Map<Long, Integer> feedbackMap) throws RatingQuestionsNotExistentException {
+	public List<RatingQuestion> reloadForInvalidFeedback(Project project, Gender gender, Map<Long, Integer> feedbackMap) throws RatingQuestionsNotExistentException, InvalidFeedbackException {
 
 		if(feedbackMap == null) {
-			feedbackMap = new HashMap<>();
+			throw new InvalidFeedbackException("No feedback map was given.");
 		}
 		
 		LOG.debug("Reloaded rating questions");
@@ -254,6 +251,12 @@ public class RatingQuestionService {
 		}
 	}
 	
+	/**
+	 * Calculates the possible rating question count
+	 * for a given numer of rating objects 
+	 * @param given
+	 * @return
+	 */
 	private int calcPossible(int given) {
 		if(given == 1) {
 			return 1;

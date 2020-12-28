@@ -104,7 +104,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.accessDeniedHandler(deniedHandler);
 				// ... use this default handler
 				// .accessDeniedPage(ApplicationPath.URL_ERROR)
-				;
+				//;
 	}
 	
 	@Override

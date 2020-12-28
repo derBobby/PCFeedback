@@ -79,12 +79,15 @@ public class ParticipationResult {
 
 	public String printKeyList() {
 		
-		Map<Long, Integer> sortedMap = new TreeMap<Long, Integer>(feedbackMap);
+		Map<Long, Integer> sortedMap = new TreeMap<>(feedbackMap);
 		
-		String keyList = "";
+		StringBuilder keyList = new StringBuilder("");
+		
 		for(Long key : sortedMap.keySet()) {
-			keyList+= key + ",";
+			keyList.append(key);
+			keyList.append(",");
 		}
-		return keyList;
+		//TODO test this
+		return keyList.toString();
 	}
 }

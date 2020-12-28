@@ -20,7 +20,7 @@ public class ProjectFilterConfiguration {
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectFilterConfiguration.class);
 
 	@Autowired
-	private ProjectService ps;
+	private ProjectService projectService;
 	
 	@Bean
 	public FilterRegistrationBean<RequestResponseProjectFilter> projectFilter(){
@@ -28,7 +28,7 @@ public class ProjectFilterConfiguration {
 	       
 	    LOG.debug("Setting up project filter");
 	    
-	    registrationBean.setFilter(new RequestResponseProjectFilter(ps));
+	    registrationBean.setFilter(new RequestResponseProjectFilter(projectService));
 	    registrationBean.addUrlPatterns(
 	    		ApplicationPathHelper.URL_FEEDBACK_START,
 	    		ApplicationPathHelper.URL_FEEDBACK_QUESTION,

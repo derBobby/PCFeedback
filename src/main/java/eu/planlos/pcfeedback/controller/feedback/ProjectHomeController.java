@@ -32,7 +32,7 @@ public class ProjectHomeController {
 	private ModelFillerService mfs;
 	
 	@Autowired
-	private ProjectService ps;
+	private ProjectService projectService;
 	
 	@Autowired
 	private UiTextService uts;
@@ -49,10 +49,10 @@ public class ProjectHomeController {
 		
 		HttpServletResponse res = (HttpServletResponse) response;
 
-		if(ps.exists(projectName)) {
+		if(projectService.exists(projectName)) {
 			
-			Project project = ps.findProject(projectName);
-			if(! ps.isOnline(project)) {
+			Project project = projectService.findProject(projectName);
+			if(! projectService.isOnline(project)) {
 				LOG.error("User tried to Start inactive project {}", projectName);
 				res.sendError(404, String.format("Projekt %s läuft aktuell nicht.", projectName));
 				return null;
