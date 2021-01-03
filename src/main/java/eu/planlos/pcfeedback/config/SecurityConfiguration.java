@@ -1,6 +1,11 @@
 package eu.planlos.pcfeedback.config;
 
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,15 +14,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
-import eu.planlos.pcfeedback.constants.ApplicationRoleHelper;
 import eu.planlos.pcfeedback.web.security.LoginAccessDeniedHandler;
 import eu.planlos.pcfeedback.web.security.UserDetailsServiceImpl;
 
+@Profile("!KEYCLOAK")
 //Schalter für SimpleAuthentication
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfiguration.class);
+	
 	@Autowired
 	private UserDetailsServiceImpl userDetailService;
 
@@ -50,9 +57,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
-					).hasAnyAuthority(
-						ApplicationRoleHelper.ROLE_ADMIN
-					)
+						
+					).hasAnyAuthority(RoleConfiguration.ROLE_ADMIN)
 				
 				/*
 				 * PUBLIC
@@ -63,6 +69,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						"/img/**",
 						"/favicon.ico",
 						ApplicationPathHelper.URL_AREA_PUBLIC + "**"
+						
 					).permitAll()
 					
 			
@@ -114,6 +121,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		auth
 			.userDetailsService(userDetailService)
 			.passwordEncoder(bCryptPasswordEncoder);
+	}
+	
+	@PostConstruct
+	private void init() {
+		LOG.debug("Configuration loaded");
 	}
 
 }

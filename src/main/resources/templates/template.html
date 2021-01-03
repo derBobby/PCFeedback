@@ -6,18 +6,18 @@
 	
 		<title>Feedback App</title>
 		
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale = 1.0, user-scalable = no">
-		<meta name="description" content="Tool zum Sammeln von Feedback für die TEENNIGHT des SWDEC">
-		<meta name="author" content="derBobby">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale = 1.0, user-scalable = no" />
+		<meta name="description" content="Tool zum Sammeln von Feedback für die TEENNIGHT des SWDEC" />
+		<meta name="author" content="derBobby" />
 	
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />				
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/font-awesome/css/all.css}" />
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/bootstrap4-toggle/css/bootstrap4-toggle.min.css}" />  
 		<link rel="stylesheet" media="screen" th:href="@{/css/custom.css}" />
-		<link rel="stylesheet" media="screen" th:href="@{/webjars/summernote/dist/summernote-bs4.css}">
-		<link rel="stylesheet" media="screen" th:href="@{/webjars/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}">
+		<link rel="stylesheet" media="screen" th:href="@{/webjars/summernote/dist/summernote-bs4.css}" />
+		<link rel="stylesheet" media="screen" th:href="@{/webjars/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}" />
 
 		<script th:src="@{/webjars/jquery/jquery.js}"></script>
 		<script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
@@ -50,25 +50,26 @@
 				Feedback App
 			</a>
 	
-			<button sec:authorize="hasAnyRole('ROLE_ADMIN')" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
+			<button sec:authorize="hasAnyRole(T(eu.planlos.pcfeedback.config.RoleConfiguration).ROLE_ADMIN)" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			
 			<!-- collapsible part -->
-			<div sec:authorize="hasAnyRole('ROLE_ADMIN')" class="collapse navbar-collapse" id="anwNavbar">
+			<div sec:authorize="hasAnyRole(T(eu.planlos.pcfeedback.config.RoleConfiguration).ROLE_ADMIN)" class="collapse navbar-collapse" id="anwNavbar">
 			
 				<!-- alignment to the right -->
 				<div class="navbar-nav ml-auto">
-
-				<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-					<!-- TODO Multiple elements are active -->
-					<li class="nav-item active">
-						<a class="nav-link" th:href="@{${URL_ADMIN_PROJECTS}}"><i class="fas fa-users"></i> Projekte</a>
-					</li>
-					<li class="nav-item active">
-						<a class="nav-link" th:href="@{${URL_LOGOUT}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
-					</li>
-				</ul>
+	
+					<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+						<!-- TODO Multiple elements are active -->
+						<li class="nav-item active">
+							<a class="nav-link" th:href="@{${URL_ADMIN_PROJECTS}}"><i class="fas fa-users"></i> Projekte</a>
+						</li>
+						<li class="nav-item active">
+							<a class="nav-link" th:href="@{${URL_LOGOUT}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</nav>						 				
 
@@ -79,15 +80,45 @@
 			</div>
 			
 			<div th:if="${isDevProfile}" class="container text-center text-muted">
-				</br>
-				<p th:text="'SESSION: ' + ${#session.getId()}"></p>
-				<p th:text="'PROJECT: ' + ${#session.getAttribute('project')}"></p>
-				</br>
-				<p th:text="'NAME: ' + ${#authentication.name}"></p>
-				<p th:text="'PRINCIPAL: ' + ${#authentication.principal}"></p>
-				<p th:text="'CREDENTIALS: ' + ${#authentication.credentials}"></p>			
-				<p th:text="'AUTHORITIES: ' + ${#authentication.Authorities}"></p>
-				<p th:text="'DETAILS: ' + ${#authentication.details}"></p>
+				<table border="1" th:if="${ #session != null }">
+					<tr>
+						<th colspan="2">Session</th>
+					</tr>
+					<tr>
+						<td>ID</td>
+						<td th:text="${#session.getId()}"></td>
+					</tr>
+					<tr>
+						<td>Project</td>
+						<td th:text="${#session.getAttribute('project')}"></td>
+					</tr>
+				</table>
+				<br/>
+				<table border="1">
+					<tr>
+						<th colspan="2">Authentication</th>
+					</tr>
+					<tr>
+						<td>Name</td>
+						<td th:text="${#authentication.name}"></td>
+					</tr>
+					<tr>
+						<td>Principal</td>
+						<td th:text="${#authentication.principal}"></td>
+					</tr>
+					<tr>
+						<td>Credentials</td>
+						<td th:text="${#authentication.credentials}"></td>
+					</tr>
+					<tr>
+						<td>Authorities</td>
+						<td th:text="${#authentication.Authorities}"></td>
+					</tr>
+					<tr>
+						<td>Details</td>
+						<td th:text="${#authentication.details}"></td>
+					</tr>
+				</table>
 			</div>
 			
 		</footer> 
