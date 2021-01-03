@@ -89,6 +89,12 @@ public class Project implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<RatingObject> ratingObjectList;
 
+	/*
+	 * Spring Data needs default constructor
+	 */
+	public Project() {
+	}
+	
 	public Project(List<RatingObject> roList) {
 		this.ratingObjectList = roList;
 	}

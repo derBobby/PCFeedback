@@ -74,7 +74,7 @@ public class DataCreationService {
 
 		LOG.debug("###### Creating sample project: {}", projectName);
 		ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 1, 14, 30, 0, 0, ZoneId.of(ZonedDateTimeUtility.CET));
-		ZonedDateTime endTime = ZonedDateTime.of(2020, 12, 30, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeUtility.CET));
+		ZonedDateTime endTime = ZonedDateTime.of(2021, 12, 30, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeUtility.CET));
 		
 		int neededQuestionCount = 5;
 		

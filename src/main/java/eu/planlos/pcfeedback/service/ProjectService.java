@@ -58,7 +58,7 @@ public class ProjectService {
 	public List<Project> getActive() {
 		ZonedDateTime now = ZonedDateTimeUtility.nowUTC();
 		Instant nowInstant = now.toInstant();
-		return projectRepo.findAllByActiveAndStartInstantLessThanAndEndInstantGreaterThan(true, nowInstant, nowInstant);
+		return projectRepo.findAllByActiveAndProjectStartInstantLessThanAndProjectEndInstantGreaterThan(true, nowInstant, nowInstant);
 	}
 
 	public boolean isOnline(Project project) {
