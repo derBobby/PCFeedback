@@ -49,7 +49,7 @@
 							
 							<!--  Declarations: data protection and price game statement -->
 							
-							<div class="form-group" th:if="*{project.isPricegame}">
+							<div class="form-group" th:if="*{project.pricegame}">
 								<input type="checkbox" id="priceGameStatementAccepted" th:field="*{priceGameStatementAccepted}" class="form-check-input" required="required" />
 								<label for="priceGameStatementAccepted"><a target="_blank" th:href="@{${URL_PRICEGAME}+*{project.projectName}}">Gewinnspielhinweise</a> gelesen und akzeptiert.</label>
 								<br/><span th:errors="*{priceGameStatementAccepted}" class="text-warning"></span>

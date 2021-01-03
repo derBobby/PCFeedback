@@ -55,8 +55,6 @@ public class ResultsController {
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + "{projectName}", method = RequestMethod.GET)
 	public String showResults(ServletResponse response, @PathVariable(name = "projectName") String projectName, Model model) throws RatingQuestionsNotExistentException, IOException {
 
-		RatingQuestionEvaluator evaluator = new RatingQuestionEvaluator();
-		
 		HttpServletResponse res = (HttpServletResponse) response;
 
 		Project project = psService.findProject(projectName);
@@ -65,6 +63,8 @@ public class ResultsController {
 			res.sendError(404, "Kein Projekt angegeben");
 			return null;
 		}
+		
+		RatingQuestionEvaluator evaluator = new RatingQuestionEvaluator();
 		
 		LOG.debug("Loading random participants");
 		List<Participant> randomParticipantList = pService.getRandomWinnerParticipantsForProject(project);

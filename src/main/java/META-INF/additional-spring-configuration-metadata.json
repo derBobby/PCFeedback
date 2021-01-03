@@ -14,4 +14,9 @@
     "type": "java.lang.String",
     "description": "From address for mail sending"
   },
+  {
+    "name": "eu.planlos.pcfeedback.keycloak.role.admin",
+    "type": "java.lang.String",
+    "description": "Role from Keycloak to use as admin user role in the application"
+  }
 ]}

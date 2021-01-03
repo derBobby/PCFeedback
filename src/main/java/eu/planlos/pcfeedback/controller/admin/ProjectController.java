@@ -37,10 +37,10 @@ import eu.planlos.pcfeedback.service.UiTextService;
 @Controller
 public class ProjectController {
 
-	private static Logger LOG = LoggerFactory.getLogger(ProjectController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ProjectController.class);
 
 	@Autowired
-	private ProjectService ps;
+	private ProjectService projectService;
 
 	@Autowired
 	private ParticipantService participantService;
@@ -63,10 +63,10 @@ public class ProjectController {
 	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTS)
 	public String listProjects(Model model) {
 		
-		List<Project> projectList = ps.findAll();
+		List<Project> projectList = projectService.findAll();
 		
 		for(Project project : projectList) {
-			project.setOnline(ps.isOnline(project));
+			project.setOnline(projectService.isOnline(project));
 		}
 
 		model.addAttribute("URL_ADMIN_PROJECTRUN", ApplicationPathHelper.URL_ADMIN_PROJECTRUN);
@@ -97,7 +97,7 @@ public class ProjectController {
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS + "/{projectName}")
 	public String editProject(Model model, @PathVariable("projectName") String projectName) {
 		
-		Project project = ps.findProject(projectName);
+		Project project = projectService.findProject(projectName);
 
 		mfs.fillProjectDetails(model, project);
 		mfs.fillGlobal(model);
@@ -116,7 +116,7 @@ public class ProjectController {
 		HttpServletResponse res = (HttpServletResponse) response;
 		
 		if(! isNewProject) {
-			Project dbProject = ps.findProject(uiProject.getIdProject());
+			Project dbProject = projectService.findProject(uiProject.getIdProject());
 			if(dbProject.isActive()) {
 				LOG.error("Project name='{}' is active. Edit not allowed -> sending 403", dbProject.getProjectName());
 				res.sendError(403, String.format("Projekt %s ist nicht aktiv. Speichern verboten.", dbProject.getProjectName()));
@@ -143,7 +143,7 @@ public class ProjectController {
 			rqs.checkEnoughRatingQuestions(uiProject, false);
 			ros.validateAndSaveList(uiProject.getRatingObjectList());
 			
-			ps.save(uiProject);
+			projectService.save(uiProject);
 
 			if(isNewProject) {
 				LOG.debug("Adding UiTexts for new Project");
@@ -173,7 +173,7 @@ public class ProjectController {
 		
 		HttpServletResponse res = (HttpServletResponse) response;
 
-		Project project = ps.findProject(projectName);
+		Project project = projectService.findProject(projectName);
 		if(project == null) {
 			LOG.error("Project name='{}' does not exist -> sending 400", projectName);
 			res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
@@ -186,7 +186,7 @@ public class ProjectController {
 		rqList.addAll(rqs.create(project));
 		project.setActive(true);
 		rqs.saveAll(rqList);
-		ps.save(project);
+		projectService.save(project);
 		
 		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
 	}
@@ -196,7 +196,7 @@ public class ProjectController {
 		
 		HttpServletResponse res = (HttpServletResponse) response;
 
-		Project project = ps.findProject(projectName);
+		Project project = projectService.findProject(projectName);
 		if(project == null) {
 			LOG.error("Project name='{}' does not exist -> sending 400", projectName);
 			res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
@@ -207,7 +207,7 @@ public class ProjectController {
 		
 		prs.resetProject(project);
 		participantService.resetProject(project);
-		ps.resetProject(project);
+		projectService.resetProject(project);
 		rqs.resetProject(project);
 		
 		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
@@ -217,7 +217,7 @@ public class ProjectController {
 		
 		HttpServletResponse res = (HttpServletResponse) response;
 
-		Project project = ps.findProject(projectName);
+		Project project = projectService.findProject(projectName);
 		if(project == null) {
 			LOG.error("Project name='{}' does not exist -> sending 400", projectName);
 			res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
@@ -233,10 +233,10 @@ public class ProjectController {
 		
 		List<RatingObject> roList = project.getRatingObjectList();
 		project.setRatingObjectList(null);
-		ps.save(project);
+		projectService.save(project);
 		
 		ros.deleteAll(roList);
-		ps.deleteProject(project); 
+		projectService.deleteProject(project); 
 		
 		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
 	}

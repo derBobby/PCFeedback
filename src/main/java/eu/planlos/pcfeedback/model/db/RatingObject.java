@@ -17,13 +17,8 @@ import javax.persistence.UniqueConstraint;
 			@UniqueConstraint(columnNames = {"idRatingObject"}),
 })
 public class RatingObject implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Required for JPA and reflection stuff.
-	 */
-	public RatingObject() {
-	}
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -33,6 +28,12 @@ public class RatingObject implements Serializable {
 	@Column(name="name", nullable=false)
 	private String name;
 
+	/**
+	 * Required for JPA and reflection stuff.
+	 */
+	public RatingObject() {
+	}
+	
 	public RatingObject(String name) {
 		this.name = name;
 	}
@@ -62,14 +63,17 @@ public class RatingObject implements Serializable {
 	}
 	
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object object) {
 
-        if (o == this) return true;
-        if (!(o instanceof RatingObject)) {
+        if (object == this) {
+        	return true;
+        }
+        	
+        if (!(object instanceof RatingObject)) {
             return false;
         }
-        RatingObject ro = (RatingObject) o;
-        return this.name.equals(ro.getName());
+        RatingObject ratingObject = (RatingObject) object;
+        return this.name.equals(ratingObject.getName());
     }
 
     @Override

@@ -33,7 +33,7 @@ public class FeedbackValidationService {
 				Integer voteFor = feedbackMap.get(idRatingQuestion);
 	
 				//feedback has needed question count but wrong answers
-				if(voteFor == null || (voteFor != RatingQuestionService.OBJECT_ONE && voteFor != RatingQuestionService.OBJECT_TWO)) {
+				if(voteFor == null || voteFor != RatingQuestionService.OBJECT_ONE && voteFor != RatingQuestionService.OBJECT_TWO) {
 					LOG.error("Feedback invalid. voteFor={}", voteFor);
 					throw new InvalidFeedbackException("Fehler im Feedback, bitte noch mal versuchen.");
 				}

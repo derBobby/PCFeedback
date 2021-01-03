@@ -57,10 +57,10 @@ public class CustomErrorController implements ErrorController {
         // Extract stack trace string
         String errorTrace = (String) body.get("trace");
 		
-		String errorTitle = "Unbekannter Fehler";
+		String errorTitle;
 	    Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 	    
-        Integer statusCode = status != null ? Integer.valueOf(status.toString()) : -1;
+        Integer statusCode = (status != null ? Integer.valueOf(status.toString()) : -1);
 	    
     	if(statusCode == HttpStatus.UNAUTHORIZED.value()) {
         	errorTitle = "Fehlende Authentifizierung";

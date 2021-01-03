@@ -54,7 +54,7 @@ public class UiText {
 		this.project = project;
 		this.uiTextKey = uiTextKey;
 		this.description = uiTextKey.getDescription();
-		this.text = null;
+		this.text = "";
 	}
 	
 	public UiTextKey getUiTextKey() {

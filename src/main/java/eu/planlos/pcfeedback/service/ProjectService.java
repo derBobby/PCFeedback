@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.repository.ProjectRepository;
-import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
+import eu.planlos.pcfeedback.util.ZonedDateTimeUtility;
 
 @Service
 public class ProjectService {
@@ -28,6 +28,7 @@ public class ProjectService {
 		try {
 			projectRepo.save(project);
 		} catch (DataIntegrityViolationException e) {
+			LOG.debug(e.getMessage());
 			throw new ProjectAlreadyExistingException(String.format("Projekt mit Namen '{}' existiert bereits", project.getProjectName()));
 		}
 	}
@@ -42,13 +43,12 @@ public class ProjectService {
 	}
 
 	public List<Project> findAll() {
-		return projectRepo.findAll();
+		return (List<Project>) projectRepo.findAll();
 	}
 
 	public void resetDB() {
 		LOG.debug("RESET: Project");
 		projectRepo.deleteAll();
-		return;
 	}
 
 	public Project findProject(Long idProject) {
@@ -56,33 +56,32 @@ public class ProjectService {
 	}
 
 	public List<Project> getActive() {
-		ZonedDateTime now = ZonedDateTimeHelper.nowUTC();
+		ZonedDateTime now = ZonedDateTimeUtility.nowUTC();
 		Instant nowInstant = now.toInstant();
-		return projectRepo.findAllByActiveAndStartInstantLessThanAndEndInstantGreaterThan(true, nowInstant, nowInstant);
+		return projectRepo.findAllByActiveAndProjectStartInstantLessThanAndProjectEndInstantGreaterThan(true, nowInstant, nowInstant);
 	}
 
 	public boolean isOnline(Project project) {
-
-		ZonedDateTime now = ZonedDateTimeHelper.nowCET();
-
-		ZonedDateTime projectStart = project.getStartZonedDateTime();
-		ZonedDateTime projectEnd = project.getEndZonedDateTime();
 
 		if (!project.isActive()) {
 			LOG.debug("Project '{}' not active", project.getProjectName());
 			return false;
 		}
 
+		ZonedDateTime now = ZonedDateTimeUtility.nowCET();
+		ZonedDateTime projectStart = project.getProjectStart();
+		ZonedDateTime projectEnd = project.getProjectEnd();
+		
 		if (now.isBefore(projectStart)) {
 			LOG.debug("'{}' before '{}'",
-					ZonedDateTimeHelper.nice(now),
-					ZonedDateTimeHelper.nice(projectStart));
+					ZonedDateTimeUtility.nice(now),
+					ZonedDateTimeUtility.nice(projectStart));
 			return false;
 		}
 		if (now.isAfter(projectEnd)) {
 			LOG.debug("'{}' after '{}'",
-					ZonedDateTimeHelper.nice(now),
-					ZonedDateTimeHelper.nice(projectEnd));
+					ZonedDateTimeUtility.nice(now),
+					ZonedDateTimeUtility.nice(projectEnd));
 			return false;
 		}
 

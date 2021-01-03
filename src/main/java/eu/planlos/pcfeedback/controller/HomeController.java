@@ -19,12 +19,12 @@ public class HomeController {
 	private ModelFillerService mfs;
 	
 	@Autowired
-	private ProjectService ps;
+	private ProjectService projectService;
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_HOME)
 	public String home(Model model) {
 		
-		List<Project> pList = ps.getActive();
+		List<Project> pList = projectService.getActive();
 		model.addAttribute("projectList", pList);
 		
 		model.addAttribute("URL_PROJECTHOME", ApplicationPathHelper.URL_PROJECTHOME);

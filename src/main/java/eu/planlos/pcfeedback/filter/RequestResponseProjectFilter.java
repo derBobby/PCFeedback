@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
 import eu.planlos.pcfeedback.model.db.Project;
@@ -22,10 +23,10 @@ public class RequestResponseProjectFilter implements Filter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RequestResponseProjectFilter.class);
 	
-	private ProjectService ps;
+	private final ProjectService projectService;
 	
-	public RequestResponseProjectFilter(ProjectService ps) {
-		this.ps = ps;
+	public RequestResponseProjectFilter(ProjectService projectService) {
+		this.projectService = projectService;
 	}
 	
 
@@ -49,13 +50,13 @@ public class RequestResponseProjectFilter implements Filter {
 			res.sendRedirect(ApplicationPathHelper.URL_HOME);
 		} else {
 			String projectName = project.getProjectName();
-			if(! ps.exists(projectName)) {
-				LOG.error("Project name='{}' saved in session does not exist -> sending 400", projectName);
-				res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
-
-			} else {
+			if(projectService.exists(projectName)) {
 				LOG.debug("Valid project saved in session: project={}", projectName);
 				chain.doFilter(request, response);
+				
+			} else {
+				LOG.error("Project name='{}' saved in session does not exist -> sending 400", projectName);
+				res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
 			}
 		}
 	}

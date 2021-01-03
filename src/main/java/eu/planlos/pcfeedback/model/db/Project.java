@@ -21,7 +21,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
+import eu.planlos.pcfeedback.util.ZonedDateTimeUtility;
 
 @Entity
 @Table(
@@ -48,7 +48,7 @@ public class Project implements Serializable {
 	private boolean needMail;
 
 	@Column(nullable = false)
-	private boolean isPricegame;
+	private boolean pricegame;
 	
 	@Column(nullable = false)
 	private boolean askFreetext;
@@ -57,54 +57,62 @@ public class Project implements Serializable {
 	private boolean active;
 	
 	@Column(nullable=false)
-	@DecimalMin(value = "1")
+	@DecimalMin("1")
 	private int ratingQuestionCount;
 	
 	private boolean online;
 
 	@Column
-	private Instant saveInstant;
+	private Instant projectSaveInstant;
 
 	@Column
-	private Instant startInstant;
+	private Instant projectStartInstant;
 
 	@Column
-	private Instant endInstant;
+	private Instant projectEndInstant;
 	
 	@Column
 	private String notificationMail;
 
 	@Transient
 	@DateTimeFormat(pattern = "dd.MM.YYYY HH:mm")
-	private ZonedDateTime saveZonedDateTime;
+	private ZonedDateTime projectSave;
 	
 	@Transient
 	@DateTimeFormat(pattern = "dd.MM.YYYY HH:mm")
-	private ZonedDateTime startZonedDateTime;
+	private ZonedDateTime projectStart;
 	
 	@Transient
 	@DateTimeFormat(pattern = "dd.MM.YYYY HH:mm")
-	private ZonedDateTime endZonedDateTime;
+	private ZonedDateTime projectEnd;
 
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<RatingObject> ratingObjectList;
 
+	/*
+	 * Spring Data needs default constructor
+	 */
 	public Project() {
 	}
-
+	
 	public Project(List<RatingObject> roList) {
 		this.ratingObjectList = roList;
 	}
 	
-	public Project(String projectName, List<RatingObject> ratingObjectList, boolean needMail, boolean needMobile, boolean active, ZonedDateTime startZonedDateTime, ZonedDateTime endZonedDateTime, int ratingQuestionCount) {
+	public Project(String projectName, List<RatingObject> ratingObjectList, boolean needMail, boolean needMobile, boolean active, ZonedDateTime projectStart, ZonedDateTime projectEnd, int ratingQuestionCount) {
 		this.ratingObjectList = ratingObjectList;
 		
 		this.projectName = projectName;
 		this.needMail = needMail;
 		this.needMobile = needMobile;
 		this.active = active;
-		setStartZonedDateTimeUpdateInstant(startZonedDateTime);
-		setEndZonedDateTimeUpdateInstant(endZonedDateTime);
+
+		this.projectStart = projectStart;
+		this.projectStartInstant = projectStart.toInstant();
+		
+		this.projectEnd = projectEnd;
+		this.projectEndInstant = projectEnd.toInstant();
+		
 		this.ratingQuestionCount = ratingQuestionCount;
 	}
 	
@@ -148,69 +156,62 @@ public class Project implements Serializable {
 		this.active = active;
 	}
 
-	public ZonedDateTime getStartZonedDateTime() {
+	public ZonedDateTime getProjectStart() {
 		// Should always be set
-		if (startInstant != null) {
-			this.startZonedDateTime = ZonedDateTime.ofInstant(startInstant, ZoneId.of(ZonedDateTimeHelper.CET));
-			return startZonedDateTime;
+		if (projectStartInstant != null) {
+			this.projectStart = ZonedDateTime.ofInstant(projectStartInstant, ZoneId.of(ZonedDateTimeUtility.CET));
+			return projectStart;
 		}
 		// except for new unsaved projects
 		return null;
 	}
 
 	// Absolute necessary for Binding from UI to objects
-	public void setStartZonedDateTime(ZonedDateTime startZonedDateTime) {
-		setStartZonedDateTimeUpdateInstant(startZonedDateTime);
+	public void setProjectStart(ZonedDateTime projectStart) {
+		this.projectStart = projectStart;
+		this.projectStartInstant = projectStart.toInstant();
 	}
 	
-	public void setStartZonedDateTimeUpdateInstant(ZonedDateTime startZonedDateTime) {
-		this.startZonedDateTime = startZonedDateTime;
-		this.startInstant = startZonedDateTime.toInstant();
-	}
-	
-	public ZonedDateTime getEndZonedDateTime() {
+	public ZonedDateTime getProjectEnd() {
 		// Should always be set
-		if (endInstant != null) {
-			this.endZonedDateTime = ZonedDateTime.ofInstant(endInstant, ZoneId.of(ZonedDateTimeHelper.CET));
-			return endZonedDateTime;
+		if (projectEndInstant != null) {
+			this.projectEnd = ZonedDateTime.ofInstant(projectEndInstant, ZoneId.of(ZonedDateTimeUtility.CET));
+			return projectEnd;
 		}
 		// except for new unsaved projects
 		return null;
 	}
 	
 	// Absolute necessary for Binding from UI to objects
-	public void setEndZonedDateTime(ZonedDateTime startZonedDateTime) {
-		setEndZonedDateTimeUpdateInstant(startZonedDateTime);
+	public void setProjectEnd(ZonedDateTime projectEnd) {
+		this.projectEnd = projectEnd;
+		this.projectEndInstant = projectEnd.toInstant();
 	}
 	
-	public void setEndZonedDateTimeUpdateInstant(ZonedDateTime endZonedDateTime) {
-		this.endZonedDateTime = endZonedDateTime;
-		this.endInstant = endZonedDateTime.toInstant();
-	}
-	
-	public ZonedDateTime getSaveZonedDateTime() {
+	public ZonedDateTime getProjectSave() {
 		// Should always be set
-		if (saveInstant != null) {
-			this.saveZonedDateTime = ZonedDateTime.ofInstant(saveInstant, ZoneId.of(ZonedDateTimeHelper.CET));
-			return saveZonedDateTime;
+		if (projectSaveInstant != null) {
+			this.projectSave = ZonedDateTime.ofInstant(projectSaveInstant, ZoneId.of(ZonedDateTimeUtility.CET));
+			return projectSave;
 		}
 		// except for new unsaved projects
 		return null;
 	}
 	
 	// Absolute necessary for Binding from UI to objects
-	public void setSaveZonedDateTime(ZonedDateTime saveZonedDateTime) {
-		setSaveZonedDateTimeUpdateInstant(saveZonedDateTime);
+	public void setProjectSave(ZonedDateTime projectSave) {
+		setProjectSaveUpdateInstant(projectSave);
 	}
 	
-	public void setSaveZonedDateTimeUpdateInstant(ZonedDateTime saveZonedDateTime) {
-		this.saveZonedDateTime = saveZonedDateTime;
-		this.saveInstant = saveZonedDateTime.toInstant();
+	public void setProjectSaveUpdateInstant(ZonedDateTime projectSave) {
+		this.projectSave = projectSave;
+		this.projectSaveInstant = projectSave.toInstant();
 	}
 
 	/*
 	 * Functions
-	 */	
+	 */
+	@Override
 	public String toString() {
 		return String.format("idProject='%s', name='%s'", idProject, projectName);
 	}
@@ -232,16 +233,16 @@ public class Project implements Serializable {
 	}
 
 	public boolean isPricegame() {
-		return isPricegame;
+		return pricegame;
 	}
 
 	// Redundant for isPricegame for Thymeleaf compatibility 
-	public boolean getIsPricegame() {
-		return isPricegame;
+	public boolean getPricegame() {
+		return pricegame;
 	}
 
-	public void setIsPricegame(boolean isPricegame) {
-		this.isPricegame = isPricegame;
+	public void setPricegame(boolean pricegame) {
+		this.pricegame = pricegame;
 	}
 
 	public boolean getAskFreetext() {

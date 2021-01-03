@@ -70,7 +70,6 @@ public class MailService implements EnvironmentAware {
 			
 		} catch (MessagingException e) {
 			LOG.error("Notification email could not been sent: {}", e.getMessage());
-			e.printStackTrace();
 		}
 	}
 		
@@ -126,7 +125,6 @@ public class MailService implements EnvironmentAware {
 			
 		} catch (MessagingException e) {
 			LOG.error("Notification email could not been sent: {}", e.getMessage());
-			e.printStackTrace();
 		}
 	}
 

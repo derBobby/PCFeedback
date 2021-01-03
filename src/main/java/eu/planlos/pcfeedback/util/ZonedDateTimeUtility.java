@@ -8,9 +8,9 @@ import java.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ZonedDateTimeHelper {
+public class ZonedDateTimeUtility {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ZonedDateTimeHelper.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ZonedDateTimeUtility.class);
 	
 	public static final String CET = "Europe/Berlin";
 	public static final String UTC = "UTC";

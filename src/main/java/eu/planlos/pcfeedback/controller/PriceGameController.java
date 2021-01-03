@@ -18,7 +18,7 @@ import eu.planlos.pcfeedback.service.UiTextService;
 public class PriceGameController {
 
 	@Autowired
-	private ProjectService ps;
+	private ProjectService projectService;
 	
 	@Autowired
 	private ModelFillerService mfs;
@@ -34,7 +34,7 @@ public class PriceGameController {
 	@RequestMapping(ApplicationPathHelper.URL_PRICEGAME + "{projectName}")
 	public String priceGame(Model model, @PathVariable(name = "projectName") String projectName) {
 	
-		Project project = ps.findProject(projectName);
+		Project project = projectService.findProject(projectName);
 		UiText uiText = uts.getUiText(project, UiTextKey.MSG_PRICEGAME);
 				
 		model.addAttribute("projectName", projectName);

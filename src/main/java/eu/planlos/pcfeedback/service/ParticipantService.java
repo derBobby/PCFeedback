@@ -68,14 +68,14 @@ public class ParticipantService implements EnvironmentAware {
 		
 		Project project = participant.getProject();
 		
-		boolean needEmail = project.getNeedMail();
-		boolean needMobile = project.getNeedMobile();
-		
 		if (participantRepo.existsByProjectAndFirstnameAndName(project, participant.getFirstname(), participant.getName())) {
 			LOG.error("Participant exists by firstname and name");
 			throw new ParticipantAlreadyExistingException("Vor- / Nachname bereits vergeben!");
 		}
 
+		boolean needEmail = project.getNeedMail();
+		boolean needMobile = project.getNeedMobile();
+		
 		if (needEmail && participantRepo.existsByProjectAndEmail(project, participant.getEmail())) {
 			LOG.error("Participant exists by email");
 			throw new ParticipantAlreadyExistingException("E-Mail bereits vergeben!");

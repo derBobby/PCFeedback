@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 
-import eu.planlos.pcfeedback.util.ZonedDateTimeHelper;
+import eu.planlos.pcfeedback.util.ZonedDateTimeUtility;
 
 public class StringToZonedDateTimeConverter implements Converter<String, ZonedDateTime> {
 
@@ -20,12 +20,10 @@ public class StringToZonedDateTimeConverter implements Converter<String, ZonedDa
 
 		LOG.debug("Date to convert '{}'", source);
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ZonedDateTimeHelper.UI_FORMAT);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ZonedDateTimeUtility.UI_FORMAT);
 		LocalDateTime localDateTime = LocalDateTime.parse(source, formatter);
-				
-		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of(ZonedDateTimeHelper.CET));
 
-		return zonedDateTime;
+		return ZonedDateTime.of(localDateTime, ZoneId.of(ZonedDateTimeUtility.CET));
 	}
 
 }
