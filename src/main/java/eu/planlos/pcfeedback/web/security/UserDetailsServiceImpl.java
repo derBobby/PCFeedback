@@ -45,10 +45,13 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 	*/
 	public UserDetails loadUserByUsername(final String loginName) {
 
+		LOG.debug("Loading simple auth user");
+		
 		final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		final List<GrantedAuthority> authoritiesList = new ArrayList<>();
 		
 		if(loginName.equals(adminUser)) {
+			
 			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, RoleConfiguration.ROLE_ADMIN);
 			authoritiesList.add(new SimpleGrantedAuthority(RoleConfiguration.ROLE_ADMIN));
 			return new User(loginName, passwordEncoder.encode(adminPassword), authoritiesList);
