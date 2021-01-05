@@ -32,6 +32,9 @@ public class MailService implements EnvironmentAware {
 	@Value("${eu.planlos.pcfeedback.mail.sender}")
 	private String mailSender;
 
+	@Value("${eu.planlos.pcfeedback.mail.active}")
+	private boolean mailActive;
+
 	@Value("${spring.mail.host}")
 	private String springMailHost;
 	
@@ -48,6 +51,11 @@ public class MailService implements EnvironmentAware {
 	
 	@Async
 	public void notifyParticipation(Project project) {
+		
+		if(!mailActive) {
+			LOG.debug("Not sending notification email");
+			return;
+		}
 		
 		LOG.debug("Sending notification email");
 		
@@ -89,8 +97,14 @@ public class MailService implements EnvironmentAware {
 
 	@PostConstruct
 	private void printCredentials() {
+		
+		if(!mailActive) {
+			LOG.debug("Not sending notification email");
+			return;
+		}
+		
 		/*
-		 * URLs for DEV profile
+		 * for DEV profile
 		 */
 		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
 
@@ -103,6 +117,11 @@ public class MailService implements EnvironmentAware {
 	@PostConstruct
 	@Async
 	private void notifyStart() {
+				
+		if(!mailActive) {
+			LOG.debug("Not sending notification email");
+			return;
+		}
 		
 		LOG.debug("Sending notification email");
 		
