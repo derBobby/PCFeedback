@@ -10,15 +10,13 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
+import eu.planlos.pcfeedback.mail.MailSender;
 import eu.planlos.pcfeedback.model.db.Project;
 
 @Service
@@ -26,91 +24,35 @@ public class MailService implements EnvironmentAware {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MailService.class);
 
+	private static final String MIME_TYPE = "text/html; charset=utf-8";
+	
 	@Autowired
-	private JavaMailSender javaMailSender;
+	private MailSender javaMailSender;
 
-	@Value("${eu.planlos.pcfeedback.mail.sender}")
-	private String mailSender;
-
-	@Value("${eu.planlos.pcfeedback.mail.active}")
-	private boolean mailActive;
-
-	@Value("${spring.mail.host}")
-	private String springMailHost;
+	@Autowired
+	private MimeMessage preconfiguredMessage;
 	
-	@Value("${spring.mail.port}")
-	private String springMailPort;
-	
-	@Value("${spring.mail.username}")
-	private String springMailUsername;
-
-	@Value("${spring.mail.password}")
-	private String springMailPassword;
-
 	private Environment environment;
 	
 	@Async
 	public void notifyParticipation(Project project) {
 		
-		if(!mailActive) {
-			LOG.debug("Not sending notification email");
+		if(! javaMailSender.isActive()) {
+			logNotSending();
 			return;
 		}
-		
-		LOG.debug("Sending notification email");
-		
-		MimeMessageHelper mailHelper;
-		MimeMessage mail = javaMailSender.createMimeMessage();
+		logSending();
 		
 		try {
-			
-			mailHelper = new MimeMessageHelper(mail, true);
-			mailHelper.setSubject(String.format("%sPCFeedback - Update Benachrichtigung", subjectPrefix()));
-			mailHelper.setFrom(mailSender);
-			mailHelper.setTo(project.getNotificationMail());
-			
-			String htmlBody = String.format("Neue Teilnahme an Umfrage '%s'", project.getProjectName());
-
-			mail.setContent(htmlBody, "text/html; charset=utf-8");
-			
-			javaMailSender.send(mail);
-			LOG.debug("Notification email has been sent.");
+			MimeMessage message = new MimeMessage(preconfiguredMessage);
+			message.setSubject(buildSubject("PCFeedback - Update Benachrichtigung"));
+			message.setContent(String.format("Neue Teilnahme an Umfrage '%s'", project.getProjectName()), MIME_TYPE);
+						
+			javaMailSender.send(message);
+			logMailOK();
 			
 		} catch (MessagingException e) {
-			LOG.error("Notification email could not been sent: {}", e.getMessage());
-		}
-	}
-		
-	private String subjectPrefix() {
-		
-		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
-
-		if (profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
-			return "DEV - ";
-		}
-		if (profiles.contains(ApplicationProfileHelper.REV_PROFILE)) {
-			return "REV - ";
-		}
-		
-		return "";
-	}
-
-	@PostConstruct
-	private void printCredentials() {
-		
-		if(!mailActive) {
-			LOG.debug("Not sending notification email");
-			return;
-		}
-		
-		/*
-		 * for DEV profile
-		 */
-		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
-
-		if (profiles.contains(ApplicationProfileHelper.DEV_PROFILE)
-				|| profiles.contains(ApplicationProfileHelper.REV_PROFILE)) {
-			LOG.debug("Setup email account as user='{}' password='{}' socket='{}:{}'", springMailUsername, springMailPassword, springMailHost, springMailPort);
+			logMailError(e.getMessage());
 		}
 	}
 	
@@ -118,35 +60,56 @@ public class MailService implements EnvironmentAware {
 	@Async
 	private void notifyStart() {
 				
-		if(!mailActive) {
-			LOG.debug("Not sending notification email");
+		if(! javaMailSender.isActive()) {
+			logNotSending();
 			return;
 		}
-		
-		LOG.debug("Sending notification email");
-		
-		MimeMessageHelper mailHelper;
-		MimeMessage mail = javaMailSender.createMimeMessage();
+		logSending();
 		
 		try {
-			
-			mailHelper = new MimeMessageHelper(mail, true);
-			mailHelper.setSubject(String.format("%sPCFeedback - Server gestartet", subjectPrefix()));
-			mailHelper.setFrom(mailSender);
-			mailHelper.setTo(mailSender);
-			
-			String htmlBody = String.format("");
-
-			mail.setContent(htmlBody, "text/html; charset=utf-8");
-			
-			javaMailSender.send(mail);
-			LOG.debug("Notification email has been sent.");
+			MimeMessage message = new MimeMessage(preconfiguredMessage);
+			message.setSubject(buildSubject("PCFeedback - Server gestartet"));
+			message.setContent(String.format(""), MIME_TYPE);
+		
+			javaMailSender.send(message);
+			logMailOK();
 			
 		} catch (MessagingException e) {
-			LOG.error("Notification email could not been sent: {}", e.getMessage());
+			e.printStackTrace();
+			logMailError(e.getMessage());
 		}
 	}
 
+	private String buildSubject(String subject) {
+
+		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
+
+		if (profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
+			return String.format("DEV - %s", subject);
+		}
+		if (profiles.contains(ApplicationProfileHelper.REV_PROFILE)) {
+			return String.format("REV - %s", subject);
+		}
+
+		return "";
+	}
+
+	private void logMailError(String message) {
+		LOG.error("Notification email could not been sent: {}", message);
+	}
+	
+	private void logMailOK() {
+		LOG.debug("Notification email has been sent.");
+	}
+
+	private void logNotSending() {
+		LOG.debug("Not sending notification email");
+	}
+	
+	private void logSending() {
+		LOG.debug("Sending notification email");
+	}
+	
 	@Override
 	public void setEnvironment(Environment environment) {
 		this.environment = environment;
