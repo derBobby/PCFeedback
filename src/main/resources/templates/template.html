@@ -50,12 +50,12 @@
 				Feedback App
 			</a>
 	
-			<button sec:authorize="hasAnyRole(T(eu.planlos.pcfeedback.config.RoleConfiguration).ROLE_ADMIN)" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
+			<button sec:authorize="hasAnyRole(T(eu.planlos.pcfeedback.auth.basic.config.RoleConfiguration).ROLE_ADMIN)" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			
 			<!-- collapsible part -->
-			<div sec:authorize="hasAnyRole(T(eu.planlos.pcfeedback.config.RoleConfiguration).ROLE_ADMIN)" class="collapse navbar-collapse" id="anwNavbar">
+			<div sec:authorize="hasAnyRole(T(eu.planlos.pcfeedback.auth.basic.config.RoleConfiguration).ROLE_ADMIN)" class="collapse navbar-collapse" id="anwNavbar">
 			
 				<!-- alignment to the right -->
 				<div class="navbar-nav ml-auto">

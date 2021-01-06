@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.config;
+package eu.planlos.pcfeedback.auth.keycloak;
 
 import javax.annotation.PostConstruct;
 
@@ -9,6 +9,7 @@ import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,10 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationKeycloak.class);
 
+	//TODO More elegant way? See RoleConfigurationKeycloak
+	@Value("${eu.planlos.pcfeedback.auth.keycloak.role.admin}")
+	private String ROLE_ADMIN;
+	
 	@PostConstruct
 	private void init() {
 		LOG.debug("Configuration loaded");
@@ -61,9 +66,6 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		LOG.debug("running configure()");
-
-		//TODO Can this be too early?
-		String adminRole = RoleConfiguration.ROLE_ADMIN;
 		
 		super.configure(http);
 
@@ -78,7 +80,7 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 				.antMatchers(
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**")
-				.hasRole(adminRole)
+				.hasRole(ROLE_ADMIN)
 
 				/*
 				 * PUBLIC
@@ -90,7 +92,5 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 						"/favicon.ico",
 						ApplicationPathHelper.URL_AREA_PUBLIC + "**")
 				.permitAll();
-		
-		LOG.debug("Used admin role: {}", adminRole);
 	}
 }

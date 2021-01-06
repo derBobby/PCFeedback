@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.web.security;
+package eu.planlos.pcfeedback.auth.basic.service;
 
 //@Component
 //public class LoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {

@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.config;
+package eu.planlos.pcfeedback.auth.basic.config;
 
 import javax.annotation.PostConstruct;
 
@@ -13,17 +13,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import eu.planlos.pcfeedback.auth.basic.service.LoginAccessDeniedHandler;
+import eu.planlos.pcfeedback.auth.basic.service.UserDetailsServiceImpl;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
-import eu.planlos.pcfeedback.web.security.LoginAccessDeniedHandler;
-import eu.planlos.pcfeedback.web.security.UserDetailsServiceImpl;
 
 @Profile("!KEYCLOAK")
 //Schalter für SimpleAuthentication
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfiguration.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationBasic.class);
 	
 	@Autowired
 	private UserDetailsServiceImpl userDetailService;
@@ -58,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
 						
-					).hasAnyAuthority(RoleConfiguration.ROLE_ADMIN)
+					).hasAnyAuthority(RoleConfigurationBasic.ROLE_ADMIN)
 				
 				/*
 				 * PUBLIC

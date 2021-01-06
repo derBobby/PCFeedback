@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.web.security;
+package eu.planlos.pcfeedback.auth.basic.service;
 
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.config.RoleConfiguration;
+import eu.planlos.pcfeedback.auth.basic.config.RoleConfigurationBasic;
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 
 @Profile("!KEYCLOAK")
@@ -31,10 +31,10 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
-	@Value("${eu.planlos.pcfeedback.admin.user}")
+	@Value("${eu.planlos.pcfeedback.auth.admin.user}")
 	private String adminUser;
 
-	@Value("${eu.planlos.pcfeedback.admin.password}")
+	@Value("${eu.planlos.pcfeedback.auth.admin.password}")
 	private String adminPassword;
 	
 	private Environment environment;
@@ -52,8 +52,8 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 		
 		if(loginName.equals(adminUser)) {
 			
-			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, RoleConfiguration.ROLE_ADMIN);
-			authoritiesList.add(new SimpleGrantedAuthority(RoleConfiguration.ROLE_ADMIN));
+			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, RoleConfigurationBasic.ROLE_ADMIN);
+			authoritiesList.add(new SimpleGrantedAuthority(RoleConfigurationBasic.ROLE_ADMIN));
 			return new User(loginName, passwordEncoder.encode(adminPassword), authoritiesList);
 		}
 		

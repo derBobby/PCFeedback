@@ -1,22 +1,22 @@
 {"properties": [
   {
-    "name": "eu.planlos.pcfeedback.admin.password",
+    "name": "eu.planlos.pcfeedback.auth.admin.password",
     "type": "java.lang.String",
     "description": "Password which is used to authenticate the admin user"
   },
   {
-    "name": "eu.planlos.pcfeedback.admin.user",
+    "name": "eu.planlos.pcfeedback.auth.admin.user",
     "type": "java.lang.String",
     "description": "Username which is used to authenticate the admin user"
   },
   {
-    "name": "eu.planlos.pcfeedback.mail.sender",
-    "type": "java.lang.String",
-    "description": "From address for mail sending"
-  },
-  {
-    "name": "eu.planlos.pcfeedback.keycloak.role.admin",
+    "name": "eu.planlos.pcfeedback.auth.keycloak.role.admin",
     "type": "java.lang.String",
     "description": "Role from Keycloak to use as admin user role in the application"
+  },
+  {
+    "name": "eu.planlos.pcfeedback.mail.active",
+    "type": "java.lang.boolean",
+    "description": "JavaMailSender configuration can be enabled by setting this to true. If true all following spring.mail properties must be set"
   }
 ]}
