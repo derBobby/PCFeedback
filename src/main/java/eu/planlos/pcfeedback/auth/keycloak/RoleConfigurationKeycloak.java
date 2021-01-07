@@ -19,9 +19,9 @@ public class RoleConfigurationKeycloak {
 	private String adminRole;
 	
 
-	@Bean
+	@Bean(name = "roleConfiguration")
 	public RoleConfiguration roleConfiguration() {
-		LOG.debug("Creating admin role text for Keycloak login");
+		LOG.debug("Creating RoleConfiguration for Keycloak auth");
 		return new RoleConfiguration(adminRole);
 	}
 }

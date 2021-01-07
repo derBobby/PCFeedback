@@ -16,9 +16,9 @@ public class RoleConfigurationBasic {
 		
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	
-	@Bean
+	@Bean(name = "roleConfiguration")
 	public RoleConfiguration roleConfiguration() {
-		LOG.debug("Creating admin role text for basic login");
+		LOG.debug("Creating RoleConfiguration for basic auth");
 		return new RoleConfiguration(ROLE_ADMIN);
 	}
 }
