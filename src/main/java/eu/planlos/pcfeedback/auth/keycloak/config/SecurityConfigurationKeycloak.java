@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.auth.keycloak;
+package eu.planlos.pcfeedback.auth.keycloak.config;
 
 import javax.annotation.PostConstruct;
 
@@ -81,7 +81,15 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**")
 				.hasRole(ROLE_ADMIN)
-
+				
+				/*
+				 * LOGIN, LOGOUT
+				 */
+				.antMatchers(ApplicationPathHelper.URL_LOGIN_FORM)
+				.anonymous()
+				.antMatchers(ApplicationPathHelper.URL_LOGOUT)
+				.authenticated()
+				
 				/*
 				 * PUBLIC
 				 */
@@ -91,6 +99,12 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 						"/img/**",
 						"/favicon.ico",
 						ApplicationPathHelper.URL_AREA_PUBLIC + "**")
-				.permitAll();
+				.permitAll()
+				
+			    .and()
+		        .logout()
+		        	.addLogoutHandler(keycloakLogoutHandler())
+		        	.logoutUrl("/sso/logout").permitAll()
+		        	.logoutSuccessUrl("/");
 	}
 }
