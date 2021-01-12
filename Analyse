@@ -1,4 +1,5 @@
 
+
 Exceptions
 ==========
 
@@ -19,6 +20,7 @@ Anwendungsbestandteile die gleichen Spring Komponenten verwendet, kann in der ap
 dargestellt werden.
 Man sollte sich allerdings bewußt sein, dass gerade in Spring Boot manche Exceptions mti einem HTTP Status Code assoziiert werden, ohne dass explizit ein
 Handling definiert wurde, falls man diesen Standart-Mechanismus verwenden will.
+Generell gilt in Spring Boot: Für eigene Exceptions unchecked exceptions (also von RuntimeException ableiten) statt chekcked exceptions
 
 - Kann man das anders handhaben?
 - Statt zu validieren und ohne Erklärung nach "Home" zu routen doch ein 404 werfen?
@@ -31,8 +33,13 @@ HTTP Status macht in der REST Welt Sinn, weil dort der Client zurückgemeldet be
 - bsp 2: ParticipantIsMissingMobileException
 
 > Schreibt man die Exception-Klassen so?
-
-
+Jein. Im agilen Umfeld schreibt man das was man braucht so dass es andere erweitern können, wenn sie es möchten. Wenn Du Exceptiosn schreibst,
+die nur in Deiner Anwendung verwendet werden, schreibst dementsprechend auch nur die Konstruktoren, die Du wirklich verwendest.
+Im Enterprise Umfeld findet man oft auch strengere Vorgabeen, was das Format der Message anbelangt, da in irgendeiner Form so etwas
+wie E00347 oder ähnliches zur automatischen Auswertung von Logs gewünscht wird. Da kann es sinnvoll sein, einen Teil der Message bereits vor zu defineieren und im Konstruktor
+nur noch Teilstrings zu übergeben. In REST APIS wird zudem üblicherweise eine gemeinsamne Oberklasse definiert (APIException oder ähnliches),
+damit daraus eine einheitliche JSON Response für alle Schnittstellen zurückgegeben wird.
+In den beiden Klaasen stört mich eigentlich nur die servialVersionId, habe noch nie gesehen, dass diese wirklich gebraucht wurde.
 
 
 Filter
@@ -42,12 +49,19 @@ Filter
 - "Nur weil es geht muss es nicht richtig sein!"
 - bsp: RequestResponseProjectFilter
 - Ist der Versuch validierung aus den einzelnen Controllern vorwegzunehmen
+Validierung in Spring erfolgt unter der Verwendung von Springs Bean Validation Implementierung (JSR-380).
+Dabei werden für die Parameter in Controller - Methoden JSR-380 Annotations (@Valid , @NotNull) etc verwendet.
+Braucht man mehr Validierungslogik, kann man eigene Annotations und eigene Valieiderungsklassen definieren / implementieren.
+Damit ist die Validierung komplett entkoppelt, kannst Du Dir auch in der neuen Ereigniserfassung im edit1 Berehich anschauen.
 
 
 
 
 Model
 =====
+ViewModel:
+Bitte keine Benamung von Klassen ala ContainerXY , wenn diese für das Model verwendet und dem Binden von Form und View dienen.
+Das ist eine sehr EM spezifische Benamung, der Rest der Welt nennt solche Klassen BackingBean (J2EE, Srping)
 
 > In Mongo würde man vermutlich manche Dinge zusammenfassen, oder?
 - ParticipationResult und Participant zu einem

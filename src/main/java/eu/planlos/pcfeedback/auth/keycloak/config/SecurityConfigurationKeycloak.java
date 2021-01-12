@@ -63,6 +63,12 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 		return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
 	}
 
+
+	// vieleicht kurz zum logout handling: Das hast Du unten eigentlich fast richtig aufgesetzt.
+	// Dein Logout-Button muss auf die konfigurierte Logout  URL posten, dann übernimmt der KeycloakLogoutHandler
+	// das TErminieren der Session, der SSO Cookie wird invaliidiert. Spring übernimmt dann das Redirect zur logoutSuccessUrl
+	// und der bEnutzer ist ausgelogged.
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		LOG.debug("running configure()");
