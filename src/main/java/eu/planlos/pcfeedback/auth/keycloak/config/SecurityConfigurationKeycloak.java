@@ -104,6 +104,7 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 			    .and()
 		        .logout()
 		        	.addLogoutHandler(keycloakLogoutHandler())
+					// die url ist anders als die oben gelistete, die evaluiert zu "/admin/logout"
 		        	.logoutUrl("/sso/logout").permitAll()
 		        	.logoutSuccessUrl("/");
 	}

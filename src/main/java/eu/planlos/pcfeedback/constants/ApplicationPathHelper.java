@@ -1,5 +1,10 @@
 package eu.planlos.pcfeedback.constants;
 
+// Eigentlich ist das BAd Design. Diese Klasse soll nie instanziiert werden, warum also eine Klasse.
+// Aber natürlich sehe ich öfter, dass Konstanten an einer zentralen Stelle definiert werden.
+// Ich persönlich würde diese Konstanten mit in die ZonedDateTimeConverterConfig nehmen und die Klasse umbenamen,
+// da dort zentrale Konfigurationseinstellungen für den Web-Aspekt der Anwendung hinterlegt sind (und selbst das macht mir ein unwohliges Gefühl im Bauch,
+// was spricht dagegen, sie in den Controllern zu definieren, die die entsprechenden Endpunkte anbieten)
 public class ApplicationPathHelper {
 
 	/*

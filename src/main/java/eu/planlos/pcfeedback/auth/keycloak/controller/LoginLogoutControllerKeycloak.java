@@ -46,7 +46,9 @@ public class LoginLogoutControllerKeycloak {
 //		return new ModelAndView(rv, model);
 //	}
 	
-	
+
+	// das hier brauchst nicht, der KeycloakLogoutHandler übernimmt das Logout
+    // zudem hast Du die crfs Protection nicht diesalbed, da muss es eh POST statt GET sein
 	@GetMapping(path = ApplicationPathHelper.URL_LOGOUT)
 	public ModelAndView logout() {
 

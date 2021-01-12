@@ -4,8 +4,27 @@ Exceptions
 
 > Verwendung relativ vieler eigener Exception-Klassen
 - Macht man das so?
+Jein. Tatsächlich ist es in der Spring Welt üblich checked Exceptions (also Ausnahmen, die zwingend behandelt werden müssen , entweder in einem try-catch oder durch
+eine Angabe in der Methoden - Signatur, dass die Ausnahme geworfen werden kann ( throws x) in RuntimeExceptions zu wrappen.
+Das Konzept nennt sich Exception Translation und das Spring Framework selbst macht davon häufig Gebrauch. Dahinter steckt natürlioh die Vereinfachung der Implementierung, aber auch ein
+weiteres Konzept: Das Fail-Fast-Prinzip.
+Beim Fail-Fast-Prinzip geht es um folgendes: Wenn ein Client einer Anwendung (bsw. ein Browser) einen Request absendet, wartet er
+auf die Response. Es gibt aber eine ganze Reieh von Exceptions , bei denen klar ist, dass keine gültige Antwort auf die Anfrage gesendet werden kann
+(bsw. die Repräsentation eines Objektes, dass aus der Datenbank geladen wird und dann auf einer Seite visualisiert wird).
+Hier erzeugt die Behandlung einer Checked Exception nur zusätzlichen Overhead, der Client muss länger warten und es wird kein Mehrwert durch die
+Ausnahmebehandlung geneiert.
+Auch das Wrappen von Runtimeexceptions in applikationsspezifische kann Sinn machen, wenn Fehlerfälle dadurch klarer aufgelöst werden können.
+Bereits von Spring übersetzte Exceptions übersetzte Exceptions können ebefalls in manchen Situationen gewrapped werden bsw. wenn unterschiedliche
+Anwendungsbestandteile die gleichen Spring Komponenten verwendet, kann in der applikationsspezifischen Exception der fachliche oder technische Kontext klarer
+dargestellt werden.
+Man sollte sich allerdings bewußt sein, dass gerade in Spring Boot manche Exceptions mti einem HTTP Status Code assoziiert werden, ohne dass explizit ein
+Handling definiert wurde, falls man diesen Standart-Mechanismus verwenden will.
+
 - Kann man das anders handhaben?
 - Statt zu validieren und ohne Erklärung nach "Home" zu routen doch ein 404 werfen?
+404 ist der HTTP Status Code für NOT FOUND, der für BAD RQEUST ist 400. Da diese Anwendung eine web-basierte UI bereitstellt ist die Rückgabe
+von 400 nicht wirklich sinnvoll, der Benutzer interagiert ja mit der Anwendung und sollte angezeigt bekommen, was er falsch gemacht hat.
+HTTP Status macht in der REST Welt Sinn, weil dort der Client zurückgemeldet bekommt, dass seine Anfrage falsch formatiert war.
 
 > Beispiel wäre Validierung von Participant beim Submit im FeedbackController
 - bsp 1: ParticipantIsMissingEmailException

@@ -12,7 +12,9 @@ import eu.planlos.pcfeedback.converter.StringToZonedDateTimeConverter;
 public class ZonedDateTimeConverterConfig implements WebMvcConfigurer {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ZonedDateTimeConverterConfig.class);
-	
+
+	// finde ich gut, habe ich für ObjectId auch im EM verwendet. Müsste man für die Ganzen startAsString und endAsString - Blödsinn maö nachziehen
+    // den Klasssennamen finde ich aber unglücklich, da du hier eigentlich zentral alle Einstellungen für das WebMVC hinterlegen solltest.
     @Override
     public void addFormatters (FormatterRegistry registry) {
         registry.addConverter(new StringToZonedDateTimeConverter());

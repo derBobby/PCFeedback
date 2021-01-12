@@ -30,11 +30,15 @@ import eu.planlos.pcfeedback.service.csv.ICSVExporter;
 import eu.planlos.pcfeedback.service.csv.ParticipantCSVExporter;
 import eu.planlos.pcfeedback.service.csv.RatingQuestionCSVExporter;
 
+
 @Controller
 public class CSVDownloadController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CSVDownloadController.class);
-	
+
+	// Generell ist Field-Injection ein schlechter Programierstil, Du willst die Controller ja auch Unit-Testen
+	// deswegen eigentlich Constructor Injection, es sei denn Deien Beans sollen zur Laufzeit konfigurierbar sein,
+	// dann Setter-Injection. Das ist aber mit Sicherheit auch der am weitesten verbreitete "fehler"
 	@Autowired
 	private ProjectService pService;
 	

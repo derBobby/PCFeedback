@@ -1,5 +1,7 @@
 package eu.planlos.pcfeedback.config;
 
+// keine Ahnung wofür diesee Klasse gedacht ist
+
 public class RoleConfiguration {
 
 	private String adminRole;
