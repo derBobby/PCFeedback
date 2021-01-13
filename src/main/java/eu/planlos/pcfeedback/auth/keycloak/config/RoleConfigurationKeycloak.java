@@ -17,7 +17,6 @@ public class RoleConfigurationKeycloak {
 	
 	@Value("${eu.planlos.pcfeedback.auth.keycloak.role.admin}")
 	private String adminRole;
-	
 
 	@Bean(name = "roleConfiguration")
 	public RoleConfiguration roleConfiguration() {

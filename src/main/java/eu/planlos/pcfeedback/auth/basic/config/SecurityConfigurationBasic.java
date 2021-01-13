@@ -58,7 +58,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
 						
-					).hasAnyAuthority(RoleConfigurationBasic.ROLE_ADMIN)
+					).hasAnyRole(RoleConfigurationBasic.ROLE_ADMIN)
 				
 				/*
 				 * PUBLIC

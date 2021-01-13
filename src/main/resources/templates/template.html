@@ -11,7 +11,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale = 1.0, user-scalable = no" />
 		<meta name="description" content="Tool zum Sammeln von Feedback für die TEENNIGHT des SWDEC" />
 		<meta name="author" content="derBobby" />
-	
+		 
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />				
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/font-awesome/css/all.css}" />
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/bootstrap4-toggle/css/bootstrap4-toggle.min.css}" />  
@@ -75,7 +75,7 @@
 		<footer th:fragment="footer">
 			<div class="container text-center text-muted">
 				<p><a target="_blank" th:href="@{${URL_IMPRESSUM}}">Impressum</a> | <a target="_blank" th:href="@{${URL_DATENSCHUTZ}}">Datenschutz</a><div sec:authorize="isAnonymous()" th:remove="tag"> | <a th:href="@{${URL_LOGIN_FORM}}">Login</a></div></p>
-				<p th:text="${TIMENOW}+' | derBobby © 2020'"></p>
+				<p th:text="${TIMENOW}+' | derBobby © 2021'"></p>
 			</div>
 			
 			<div th:if="${isDevProfile}" class="container text-center text-muted">

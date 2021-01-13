@@ -34,7 +34,7 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 
 	//TODO More elegant way? See RoleConfigurationKeycloak
 	@Value("${eu.planlos.pcfeedback.auth.keycloak.role.admin}")
-	private String ROLE_ADMIN;
+	private String adminRole;
 	
 	@PostConstruct
 	private void init() {
@@ -80,7 +80,7 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 				.antMatchers(
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**")
-				.hasRole(ROLE_ADMIN)
+				.hasRole(adminRole)
 				
 				/*
 				 * LOGIN, LOGOUT

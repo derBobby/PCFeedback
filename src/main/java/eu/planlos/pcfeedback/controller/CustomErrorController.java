@@ -50,6 +50,7 @@ public class CustomErrorController implements ErrorController {
 	
         String errorMessage = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
         Exception errorException = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+        //TODO not the real url
         String requestedSite = request.getRequestURI();
 
         // Get error stack trace map object

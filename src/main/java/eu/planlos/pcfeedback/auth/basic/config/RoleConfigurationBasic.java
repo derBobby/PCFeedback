@@ -14,7 +14,7 @@ public class RoleConfigurationBasic {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(RoleConfigurationBasic.class);
 		
-	public static final String ROLE_ADMIN = "ROLE_ADMIN";
+	public static final String ROLE_ADMIN = "ADMIN";
 	
 	@Bean(name = "roleConfiguration")
 	public RoleConfiguration roleConfiguration() {
