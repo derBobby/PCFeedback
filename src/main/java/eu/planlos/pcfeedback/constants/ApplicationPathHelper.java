@@ -5,6 +5,16 @@ package eu.planlos.pcfeedback.constants;
 // Ich persönlich würde diese Konstanten mit in die ZonedDateTimeConverterConfig nehmen und die Klasse umbenamen,
 // da dort zentrale Konfigurationseinstellungen für den Web-Aspekt der Anwendung hinterlegt sind (und selbst das macht mir ein unwohliges Gefühl im Bauch,
 // was spricht dagegen, sie in den Controllern zu definieren, die die entsprechenden Endpunkte anbieten)
+
+/*
+ * Wie sieht die Lösung aus, wenn man die Konstanten in die Controller raussieht, wenn man doch die Konstante an drei Orten braucht:
+ * - HTML / Thymeleaf (aktuellläuft es über ModelFillerService)
+ * - Controller / RequestMapper
+ * - Andere Controller für Redirects
+ */
+
+
+
 public class ApplicationPathHelper {
 
 	/*
