@@ -17,9 +17,13 @@ public class RatingObjectService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RatingObjectService.class);
 	
-	@Autowired
 	private RatingObjectRepository ratingObjectRepository;
 
+	@Autowired
+	public RatingObjectService(RatingObjectRepository ratingObjectRepository) {
+		this.ratingObjectRepository = ratingObjectRepository;
+	}
+	
 	public List<RatingObject> validateAndSaveList(List<RatingObject> ratingObjectList) throws DuplicateRatingObjectException {
 
 		List<RatingObject> saveList = new ArrayList<>();

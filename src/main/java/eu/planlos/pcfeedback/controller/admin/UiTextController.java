@@ -30,14 +30,16 @@ public class UiTextController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UiTextController.class);
 	
-	@Autowired
 	private UiTextService uts;
-	
-	@Autowired
 	private ModelFillerService mfs;
+	private ProjectService ps;
 	
 	@Autowired
-	private ProjectService ps;
+	public UiTextController(UiTextService uts, ModelFillerService mfs, ProjectService ps) {
+		this.uts = uts;
+		this.mfs = mfs;
+		this.ps = ps;
+	}
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITUITEXT + "{idProject}", method = RequestMethod.GET)
 	public String showUiText(ServletResponse response, @PathVariable(name = "idProject") Long idProject, Model model) throws IOException {

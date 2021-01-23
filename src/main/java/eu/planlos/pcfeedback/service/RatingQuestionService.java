@@ -28,8 +28,12 @@ public class RatingQuestionService {
 	public static final int OBJECT_ONE = 1;
 	public static final int OBJECT_TWO = 2;
 	
-	@Autowired
 	private RatingQuestionRepository rqRepository;
+	
+	@Autowired
+	public RatingQuestionService(RatingQuestionRepository rqRepository) {
+		this.rqRepository = rqRepository;
+	}
 	
 	/**
 	 * Returns all rating questions for given gender

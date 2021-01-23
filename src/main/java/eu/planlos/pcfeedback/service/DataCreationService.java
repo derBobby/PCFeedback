@@ -37,23 +37,24 @@ public class DataCreationService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataCreationService.class);
 	
-	@Autowired
 	private RatingObjectService roService;
-
-	@Autowired
 	private RatingQuestionService rqService;
-
-	@Autowired
 	private UiTextService uiTextService;
-	
-	@Autowired
 	private ParticipantService participantService;
-
-	@Autowired
 	private ParticipationResultService participationResultService;
+	private ProjectService projectService;
 	
 	@Autowired
-	private ProjectService projectService;
+	public DataCreationService(RatingObjectService roService, RatingQuestionService rqService,
+			UiTextService uiTextService, ParticipantService participantService,
+			ParticipationResultService participationResultService, ProjectService projectService) {
+		this.roService = roService;
+		this.rqService = rqService;
+		this.uiTextService = uiTextService;
+		this.participantService = participantService;
+		this.participationResultService = participationResultService;
+		this.projectService = projectService;
+	}
 	
 	@PostConstruct
 	private void initialize() throws WrongRatingQuestionCountExistingException, UiTextException,

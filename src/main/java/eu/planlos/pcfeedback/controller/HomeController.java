@@ -15,11 +15,14 @@ import eu.planlos.pcfeedback.service.ProjectService;
 @Controller
 public class HomeController {
 
-	@Autowired
 	private ModelFillerService mfs;
+	private ProjectService projectService;
 	
 	@Autowired
-	private ProjectService projectService;
+	public HomeController(ModelFillerService mfs, ProjectService projectService) {
+		this.mfs = mfs;
+		this.projectService = projectService;
+	}
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_HOME)
 	public String home(Model model) {

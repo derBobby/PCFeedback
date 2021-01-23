@@ -17,15 +17,17 @@ import eu.planlos.pcfeedback.service.UiTextService;
 @Controller
 public class PriceGameController {
 
-	@Autowired
 	private ProjectService projectService;
-	
-	@Autowired
 	private ModelFillerService mfs;
-	
-	@Autowired
 	private UiTextService uts;
 
+	@Autowired
+	public PriceGameController(ProjectService projectService, ModelFillerService mfs, UiTextService uts) {
+		this.projectService = projectService;
+		this.mfs = mfs;
+		this.uts = uts;
+	}
+	
 	/**
 	 * Provides the price game site
 	 * @param model

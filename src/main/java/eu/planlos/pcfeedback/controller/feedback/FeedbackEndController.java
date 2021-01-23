@@ -26,11 +26,14 @@ public class FeedbackEndController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FeedbackEndController.class);
 	
-	@Autowired
 	private ModelFillerService mfs;
-	
-	@Autowired
 	private UiTextService uts;
+
+	@Autowired
+	public FeedbackEndController(ModelFillerService mfs, UiTextService uts) {
+		this.mfs = mfs;
+		this.uts = uts;
+	}
 	
 	/**
 	 * After feedback is saved user gets redirected to end page.

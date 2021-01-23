@@ -32,8 +32,12 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationKeycloak.class);
 
+	private RoleConfiguration roleConfiguration;
+
 	@Autowired
-	private RoleConfiguration roleConfig;
+	public SecurityConfigurationKeycloak(RoleConfiguration roleConfiguration) {
+		this.roleConfiguration = roleConfiguration;
+	}
 	
 	@PostConstruct
 	private void init() {
@@ -81,7 +85,7 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 				.antMatchers(
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**")
-				.hasRole(roleConfig.getAdminRole())
+				.hasRole(roleConfiguration.getAdminRole())
 				
 				/*
 				 * LOGIN, LOGOUT

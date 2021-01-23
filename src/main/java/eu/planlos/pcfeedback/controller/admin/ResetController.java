@@ -16,15 +16,17 @@ public class ResetController {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ResetController.class);
 			
-	@Autowired
 	private ParticipantService pService;
-
-	@Autowired
 	private RatingQuestionService rqService;
+	private ParticipationResultService prService;
 	
 	@Autowired
-	private ParticipationResultService prService;
-
+	public ResetController(ParticipantService pService, RatingQuestionService rqService, ParticipationResultService prService) {
+		this.pService = pService;
+		this.rqService = rqService;
+		this.prService = prService;
+	}
+	
 	@GetMapping(path = ApplicationPathHelper.URL_ADMIN_RESET)
 	public String reset() {
 		

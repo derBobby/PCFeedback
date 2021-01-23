@@ -19,24 +19,23 @@ import eu.planlos.pcfeedback.config.RoleConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 
 @Profile("!KC")
-//Schalter für SimpleAuthentication
-//@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
 public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationBasic.class);
 	
-	@Autowired
-	private RoleConfiguration roleConfig;
+	private RoleConfiguration roleConfiguration;
 	
-	@Autowired
 	private UserDetailsServiceImpl userDetailService;
-
-//	@Autowired
-//	private LoginAuthenticationSuccessHandler successHandler;
+	
+	private LoginAccessDeniedHandler deniedHandler;
 	
 	@Autowired
-	private LoginAccessDeniedHandler deniedHandler;
+	public SecurityConfigurationBasic(RoleConfiguration roleConfiguration,	UserDetailsServiceImpl userDetailService, LoginAccessDeniedHandler deniedHandler) {
+		this.roleConfiguration = roleConfiguration;
+		this.userDetailService = userDetailService;
+		this.deniedHandler = deniedHandler;
+	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -62,7 +61,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
 						
-					).hasRole(roleConfig.getAdminRole())
+					).hasRole(roleConfiguration.getAdminRole())
 				
 				/*
 				 * PUBLIC

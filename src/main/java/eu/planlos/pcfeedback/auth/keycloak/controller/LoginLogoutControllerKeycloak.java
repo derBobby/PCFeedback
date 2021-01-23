@@ -23,15 +23,7 @@ public class LoginLogoutControllerKeycloak {
 	
 	@GetMapping(path = ApplicationPathHelper.URL_LOGIN_FORM)
 	public String login() {		
-		//return secured URL
 		LOG.debug("Login requested -> Forwarding to secured page");
-		//TODO directly to sso/login?
 		return String.format("redirect:%s", ApplicationPathHelper.URL_ADMIN_PROJECTS);
 	}
-	
-//	@GetMapping(path = ApplicationPathHelper.URL_LOGOUT)
-//	public String logout() {
-//		LOG.debug("Logout requested -> Forwarding to secured page");
-//		return null;
-//	}
 }

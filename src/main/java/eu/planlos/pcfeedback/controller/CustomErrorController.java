@@ -28,73 +28,71 @@ public class CustomErrorController implements ErrorController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CustomErrorController.class);
 
-	@Autowired
 	private ErrorAttributes errorAttributes;
-	
+	private ModelFillerService mfs;
+
 	@Autowired
-	private ModelFillerService mfs;	
-	
-//	@Autowired
-//	private MailService errorMailNotificationService;
-    
+	public CustomErrorController(ErrorAttributes errorAttributes, ModelFillerService mfs) {
+		this.errorAttributes = errorAttributes;
+		this.mfs = mfs;
+	}
+
 	/**
 	 * Is called whenever an error is thrown during web access
-	 * @param request automatically provided
-	 * @param auth automatically provided
+	 * 
+	 * @param request    automatically provided
+	 * @param auth       automatically provided
 	 * @param webRequest automatically provided
-	 * @param model automatically provided
-	 * @return error template to load 
+	 * @param model      automatically provided
+	 * @return error template to load
 	 */
 	@RequestMapping(path = ApplicationPathHelper.URL_ERROR)
 	public String handleError(HttpServletRequest request, Authentication auth, WebRequest webRequest, Model model) {
-	
-        String errorMessage = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
-        Exception errorException = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
-        //TODO not the real url
-        String requestedSite = request.getRequestURI();
 
-        // Get error stack trace map object
-        Map<String, Object> body = errorAttributes.getErrorAttributes(webRequest, ErrorAttributeOptions.defaults());
-        // Extract stack trace string
-        String errorTrace = (String) body.get("trace");
-		
+		String errorMessage = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
+		Exception errorException = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+		// TODO not the real url
+		String requestedSite = request.getRequestURI();
+
+		// Get error stack trace map object
+		Map<String, Object> body = errorAttributes.getErrorAttributes(webRequest, ErrorAttributeOptions.defaults());
+		// Extract stack trace string
+		String errorTrace = (String) body.get("trace");
+
 		String errorTitle;
-	    Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-	    
-        Integer statusCode = (status != null ? Integer.valueOf(status.toString()) : -1);
-	    
-    	if(statusCode == HttpStatus.UNAUTHORIZED.value()) {
-        	errorTitle = "Fehlende Authentifizierung";
-        	LOG.error("User was not authenticated when requesting site: {}", requestedSite);
-        }
-        
-    	else if(statusCode == HttpStatus.FORBIDDEN.value()) {
-        	errorTitle = "Zugriff verboten";
-        	LOG.error("User was not authorized for requested site: {}", requestedSite);
-    		if(auth != null) {
-    			LOG.error("User was: {}", auth.getName());
-    		}
-        }
-        
-    	else if(statusCode == HttpStatus.NOT_FOUND.value()) {
-        	errorTitle = "Ressource existiert nicht";
-        	LOG.error("Requested ressource does not exist. Message: {}", errorMessage);
-        }
-        
-    	else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-        	errorTitle = "Fehler im Server";
-        	LOG.error("Requested site produced internal server error: {}", requestedSite);
-        	
-        } else {
-    	    errorTitle = "Unbekannter Fehler";
-    	    LOG.error("~~~ We should not have gotten here ¯\\_(ツ)_/¯ ~~~");
-        }
-	    
-	    // Send email notification
-	    //errorMailNotificationService.sendErrorNotification(title, errorMessage, errorException, errorTrace); 
-	    
-    	mfs.fillError(model, statusCode, errorTitle, errorMessage, errorException, errorTrace, true);
-    	mfs.fillGlobal(model);
+		Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+
+		Integer statusCode = (status != null ? Integer.valueOf(status.toString()) : -1);
+
+		if (statusCode == HttpStatus.UNAUTHORIZED.value()) {
+			errorTitle = "Fehlende Authentifizierung";
+			LOG.error("User was not authenticated when requesting site: {}", requestedSite);
+		}
+
+		else if (statusCode == HttpStatus.FORBIDDEN.value()) {
+			errorTitle = "Zugriff verboten";
+			LOG.error("User was not authorized for requested site: {}", requestedSite);
+			if (auth != null) {
+				LOG.error("User was: {}", auth.getName());
+			}
+		}
+
+		else if (statusCode == HttpStatus.NOT_FOUND.value()) {
+			errorTitle = "Ressource existiert nicht";
+			LOG.error("Requested ressource does not exist. Message: {}", errorMessage);
+		}
+
+		else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+			errorTitle = "Fehler im Server";
+			LOG.error("Requested site produced internal server error: {}", requestedSite);
+
+		} else {
+			errorTitle = "Unbekannter Fehler";
+			LOG.error("~~~ We should not have gotten here ¯\\_(ツ)_/¯ ~~~");
+		}
+
+		mfs.fillError(model, statusCode, errorTitle, errorMessage, errorException, errorTrace, true);
+		mfs.fillGlobal(model);
 		return RES_ERROR;
 	}
 
