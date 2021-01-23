@@ -88,8 +88,8 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 				 */
 				.antMatchers(ApplicationPathHelper.URL_LOGIN_FORM)
 				.anonymous()
-				.antMatchers(ApplicationPathHelper.URL_LOGOUT)
-				.authenticated()
+//				.antMatchers(ApplicationPathHelper.URL_LOGOUT)
+//				.authenticated()
 				
 				/*
 				 * PUBLIC
@@ -105,7 +105,9 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 			    .and()
 		        .logout()
 		        	.addLogoutHandler(keycloakLogoutHandler())
-		        	.logoutUrl("/sso/logout").permitAll()
+		        	.logoutUrl(ApplicationPathHelper.URL_LOGOUT).permitAll()
+
+//		        	.logoutUrl("/sso/logout").permitAll()
 		        	.logoutSuccessUrl("/");
 	}
 }
