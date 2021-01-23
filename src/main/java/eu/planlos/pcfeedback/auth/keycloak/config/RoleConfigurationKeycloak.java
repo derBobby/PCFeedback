@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile;
 
 import eu.planlos.pcfeedback.config.RoleConfiguration;
 
-@Profile("KEYCLOAK")
+@Profile("KC")
 @Configuration
 public class RoleConfigurationKeycloak {
 	

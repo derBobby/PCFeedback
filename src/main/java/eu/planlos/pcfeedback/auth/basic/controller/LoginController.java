@@ -11,7 +11,7 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.model.LoginFormContainer;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 
-@Profile("!KEYCLOAK")
+@Profile("!KC")
 @Controller
 public class LoginController {
 	

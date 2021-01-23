@@ -9,7 +9,6 @@ import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +21,10 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
+import eu.planlos.pcfeedback.config.RoleConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 
-@Profile("KEYCLOAK")
+@Profile("KC")
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
@@ -32,9 +32,8 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationKeycloak.class);
 
-	//TODO More elegant way? See RoleConfigurationKeycloak
-	@Value("${eu.planlos.pcfeedback.auth.keycloak.role.admin}")
-	private String adminRole;
+	@Autowired
+	private RoleConfiguration roleConfig;
 	
 	@PostConstruct
 	private void init() {
@@ -46,6 +45,8 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 
 		LOG.debug("running configureGlobal()");
 		KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
+		// SimpleAuthorityMapper is used to remove the ROLE_* conventions defined by
+		// Java so we can use only admin or user instead of ROLE_ADMIN and ROLE_USER
 		keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
 		auth.authenticationProvider(keycloakAuthenticationProvider);
 	}
@@ -80,7 +81,7 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 				.antMatchers(
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**")
-				.hasRole(adminRole)
+				.hasRole(roleConfig.getAdminRole())
 				
 				/*
 				 * LOGIN, LOGOUT

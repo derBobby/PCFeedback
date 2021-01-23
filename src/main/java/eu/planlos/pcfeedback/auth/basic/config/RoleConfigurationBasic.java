@@ -8,13 +8,13 @@ import org.springframework.context.annotation.Profile;
 
 import eu.planlos.pcfeedback.config.RoleConfiguration;
 
-@Profile("!KEYCLOAK")
+@Profile("!KC")
 @Configuration
 public class RoleConfigurationBasic {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(RoleConfigurationBasic.class);
 		
-	public static final String ROLE_ADMIN = "ADMIN";
+	private static final String ROLE_ADMIN = "ADMIN";
 	
 	@Bean(name = "roleConfiguration")
 	public RoleConfiguration roleConfiguration() {

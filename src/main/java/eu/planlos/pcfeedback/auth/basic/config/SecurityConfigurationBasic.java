@@ -15,15 +15,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import eu.planlos.pcfeedback.auth.basic.service.LoginAccessDeniedHandler;
 import eu.planlos.pcfeedback.auth.basic.service.UserDetailsServiceImpl;
+import eu.planlos.pcfeedback.config.RoleConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 
-@Profile("!KEYCLOAK")
+@Profile("!KC")
 //Schalter für SimpleAuthentication
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
 public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationBasic.class);
+	
+	@Autowired
+	private RoleConfiguration roleConfig;
 	
 	@Autowired
 	private UserDetailsServiceImpl userDetailService;
@@ -58,7 +62,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
 						
-					).hasAnyRole(RoleConfigurationBasic.ROLE_ADMIN)
+					).hasRole(roleConfig.getAdminRole())
 				
 				/*
 				 * PUBLIC

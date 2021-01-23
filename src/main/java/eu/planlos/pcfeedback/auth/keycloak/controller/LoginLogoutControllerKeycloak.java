@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 
-@Profile("KEYCLOAK")
+@Profile("KC")
 @Controller
 public class LoginLogoutControllerKeycloak {
 

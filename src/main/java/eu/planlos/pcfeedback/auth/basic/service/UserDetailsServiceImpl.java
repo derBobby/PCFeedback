@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Profile;
@@ -22,15 +23,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.auth.basic.config.RoleConfigurationBasic;
+import eu.planlos.pcfeedback.config.RoleConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 
-@Profile("!KEYCLOAK")
+@Profile("!KC")
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAware {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
+	@Autowired
+	private RoleConfiguration roleConfig;
+	
 	@Value("${eu.planlos.pcfeedback.auth.admin.user}")
 	private String adminUser;
 
@@ -52,8 +56,10 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 		
 		if(loginName.equals(adminUser)) {
 			
-			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, RoleConfigurationBasic.ROLE_ADMIN);
-			authoritiesList.add(new SimpleGrantedAuthority(RoleConfigurationBasic.ROLE_ADMIN));
+			String roleString = String.format("ROLE_%s", roleConfig.getAdminRole());
+			
+			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, roleString);
+			authoritiesList.add(new SimpleGrantedAuthority(roleString));
 			return new User(loginName, passwordEncoder.encode(adminPassword), authoritiesList);
 		}
 		
