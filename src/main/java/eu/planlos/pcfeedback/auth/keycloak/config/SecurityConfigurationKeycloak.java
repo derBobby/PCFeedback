@@ -81,15 +81,7 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 				.antMatchers(
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**")
-				.hasRole(roleConfig.getAdminRole())
-				
-				/*
-				 * LOGIN, LOGOUT
-				 */
-				.antMatchers(ApplicationPathHelper.URL_LOGIN_FORM)
-				.anonymous()
-//				.antMatchers(ApplicationPathHelper.URL_LOGOUT)
-//				.authenticated()
+					.hasRole(roleConfig.getAdminRole())
 				
 				/*
 				 * PUBLIC
@@ -100,14 +92,15 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 						"/img/**",
 						"/favicon.ico",
 						ApplicationPathHelper.URL_AREA_PUBLIC + "**")
-				.permitAll()
+					.permitAll()
+				.and()
 				
-			    .and()
+			    /*
+			     * LOGOUT
+			     */
 		        .logout()
 		        	.addLogoutHandler(keycloakLogoutHandler())
 		        	.logoutUrl(ApplicationPathHelper.URL_LOGOUT).permitAll()
-
-//		        	.logoutUrl("/sso/logout").permitAll()
 		        	.logoutSuccessUrl("/");
 	}
 }
