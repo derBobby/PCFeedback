@@ -7,20 +7,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import eu.planlos.pcfeedback.config.RoleConfiguration;
+import eu.planlos.pcfeedback.config.AuthConfiguration;
 
 @Profile("KC")
 @Configuration
-public class RoleConfigurationKeycloak {
+public class AuthConfigurationKeycloak {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(RoleConfigurationKeycloak.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AuthConfigurationKeycloak.class);
 	
+	private static final String URL_LOGOUT = "/sso/logout";
+
 	@Value("${eu.planlos.pcfeedback.auth.keycloak.role.admin}")
 	private String adminRole;
-
-	@Bean(name = "roleConfiguration")
-	public RoleConfiguration roleConfiguration() {
-		LOG.debug("Creating RoleConfiguration for Keycloak auth");
-		return new RoleConfiguration(adminRole);
+	
+	@Bean(name = "authConfiguration")
+	public AuthConfiguration authConfiguration() {
+		LOG.debug("Creating AuthConfiguration for Keycloak auth");
+		return new AuthConfiguration(adminRole, URL_LOGOUT);
 	}
 }

@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import eu.planlos.pcfeedback.auth.basic.service.LoginAccessDeniedHandler;
 import eu.planlos.pcfeedback.auth.basic.service.UserDetailsServiceImpl;
-import eu.planlos.pcfeedback.config.RoleConfiguration;
+import eu.planlos.pcfeedback.config.AuthConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 
 @Profile("!KC")
@@ -27,7 +27,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationBasic.class);
 	
 	@Autowired
-	private RoleConfiguration roleConfig;
+	private AuthConfiguration authConfig;
 	
 	@Autowired
 	private UserDetailsServiceImpl userDetailService;
@@ -62,7 +62,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
 						
-					).hasRole(roleConfig.getAdminRole())
+					).hasRole(authConfig.getAdminRole())
 				
 				/*
 				 * PUBLIC
@@ -101,7 +101,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 			 * Logout procedure
 			 */
 			.and().logout()
-				.logoutUrl(ApplicationPathHelper.URL_LOGOUT)
+				.logoutUrl(authConfig.getLogoutUrl())
 				.logoutSuccessUrl(ApplicationPathHelper.URL_HOME)
 				.invalidateHttpSession(true)
 				.clearAuthentication(true)

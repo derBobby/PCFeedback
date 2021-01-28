@@ -23,7 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.config.RoleConfiguration;
+import eu.planlos.pcfeedback.config.AuthConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 
 @Profile("!KC")
@@ -33,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 	private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
 	@Autowired
-	private RoleConfiguration roleConfig;
+	private AuthConfiguration authConfig;
 	
 	@Value("${eu.planlos.pcfeedback.auth.admin.user}")
 	private String adminUser;
@@ -56,7 +56,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 		
 		if(loginName.equals(adminUser)) {
 			
-			String roleString = String.format("ROLE_%s", roleConfig.getAdminRole());
+			String roleString = String.format("ROLE_%s", authConfig.getAdminRole());
 			
 			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, roleString);
 			authoritiesList.add(new SimpleGrantedAuthority(roleString));

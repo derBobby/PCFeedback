@@ -50,12 +50,12 @@
 				Feedback App
 			</a>
 	
-			<button sec:authorize="${hasRole(@roleConfiguration.getAdminRole())}" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
+			<button sec:authorize="${hasRole(@authConfiguration.getAdminRole())}" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			
 			<!-- collapsible part -->
-			<div sec:authorize="${hasRole(@roleConfiguration.getAdminRole())}" class="collapse navbar-collapse" id="anwNavbar">
+			<div sec:authorize="${hasRole(@authConfiguration.getAdminRole())}" class="collapse navbar-collapse" id="anwNavbar">
 				<!-- alignment to the right -->
 				<div class="navbar-nav ml-auto">
 	
@@ -65,7 +65,7 @@
 							<a class="nav-link" th:href="@{${URL_ADMIN_PROJECTS}}"><i class="fas fa-users"></i> Projekte</a>
 						</li>
 						
-						<form th:action="@{${URL_LOGOUT}}" method="POST">
+						<form th:action="@{${@authConfiguration.getLogoutUrl()}}" method="POST">
 							<button style="border: none; background: none" type="submit" class="nav-link active"><i class="fas fa-sign-out-alt"></i> Logout</button>
 						</form>
 						
