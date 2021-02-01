@@ -23,7 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.config.RoleConfiguration;
+import eu.planlos.pcfeedback.config.AuthConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 
 @Profile("!KC")
@@ -32,6 +32,8 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
+	private AuthConfiguration authConfiguration;
+
 	@Value("${eu.planlos.pcfeedback.auth.admin.user}")
 	private String adminUser;
 
@@ -39,12 +41,10 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 	private String adminPassword;
 	
 	private Environment environment;
-	
-	private RoleConfiguration roleConfiguration;
-	
+		
 	@Autowired
-	public UserDetailsServiceImpl(RoleConfiguration roleConfiguration) {
-		this.roleConfiguration = roleConfiguration;
+	public UserDetailsServiceImpl(AuthConfiguration authConfiguration) {
+		this.authConfiguration = authConfiguration;
 	}
 	
 	@Override
@@ -60,7 +60,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 		
 		if(loginName.equals(adminUser)) {
 			
-			String roleString = String.format("ROLE_%s", roleConfiguration.getAdminRole());
+			String roleString = String.format("ROLE_%s", authConfiguration.getAdminRole());
 			
 			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, roleString);
 			authoritiesList.add(new SimpleGrantedAuthority(roleString));

@@ -53,7 +53,6 @@ public class ModelFillerService implements EnvironmentAware {
 		model.addAttribute("URL_ADMIN_SHOWFEEDBACK", ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK); //TODO notwendig?
 		model.addAttribute("URL_ADMIN_EDITUITEXT", ApplicationPathHelper.URL_ADMIN_EDITUITEXT); //TODO notwendig?
 		model.addAttribute("URL_ADMIN_SHOWUSERAGENTS", ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS); //TODO notwendig?
-		model.addAttribute("URL_LOGOUT", ApplicationPathHelper.URL_LOGOUT);
 		
 		model.addAttribute("TIMENOW", ZonedDateTimeUtility.nice(ZonedDateTimeUtility.nowCET()));		
 		

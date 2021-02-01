@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import eu.planlos.pcfeedback.auth.basic.service.LoginAccessDeniedHandler;
 import eu.planlos.pcfeedback.auth.basic.service.UserDetailsServiceImpl;
-import eu.planlos.pcfeedback.config.RoleConfiguration;
+import eu.planlos.pcfeedback.config.AuthConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 
 @Profile("!KC")
@@ -24,15 +24,15 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationBasic.class);
 	
-	private RoleConfiguration roleConfiguration;
+	private AuthConfiguration authConfiguration;
 	
 	private UserDetailsServiceImpl userDetailService;
 	
 	private LoginAccessDeniedHandler deniedHandler;
 	
 	@Autowired
-	public SecurityConfigurationBasic(RoleConfiguration roleConfiguration,	UserDetailsServiceImpl userDetailService, LoginAccessDeniedHandler deniedHandler) {
-		this.roleConfiguration = roleConfiguration;
+	public SecurityConfigurationBasic(AuthConfiguration authConfiguration,	UserDetailsServiceImpl userDetailService, LoginAccessDeniedHandler deniedHandler) {
+		this.authConfiguration = authConfiguration;
 		this.userDetailService = userDetailService;
 		this.deniedHandler = deniedHandler;
 	}
@@ -61,7 +61,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
 						
-					).hasRole(roleConfiguration.getAdminRole())
+					).hasRole(authConfiguration.getAdminRole())
 				
 				/*
 				 * PUBLIC
@@ -100,7 +100,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 			 * Logout procedure
 			 */
 			.and().logout()
-				.logoutUrl(ApplicationPathHelper.URL_LOGOUT)
+				.logoutUrl(authConfiguration.getLogoutUrl())
 				.logoutSuccessUrl(ApplicationPathHelper.URL_HOME)
 				.invalidateHttpSession(true)
 				.clearAuthentication(true)

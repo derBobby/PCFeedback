@@ -1,42 +1,52 @@
 package eu.planlos.pcfeedback.auth.keycloak.config;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
+import org.keycloak.adapters.springsecurity.filter.KeycloakSecurityContextRequestFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 
-import eu.planlos.pcfeedback.config.RoleConfiguration;
+import eu.planlos.pcfeedback.config.AuthConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 
 @Profile("KC")
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
-class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter {
+class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter implements EnvironmentAware {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationKeycloak.class);
 
-	private RoleConfiguration roleConfiguration;
+	private AuthConfiguration authConfiguration;
 
-	@Autowired
-	public SecurityConfigurationKeycloak(RoleConfiguration roleConfiguration) {
-		this.roleConfiguration = roleConfiguration;
+	private Environment environment;
+	
+	public SecurityConfigurationKeycloak(AuthConfiguration authConfiguration) {
+		this.authConfiguration = authConfiguration;
 	}
 	
 	@PostConstruct
@@ -70,31 +80,54 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		LOG.debug("running configure()");
-		
-		super.configure(http);
+		LOG.debug("running configure()");		
 
-		// H2-Console uses iFrame
-		http.headers().frameOptions().disable();
+        /*
+         * Enable iFrame for H2-console
+         */
+        List<String> profiles = Arrays.asList(environment.getActiveProfiles());
+        if(profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
+        	// H2-Console uses iFrame
+        	http.headers().frameOptions().disable();
+        }
 
-		http.authorizeRequests()
+//		super.configure(http);
+
+        http
+        	.csrf()
+        		.requireCsrfProtectionMatcher(keycloakCsrfRequestMatcher())
+        	.and()
+        		.sessionManagement()
+				.sessionAuthenticationStrategy(sessionAuthenticationStrategy())
+			.and()
+				.addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class)
+				.addFilterBefore(keycloakAuthenticationProcessingFilter(), LogoutFilter.class)
+				.addFilterAfter(keycloakSecurityContextRequestFilter(), SecurityContextHolderAwareRequestFilter.class)
+				.addFilterAfter(keycloakAuthenticatedActionsRequestFilter(), KeycloakSecurityContextRequestFilter.class)
+				.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
+			/*
+			 * LOGOUT
+			 */
+			.and()
+				.logout()
+					.addLogoutHandler(keycloakLogoutHandler())
+					.logoutUrl(authConfiguration.getLogoutUrl()).permitAll()
+					.logoutSuccessUrl("/")
+
+			.and()
+				.authorizeRequests()
 
 				/*
 				 * ADMIN
 				 */
 				.antMatchers(
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
-						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**")
-				.hasRole(roleConfiguration.getAdminRole())
-				
-				/*
-				 * LOGIN, LOGOUT
-				 */
-				.antMatchers(ApplicationPathHelper.URL_LOGIN_FORM)
-				.anonymous()
-				.antMatchers(ApplicationPathHelper.URL_LOGOUT)
-				.authenticated()
-				
+						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
+					)
+				.hasRole(
+						authConfiguration.getAdminRole()
+					)
+
 				/*
 				 * PUBLIC
 				 */
@@ -104,12 +137,11 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 						"/img/**",
 						"/favicon.ico",
 						ApplicationPathHelper.URL_AREA_PUBLIC + "**")
-				.permitAll()
-				
-			    .and()
-		        .logout()
-		        	.addLogoutHandler(keycloakLogoutHandler())
-		        	.logoutUrl("/sso/logout").permitAll()
-		        	.logoutSuccessUrl("/");
+				.permitAll();
+	}
+
+	@Override
+	public void setEnvironment(Environment environment) {
+		this.environment = environment;
 	}
 }

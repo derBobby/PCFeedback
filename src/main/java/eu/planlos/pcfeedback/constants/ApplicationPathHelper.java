@@ -56,7 +56,6 @@ public class ApplicationPathHelper {
 	 */
 	public static final String URL_LOGIN_FORM					= URL_AREA_PUBLIC + "loginform";
 	public static final String URL_LOGIN						= URL_AREA_PUBLIC + "login";
-	public static final String URL_LOGOUT						= URL_AREA_ADMIN + "logout";
 	public static final String RES_LOGIN_FORM					= "loginform";
 	
 
