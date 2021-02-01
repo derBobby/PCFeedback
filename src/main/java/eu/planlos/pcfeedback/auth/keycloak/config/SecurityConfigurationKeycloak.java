@@ -43,10 +43,8 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 
 	private AuthConfiguration authConfiguration;
 
-	@Autowired
-	private AuthConfiguration authConfig;
-
 	private Environment environment;
+	
 	public SecurityConfigurationKeycloak(AuthConfiguration authConfiguration) {
 		this.authConfiguration = authConfiguration;
 	}
@@ -113,7 +111,7 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 			.and()
 				.logout()
 					.addLogoutHandler(keycloakLogoutHandler())
-					.logoutUrl(authConfig.getLogoutUrl()).permitAll()
+					.logoutUrl(authConfiguration.getLogoutUrl()).permitAll()
 					.logoutSuccessUrl("/")
 
 			.and()
@@ -127,7 +125,7 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
 					)
 				.hasRole(
-						authConfig.getAdminRole()
+						authConfiguration.getAdminRole()
 					)
 
 				/*
