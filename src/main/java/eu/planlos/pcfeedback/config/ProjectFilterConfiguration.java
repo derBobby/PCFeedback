@@ -19,8 +19,12 @@ public class ProjectFilterConfiguration {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectFilterConfiguration.class);
 
-	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired
+	public ProjectFilterConfiguration(ProjectService projectService) {
+		this.projectService = projectService;
+	}
 	
 	@Bean
 	public FilterRegistrationBean<RequestResponseProjectFilter> projectFilter(){

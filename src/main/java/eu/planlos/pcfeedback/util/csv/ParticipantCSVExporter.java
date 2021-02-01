@@ -1,15 +1,18 @@
-package eu.planlos.pcfeedback.service.csv;
+package eu.planlos.pcfeedback.util.csv;
 
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.db.Participant;
 
 public class ParticipantCSVExporter implements ICSVExporter {
 
-//	private static final Logger LOG = LoggerFactory.getLogger(ParticipantCSVExporter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ParticipantCSVExporter.class);
 
 	private static final String[] FILE_PARTICIPANT_HEADER = { "Vorname","Nachname","Geschlecht","Teilnahmezeitpunkt" };
 

@@ -20,9 +20,13 @@ public class ProjectService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectService.class);
 
-	@Autowired
 	private ProjectRepository projectRepo;
 
+	@Autowired
+	public ProjectService(ProjectRepository projectRepo) {
+		this.projectRepo = projectRepo;
+	}
+	
 	//TODO Test this
 	public void save(Project project) throws ProjectAlreadyExistingException {
 		try {

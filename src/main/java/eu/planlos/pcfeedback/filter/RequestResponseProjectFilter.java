@@ -29,7 +29,6 @@ public class RequestResponseProjectFilter implements Filter {
 		this.projectService = projectService;
 	}
 	
-
 	/**
 	 *  Filter reads project from session.</br>
 	 *  If it is empty it will redirect to Home.

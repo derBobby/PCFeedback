@@ -17,8 +17,12 @@ public class ParticipationResultService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ParticipationResultService.class);
 
-	@Autowired
 	private ParticipationResultRepository prRepo;
+
+	@Autowired
+	public ParticipationResultService(ParticipationResultRepository prRepo) {
+		this.prRepo = prRepo;
+	}
 	
 	public ParticipationResult findByParticipant(Participant participant) {
 		return prRepo.findByParticipant(participant);

@@ -26,14 +26,16 @@ public class ParticipantController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ParticipantController.class);
 	
-	@Autowired
 	private ModelFillerService mfs;
-
-	@Autowired
 	private ParticipationService eps;
-
-	@Autowired
 	private ParticipantService participantService;
+	
+	@Autowired
+	public ParticipantController(ModelFillerService mfs, ParticipationService eps, ParticipantService participantService) {
+		this.mfs = mfs;
+		this.eps = eps;
+		this.participantService = participantService;
+	}
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITPARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
 	public String editParticipant(@PathVariable Long idParticipant, Model model) throws ParticipantNotFoundException {

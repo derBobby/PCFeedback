@@ -28,14 +28,17 @@ public class ProjectHomeController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectHomeController.class);
 
-	@Autowired
 	private ModelFillerService mfs;
-	
-	@Autowired
 	private ProjectService projectService;
+	private UiTextService uts;
 	
 	@Autowired
-	private UiTextService uts;
+	public ProjectHomeController(ModelFillerService mfs, ProjectService projectService, UiTextService uts) {
+		this.mfs = mfs;
+		this.projectService = projectService;
+		this.uts = uts;
+	}
+	
 	/**
 	 * Sets chosen project in session and load project home page</br>
 	 * Kind of <b>Step 0</b> in the feedback process.

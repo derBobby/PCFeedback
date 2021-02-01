@@ -29,28 +29,30 @@ import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.ProjectService;
-import eu.planlos.pcfeedback.service.RatingQuestionEvaluator;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
+import eu.planlos.pcfeedback.util.RatingQuestionEvaluator;
 
 @Controller
 public class ResultsController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ResultsController.class);
 
-	@Autowired
 	private ParticipantService pService;
-	
-	@Autowired
 	private RatingQuestionService rqService;
-	
-	@Autowired
 	private ProjectService psService;
-	
-	@Autowired
 	private ParticipationResultService prService;
+	private ModelFillerService mfs;
 	
 	@Autowired
-	private ModelFillerService mfs;
+	public ResultsController(ParticipantService pService, RatingQuestionService rqService,
+			ProjectService psService, ParticipationResultService prService,
+			ModelFillerService mfs) {
+		this.pService = pService;
+		this.rqService = rqService;
+		this.psService = psService;
+		this.prService = prService;
+		this.mfs = mfs;
+	}
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWFEEDBACK + "{projectName}", method = RequestMethod.GET)
 	public String showResults(ServletResponse response, @PathVariable(name = "projectName") String projectName, Model model) throws RatingQuestionsNotExistentException, IOException {

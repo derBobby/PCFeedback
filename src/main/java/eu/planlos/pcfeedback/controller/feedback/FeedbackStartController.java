@@ -36,15 +36,17 @@ public class FeedbackStartController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FeedbackStartController.class);
 
-	@Autowired
 	private ModelFillerService mfs;
-
-	@Autowired
 	private ParticipantService participantService;
+	private UiTextService uts;
 	
 	@Autowired
-	private UiTextService uts;
-
+	public FeedbackStartController(ModelFillerService mfs, ParticipantService participantService, UiTextService uts) {
+		this.mfs = mfs;
+		this.participantService = participantService;
+		this.uts = uts;
+	}
+	
 	/**
 	 * Creates form for participant with empty participant object
 	 * 

@@ -26,18 +26,21 @@ public class MailService implements EnvironmentAware {
 
 	private static final String MIME_TYPE = "text/html; charset=utf-8";
 	
-	@Autowired
-	private MailSender javaMailSender;
+	private MailSender mailSender;
+	private MimeMessage preconfiguredMessage;
 
 	@Autowired
-	private MimeMessage preconfiguredMessage;
+	public MailService(MailSender mailSender, MimeMessage preconfiguredMessage) {
+		this.mailSender=mailSender;
+		this.preconfiguredMessage=preconfiguredMessage;
+	}
 	
 	private Environment environment;
 	
 	@Async
 	public void notifyParticipation(Project project) {
 		
-		if(! javaMailSender.isActive()) {
+		if(! mailSender.isActive()) {
 			logNotSending();
 			return;
 		}
@@ -48,7 +51,7 @@ public class MailService implements EnvironmentAware {
 			message.setSubject(buildSubject("PCFeedback - Update Benachrichtigung"));
 			message.setContent(String.format("Neue Teilnahme an Umfrage '%s'", project.getProjectName()), MIME_TYPE);
 						
-			javaMailSender.send(message);
+			mailSender.send(message);
 			logMailOK();
 			
 		} catch (MessagingException e) {
@@ -60,7 +63,7 @@ public class MailService implements EnvironmentAware {
 	@Async
 	private void notifyStart() {
 				
-		if(! javaMailSender.isActive()) {
+		if(! mailSender.isActive()) {
 			logNotSending();
 			return;
 		}
@@ -71,7 +74,7 @@ public class MailService implements EnvironmentAware {
 			message.setSubject(buildSubject("PCFeedback - Server gestartet"));
 			message.setContent(String.format(""), MIME_TYPE);
 		
-			javaMailSender.send(message);
+			mailSender.send(message);
 			logMailOK();
 			
 		} catch (MessagingException e) {

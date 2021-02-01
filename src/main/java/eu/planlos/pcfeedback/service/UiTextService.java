@@ -21,8 +21,12 @@ public class UiTextService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UiTextService.class);
 	
-	@Autowired
 	private UiTextRepository uiTextRepo;
+	
+	@Autowired
+	public UiTextService(UiTextRepository uiTextRepo) {
+		this.uiTextRepo = uiTextRepo;
+	}
 	
 	public void updateText(Project project, UiTextKey uiTextKey, String text) {
 		

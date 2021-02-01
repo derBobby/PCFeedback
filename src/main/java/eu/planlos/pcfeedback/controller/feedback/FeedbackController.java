@@ -52,27 +52,28 @@ public class FeedbackController {
 	private static final String ERROR_TEMPLATE = "feedback_error";
 	
 	private static final int FREETEXTMAXLENGTH = 2000;
-	
-	@Autowired
+
 	private ModelFillerService mfs;
-	
-	@Autowired
 	private RatingQuestionService ratingQuestionService;
-	
-	@Autowired
 	private ParticipantService participantService;
-	
-	@Autowired
 	private FeedbackValidationService validationService;
+	private ParticipationResultService participationResultService;
+	private MailService mailService;
+	private UiTextService uts;
 	
 	@Autowired
-	private ParticipationResultService participationResultService;
-
-	@Autowired
-	private MailService mailService;
-
-	@Autowired
-	private UiTextService uts;
+	public FeedbackController(ModelFillerService mfs, RatingQuestionService	ratingQuestionService,
+			ParticipantService participantService, FeedbackValidationService validationService,
+			ParticipationResultService participationResultService, MailService mailService,
+			UiTextService uts) {
+		this.mfs = mfs;
+		this.ratingQuestionService = ratingQuestionService;
+		this.participantService = participantService;
+		this.validationService = validationService;
+		this.participationResultService = participationResultService;
+		this.mailService = mailService;
+		this.uts = uts;
+	}
 	
 	/**
 	 * User is redirected to this controller after successfully writing participant info to session.

@@ -15,8 +15,12 @@ import eu.planlos.pcfeedback.service.ModelFillerService;
 @Controller
 public class LoginController {
 	
-	@Autowired
 	private ModelFillerService mfs;
+	
+	@Autowired
+	public LoginController(ModelFillerService mfs) {
+		this.mfs = mfs;
+	}
 	
 	/**
 	 * Provides the login form page with login container object

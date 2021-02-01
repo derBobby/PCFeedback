@@ -25,14 +25,17 @@ import eu.planlos.pcfeedback.repository.ParticipantRepository;
 public class ParticipantService implements EnvironmentAware {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ParticipantService.class);
-
 	private static final int WINNER_COUNT = 3;
 	
-	@Autowired
 	private ParticipantRepository participantRepo;
 
 	private Environment environment;
 
+	@Autowired
+	public ParticipantService(ParticipantRepository participantRepository) {
+		this.participantRepo = participantRepository;
+	}
+	
 	public void saveEdited(Participant participant) throws ParticipantNotFoundException {
 		
 		if(participant.getIdParticipant() == null) {

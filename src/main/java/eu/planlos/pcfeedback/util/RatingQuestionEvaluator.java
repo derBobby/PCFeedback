@@ -1,4 +1,4 @@
-package eu.planlos.pcfeedback.service;
+package eu.planlos.pcfeedback.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

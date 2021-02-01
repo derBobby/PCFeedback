@@ -23,30 +23,31 @@ import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.ProjectService;
-import eu.planlos.pcfeedback.service.RatingQuestionEvaluator;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
-import eu.planlos.pcfeedback.service.csv.FreeTextRecordCSVExporter;
-import eu.planlos.pcfeedback.service.csv.ICSVExporter;
-import eu.planlos.pcfeedback.service.csv.ParticipantCSVExporter;
-import eu.planlos.pcfeedback.service.csv.RatingQuestionCSVExporter;
+import eu.planlos.pcfeedback.util.RatingQuestionEvaluator;
+import eu.planlos.pcfeedback.util.csv.FreeTextRecordCSVExporter;
+import eu.planlos.pcfeedback.util.csv.ICSVExporter;
+import eu.planlos.pcfeedback.util.csv.ParticipantCSVExporter;
+import eu.planlos.pcfeedback.util.csv.RatingQuestionCSVExporter;
 
 @Controller
 public class CSVDownloadController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CSVDownloadController.class);
 	
-	@Autowired
 	private ProjectService pService;
-	
-	@Autowired
 	private ParticipantService participantService;
-
-	@Autowired
 	private RatingQuestionService rqService;
-	
-	@Autowired
 	private ParticipationResultService prService;
 
+	@Autowired
+	public CSVDownloadController(ProjectService pService, ParticipantService participantService, RatingQuestionService rqService, ParticipationResultService prService) {
+		this.pService = pService;
+		this.participantService = participantService;
+		this.rqService = rqService;
+		this.prService = prService;
+	}
+	
 	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVPARTICIPANTS + "{idProject}")
 	@ResponseBody
 	public void participantsToCSV(HttpServletResponse response, @PathVariable("idProject") Long idProject) throws IOException {

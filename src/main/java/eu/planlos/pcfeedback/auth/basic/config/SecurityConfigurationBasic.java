@@ -19,24 +19,23 @@ import eu.planlos.pcfeedback.config.AuthConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 
 @Profile("!KC")
-//Schalter für SimpleAuthentication
-//@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
 public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationBasic.class);
 	
-	@Autowired
-	private AuthConfiguration authConfig;
+	private AuthConfiguration authConfiguration;
 	
-	@Autowired
 	private UserDetailsServiceImpl userDetailService;
-
-//	@Autowired
-//	private LoginAuthenticationSuccessHandler successHandler;
+	
+	private LoginAccessDeniedHandler deniedHandler;
 	
 	@Autowired
-	private LoginAccessDeniedHandler deniedHandler;
+	public SecurityConfigurationBasic(AuthConfiguration authConfiguration,	UserDetailsServiceImpl userDetailService, LoginAccessDeniedHandler deniedHandler) {
+		this.authConfiguration = authConfiguration;
+		this.userDetailService = userDetailService;
+		this.deniedHandler = deniedHandler;
+	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -62,7 +61,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 						ApplicationPathHelper.URL_AREA_ADMIN + "**",
 						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
 						
-					).hasRole(authConfig.getAdminRole())
+					).hasRole(authConfiguration.getAdminRole())
 				
 				/*
 				 * PUBLIC
@@ -101,7 +100,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 			 * Logout procedure
 			 */
 			.and().logout()
-				.logoutUrl(authConfig.getLogoutUrl())
+				.logoutUrl(authConfiguration.getLogoutUrl())
 				.logoutSuccessUrl(ApplicationPathHelper.URL_HOME)
 				.invalidateHttpSession(true)
 				.clearAuthentication(true)

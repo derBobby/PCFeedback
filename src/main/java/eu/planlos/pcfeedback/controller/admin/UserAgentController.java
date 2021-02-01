@@ -23,14 +23,16 @@ public class UserAgentController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserAgentController.class);
 	
-	@Autowired
 	private ModelFillerService mfs;
+	private ProjectService projectService;
+	private ParticipantService participantService;
 	
 	@Autowired
-	private ProjectService projectService;
-
-	@Autowired
-	private ParticipantService participantService;
+	public UserAgentController(ProjectService projectService, ParticipantService participantService, ModelFillerService mfs) {
+		this.mfs = mfs;
+		this.projectService = projectService;
+		this.participantService = participantService;
+	}
 	
 	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_SHOWUSERAGENTS + "{idProject}", method = RequestMethod.GET)
 	public String showUserAgents(Model model, @PathVariable("idProject") Long idProject) {

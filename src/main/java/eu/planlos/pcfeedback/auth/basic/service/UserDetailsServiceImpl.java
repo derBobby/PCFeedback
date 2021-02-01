@@ -32,9 +32,8 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
-	@Autowired
-	private AuthConfiguration authConfig;
-	
+	private AuthConfiguration authConfiguration;
+
 	@Value("${eu.planlos.pcfeedback.auth.admin.user}")
 	private String adminUser;
 
@@ -42,6 +41,11 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 	private String adminPassword;
 	
 	private Environment environment;
+		
+	@Autowired
+	public UserDetailsServiceImpl(AuthConfiguration authConfiguration) {
+		this.authConfiguration = authConfiguration;
+	}
 	
 	@Override
 	/**
@@ -56,7 +60,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 		
 		if(loginName.equals(adminUser)) {
 			
-			String roleString = String.format("ROLE_%s", authConfig.getAdminRole());
+			String roleString = String.format("ROLE_%s", authConfiguration.getAdminRole());
 			
 			LOG.debug("Erstelle Benutzer aus Konfiguration: {} ({})", loginName, roleString);
 			authoritiesList.add(new SimpleGrantedAuthority(roleString));

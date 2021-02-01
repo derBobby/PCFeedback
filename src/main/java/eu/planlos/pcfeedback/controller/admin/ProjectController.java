@@ -39,26 +39,26 @@ public class ProjectController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectController.class);
 
-	@Autowired
 	private ProjectService projectService;
-
-	@Autowired
 	private ParticipantService participantService;
-
-	@Autowired
 	private ParticipationResultService prs;
-	
-	@Autowired
 	private UiTextService uts;
+	private ModelFillerService mfs;
+	private RatingObjectService ros;
+	private RatingQuestionService rqs;
 	
 	@Autowired
-	private ModelFillerService mfs;
-
-	@Autowired
-	private RatingObjectService ros;
-
-	@Autowired
-	private RatingQuestionService rqs;
+	public ProjectController(ProjectService projectService, ParticipantService participantService,
+			ParticipationResultService prs, UiTextService uts,
+			ModelFillerService mfs, RatingObjectService ros, RatingQuestionService rqs) {
+		this.projectService = projectService;
+		this.participantService = participantService;
+		this.prs = prs;
+		this.uts = uts;
+		this.mfs = mfs;
+		this.ros = ros;
+		this.rqs = rqs;
+	}
 	
 	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTS)
 	public String listProjects(Model model) {

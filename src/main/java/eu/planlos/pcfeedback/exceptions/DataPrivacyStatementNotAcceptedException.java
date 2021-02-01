@@ -1,12 +1,7 @@
 package eu.planlos.pcfeedback.exceptions;
 
+@SuppressWarnings("serial")
 public class DataPrivacyStatementNotAcceptedException extends Exception {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6692823838499635737L;
-
 	public DataPrivacyStatementNotAcceptedException(String message) {
 		super(message);
 	}

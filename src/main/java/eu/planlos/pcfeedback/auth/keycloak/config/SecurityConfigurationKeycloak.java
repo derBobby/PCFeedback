@@ -41,10 +41,15 @@ class SecurityConfigurationKeycloak extends KeycloakWebSecurityConfigurerAdapter
 
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationKeycloak.class);
 
+	private AuthConfiguration authConfiguration;
+
 	@Autowired
 	private AuthConfiguration authConfig;
 
 	private Environment environment;
+	public SecurityConfigurationKeycloak(AuthConfiguration authConfiguration) {
+		this.authConfiguration = authConfiguration;
+	}
 	
 	@PostConstruct
 	private void init() {

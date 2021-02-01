@@ -19,11 +19,6 @@ public interface RatingQuestionRepository extends CrudRepository<RatingQuestion,
 	public List<RatingQuestion> findAllByIdRatingQuestionIn(List<Integer> questionIds);
 	public RatingQuestion findFirstByProjectAndCountVotedGreaterThanAndGenderOrderByCountVotedAsc(Project project, int chosenCount, Gender gender);
 	
-//	@Query("SELECT R "
-//			+ "FROM RatingQuestion R "
-//			+ "WHERE R.countVoted = ?1 "
-//			+ "AND R.gender = ?2 "
-//		)
 	public List<RatingQuestion> findByProjectAndGenderAndCountVoted(Project project, Gender gender, int lowestVotedCount);
 	
 	@Modifying
