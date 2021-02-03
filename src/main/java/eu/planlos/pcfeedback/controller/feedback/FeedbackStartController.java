@@ -154,6 +154,9 @@ public class FeedbackStartController {
 
 	private String backToForm(Model model, Project project) {
 		UiText uiText = uts.getUiText(project, UiTextKey.MSG_FEEDBACK_START);
+		Participant participant = (Participant) model.getAttribute("participant");
+		participant.setDataPrivacyStatementAccepted(false);
+		participant.setPriceGameStatementAccepted(false);
 		mfs.fillUiText(model, uiText);
 		mfs.fillGlobal(model);
 		return ApplicationPathHelper.RES_FEEDBACK_START;		
