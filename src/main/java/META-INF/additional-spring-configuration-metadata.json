@@ -10,13 +10,8 @@
     "description": "Username which is used to authenticate the admin user"
   },
   {
-    "name": "eu.planlos.pcfeedback.auth.keycloak.role.admin",
-    "type": "java.lang.String",
-    "description": "Role from Keycloak to use as admin user role in the application"
-  },
-  {
     "name": "eu.planlos.pcfeedback.mail.active",
-    "type": "java.lang.boolean",
+    "type": "java.lang.Boolean",
     "description": "JavaMailSender configuration can be enabled by setting this to true. If true all following spring.mail properties must be set"
   }
 ]}
