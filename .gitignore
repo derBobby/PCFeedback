@@ -30,3 +30,5 @@ HELP.md
 /PCFeedback.log
 *.gz
 /.pmd
+
+admin.properties
