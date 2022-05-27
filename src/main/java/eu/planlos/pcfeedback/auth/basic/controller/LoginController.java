@@ -11,22 +11,20 @@ import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 import eu.planlos.pcfeedback.model.LoginFormContainer;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 
-@Profile("!KC")
 @Controller
 public class LoginController {
 	
-	private ModelFillerService mfs;
-	
-	@Autowired
+	private final ModelFillerService mfs;
+
 	public LoginController(ModelFillerService mfs) {
 		this.mfs = mfs;
 	}
 	
 	/**
 	 * Provides the login form page with login container object
-	 * @param model
-	 * @param error
-	 * @return
+	 * @param model Spring web model
+	 * @param error Flag if errorous login request
+	 * @return name of template
 	 */
 	@GetMapping(path = ApplicationPathHelper.URL_LOGIN_FORM)
 	public String loginpage(Model model, @RequestParam(defaultValue = "false") boolean error) {

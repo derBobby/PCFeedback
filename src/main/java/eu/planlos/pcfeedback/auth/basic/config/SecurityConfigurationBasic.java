@@ -18,19 +18,17 @@ import eu.planlos.pcfeedback.auth.basic.service.UserDetailsServiceImpl;
 import eu.planlos.pcfeedback.config.AuthConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
 
-@Profile("!KC")
 @EnableWebSecurity
 public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationBasic.class);
 	
-	private AuthConfiguration authConfiguration;
+	private final AuthConfiguration authConfiguration;
 	
-	private UserDetailsServiceImpl userDetailService;
+	private final UserDetailsServiceImpl userDetailService;
 	
-	private LoginAccessDeniedHandler deniedHandler;
-	
-	@Autowired
+	private final LoginAccessDeniedHandler deniedHandler;
+
 	public SecurityConfigurationBasic(AuthConfiguration authConfiguration,	UserDetailsServiceImpl userDetailService, LoginAccessDeniedHandler deniedHandler) {
 		this.authConfiguration = authConfiguration;
 		this.userDetailService = userDetailService;

@@ -26,13 +26,12 @@ import org.springframework.stereotype.Service;
 import eu.planlos.pcfeedback.config.AuthConfiguration;
 import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
 
-@Profile("!KC")
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAware {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
-	private AuthConfiguration authConfiguration;
+	private final AuthConfiguration authConfiguration;
 
 	@Value("${eu.planlos.pcfeedback.auth.admin.user}")
 	private String adminUser;
@@ -41,8 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, EnvironmentAw
 	private String adminPassword;
 	
 	private Environment environment;
-		
-	@Autowired
+
 	public UserDetailsServiceImpl(AuthConfiguration authConfiguration) {
 		this.authConfiguration = authConfiguration;
 	}

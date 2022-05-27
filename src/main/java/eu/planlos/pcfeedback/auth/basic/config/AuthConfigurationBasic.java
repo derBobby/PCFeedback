@@ -8,12 +8,10 @@ import org.springframework.context.annotation.Profile;
 
 import eu.planlos.pcfeedback.config.AuthConfiguration;
 
-@Profile("!KC")
 @Configuration
 public class AuthConfigurationBasic {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(AuthConfigurationBasic.class);
-
 	private static final String ROLE_ADMIN = "ADMIN";
 	private static final String URL_LOGOUT = "/admin/logout";
 	
