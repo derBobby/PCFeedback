@@ -2,6 +2,7 @@ package eu.planlos.pcfeedback.service;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +13,12 @@ import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.repository.ParticipationResultRepository;
 
+@Slf4j
 @Service
 public class ParticipationResultService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ParticipationResultService.class);
-
 	private ParticipationResultRepository prRepo;
 
-	@Autowired
 	public ParticipationResultService(ParticipationResultRepository prRepo) {
 		this.prRepo = prRepo;
 	}
@@ -40,7 +39,7 @@ public class ParticipationResultService {
 	 * Deletes all ParticipantResult objects from DB
 	 */
 	public void resetDB() {
-		LOG.debug("RESET: ParticipantResult");
+		log.debug("RESET: ParticipantResult");
 		prRepo.deleteAll();
 	}
 

@@ -1,5 +1,9 @@
 package eu.planlos.pcfeedback.model.db;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -15,6 +19,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 public class ParticipationResult {
 	
@@ -38,9 +45,6 @@ public class ParticipationResult {
 	@NotNull
 	@JoinColumn(name="project", nullable=false)
 	private Project project;
-
-	public ParticipationResult() {
-	}
 	
 	public ParticipationResult(Project project, Participant participant, Map<Long, Integer> feedbackMap, String freeText) {
 		this.project = project;
@@ -49,34 +53,6 @@ public class ParticipationResult {
 		this.freeText = freeText;
 	}
 	
-	public long getIdParticipationResult() {
-		return idParticipationResult;
-	}
-
-	public void setIdParticipationResult(long idParticipationResult) {
-		this.idParticipationResult = idParticipationResult;
-	}
-
-	public void setFeedbackMap(Map<Long, Integer> feedbackMap) {
-		this.feedbackMap = feedbackMap;		
-	}
-	
-	public Map<Long, Integer> getFeedbackMap() {
-		return feedbackMap;
-	}
-
-	public Participant getParticipant() {
-		return participant;
-	}
-	
-	public String getFreeText() {
-		return freeText;
-	}
-
-	public void setFreeText(String freeText) {
-		this.freeText = freeText;
-	}
-
 	public String printKeyList() {
 		
 		Map<Long, Integer> sortedMap = new TreeMap<>(feedbackMap);

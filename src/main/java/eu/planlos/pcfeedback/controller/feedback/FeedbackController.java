@@ -9,9 +9,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,15 +17,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
-import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
-import eu.planlos.pcfeedback.constants.SessionAttributeHelper;
+import eu.planlos.pcfeedback.constants.ApplicationPaths;
+import eu.planlos.pcfeedback.constants.ApplicationSessionAttributes;
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.NoFeedbackException;
 import eu.planlos.pcfeedback.exceptions.ParticipantAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
-import eu.planlos.pcfeedback.model.FeedbackContainer;
+import eu.planlos.pcfeedback.model.FeedbackDTO;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Participant;
@@ -35,7 +32,6 @@ import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.model.db.UiText;
-import eu.planlos.pcfeedback.service.FeedbackValidationService;
 import eu.planlos.pcfeedback.service.MailService;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 import eu.planlos.pcfeedback.service.ParticipantService;
@@ -43,33 +39,29 @@ import eu.planlos.pcfeedback.service.ParticipationResultService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 import eu.planlos.pcfeedback.service.UiTextService;
 
+
+@Slf4j
 @Controller
-@SessionAttributes(names = {SessionAttributeHelper.PARTICIPANT, SessionAttributeHelper.PROJECT, SessionAttributeHelper.FEEDBACK})
+@org.springframework.web.bind.annotation.SessionAttributes(names = {ApplicationSessionAttributes.PARTICIPANT, ApplicationSessionAttributes.PROJECT, ApplicationSessionAttributes.FEEDBACK})
 public class FeedbackController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FeedbackController.class);
-	
 	private static final String ERROR_TEMPLATE = "feedback_error";
 	
 	private static final int FREETEXTMAXLENGTH = 2000;
 
-	private ModelFillerService mfs;
-	private RatingQuestionService ratingQuestionService;
-	private ParticipantService participantService;
-	private FeedbackValidationService validationService;
-	private ParticipationResultService participationResultService;
-	private MailService mailService;
-	private UiTextService uts;
-	
-	@Autowired
+	private final ModelFillerService mfs;
+	private final RatingQuestionService ratingQuestionService;
+	private final ParticipantService participantService;
+	private final ParticipationResultService participationResultService;
+	private final MailService mailService;
+	private final UiTextService uts;
+
 	public FeedbackController(ModelFillerService mfs, RatingQuestionService	ratingQuestionService,
-			ParticipantService participantService, FeedbackValidationService validationService,
-			ParticipationResultService participationResultService, MailService mailService,
+			ParticipantService participantService, ParticipationResultService participationResultService, MailService mailService,
 			UiTextService uts) {
 		this.mfs = mfs;
 		this.ratingQuestionService = ratingQuestionService;
 		this.participantService = participantService;
-		this.validationService = validationService;
 		this.participationResultService = participationResultService;
 		this.mailService = mailService;
 		this.uts = uts;
@@ -81,21 +73,20 @@ public class FeedbackController {
 	 * @param model
 	 * @param project
 	 * @param participant
-	 * @param session
 	 * @return template to load
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_QUESTION)
+	@RequestMapping(path = ApplicationPaths.URL_FEEDBACK_QUESTION)
 	public String feedback(Model model,
-			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
-			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant) {
+			@ModelAttribute(ApplicationSessionAttributes.PROJECT) Project project,
+			@ModelAttribute(ApplicationSessionAttributes.PARTICIPANT) Participant participant) {
 		
 		//TODO ParticipantFilter?
 		if(participant == null) {
-			LOG.debug("User tried to access feedback without entering participant details");
-			return "redirect:" + ApplicationPathHelper.URL_FEEDBACK_START;
+			log.debug("User tried to access feedback without entering participant details");
+			return "redirect:" + ApplicationPaths.URL_FEEDBACK_START;
 		}
 		
-		LOG.debug("Participant: {}", participant.toString());
+		log.debug("Participant: {}", participant.toString());
 		
 		Gender gender = participant.getGender();
 		List<RatingQuestion> ratingQuestionList = new ArrayList<>();		
@@ -103,8 +94,8 @@ public class FeedbackController {
 			ratingQuestionService.addRatingQuestionsForProjectAndGenderToList(ratingQuestionList, project, gender);
 			
 		} catch (RatingQuestionsNotExistentException e) {
-			LOG.error("FATAL - COULD NOT LOAD LIST OF MATCHING RatingQuestion. This should never happen.");
-			LOG.error("FATAL - project={}, gender={}", project.getProjectName(), gender.name());
+			log.error("FATAL - COULD NOT LOAD LIST OF MATCHING RatingQuestion. This should never happen.");
+			log.error("FATAL - project={}, gender={}", project.getProjectName(), gender.name());
 		} 
 				
 		model.addAttribute("ratingQuestionList", ratingQuestionList);
@@ -113,7 +104,7 @@ public class FeedbackController {
 		
 		mfs.fillUiText(model, uiText);
 		mfs.fillGlobal(model);
-		return ApplicationPathHelper.RES_FEEDBACK_QUESTION;
+		return ApplicationPaths.RES_FEEDBACK_QUESTION;
 	}
 	
 	/**
@@ -126,33 +117,33 @@ public class FeedbackController {
 	 * @return
 	 * @throws IOException 
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_QUESTION_SUBMIT, method = RequestMethod.POST)
+	@RequestMapping(path = ApplicationPaths.URL_FEEDBACK_QUESTION_SUBMIT, method = RequestMethod.POST)
 	public String questionSubmit(Model model,
 			ServletResponse response,
 			HttpSession session,
-			@ModelAttribute FeedbackContainer fbc,
-			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
-			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant) throws IOException {
+			@ModelAttribute FeedbackDTO fbc,
+			@ModelAttribute(ApplicationSessionAttributes.PROJECT) Project project,
+			@ModelAttribute(ApplicationSessionAttributes.PARTICIPANT) Participant participant) throws IOException {
 
-		String resource = ApplicationPathHelper.RES_FEEDBACK_FREETEXT;
-		
-		Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
+		String resource = ApplicationPaths.RES_FEEDBACK_FREETEXT;
 		
 		try {
-			validationService.isValidFeedback(project, feedbackMap);
-			LOG.debug("Adding feedback to session");
-			session.setAttribute(SessionAttributeHelper.FEEDBACK, fbc);
+			fbc.validate(project.getRatingQuestionCount());
+		
+			log.debug("Adding feedback to session");
+			session.setAttribute(ApplicationSessionAttributes.FEEDBACK, fbc);
 						
-			if(! project.getAskFreetext()) {
+			if(! project.isAskFreetext()) {
 				HttpServletResponse res = (HttpServletResponse) response;
-				res.sendRedirect(ApplicationPathHelper.URL_FEEDBACK_RESULT_SUBMIT);
+				res.sendRedirect(ApplicationPaths.URL_FEEDBACK_RESULT_SUBMIT);
+				//TODO must it be like this? Looks stupid
 				return null;
 			}
 					
 		} catch (NoFeedbackException | InvalidFeedbackException e) {
 
 			try {
-				
+				Map<Long, Integer> feedbackMap = fbc.getFeedbackMap();
 				List<RatingQuestion> ratingQuestionList = new ArrayList<>();
 				ratingQuestionList.addAll(ratingQuestionService.reloadForInvalidFeedback(project, participant.getGender(), feedbackMap));
 				model.addAttribute("ratingQuestionList", ratingQuestionList);
@@ -163,10 +154,10 @@ public class FeedbackController {
 				UiText uiText = uts.getUiText(project, UiTextKey.MSG_FEEDBACK_QUESTION);
 				mfs.fillUiText(model, uiText);
 				
-				resource = ApplicationPathHelper.RES_FEEDBACK_QUESTION;
+				resource = ApplicationPaths.RES_FEEDBACK_QUESTION;
 				
 			} catch (RatingQuestionsNotExistentException | InvalidFeedbackException f) {
-				LOG.debug("{}", f.toString());
+				log.debug("{}", f.toString());
 				resource = ERROR_TEMPLATE;
 			}
 			
@@ -188,12 +179,12 @@ public class FeedbackController {
 	 * @param freeText
 	 * @return
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_RESULT_SUBMIT, method = RequestMethod.POST)
+	@RequestMapping(path = ApplicationPaths.URL_FEEDBACK_RESULT_SUBMIT, method = RequestMethod.POST)
 	public String resultSubmit(Model model,
 			@RequestHeader("User-Agent") String userAgent,
-			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
-			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant,
-			@ModelAttribute(SessionAttributeHelper.FEEDBACK) FeedbackContainer fbContainer,
+			@ModelAttribute(ApplicationSessionAttributes.PROJECT) Project project,
+			@ModelAttribute(ApplicationSessionAttributes.PARTICIPANT) Participant participant,
+			@ModelAttribute(ApplicationSessionAttributes.FEEDBACK) FeedbackDTO fbContainer,
 			@RequestParam String freeText) {
 		
 		participant.setUserAgent(userAgent);
@@ -210,12 +201,12 @@ public class FeedbackController {
 	 * @param fbContainer
 	 * @return
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_FEEDBACK_RESULT_SUBMIT, method = RequestMethod.GET)
+	@RequestMapping(path = ApplicationPaths.URL_FEEDBACK_RESULT_SUBMIT, method = RequestMethod.GET)
 	public String resultSubmit(Model model,
 			@RequestHeader("User-Agent") String userAgent,
-			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
-			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) Participant participant,
-			@ModelAttribute(SessionAttributeHelper.FEEDBACK) FeedbackContainer fbContainer) {
+			@ModelAttribute(ApplicationSessionAttributes.PROJECT) Project project,
+			@ModelAttribute(ApplicationSessionAttributes.PARTICIPANT) Participant participant,
+			@ModelAttribute(ApplicationSessionAttributes.FEEDBACK) FeedbackDTO fbContainer) {
 		
 		participant.setUserAgent(userAgent);
 		
@@ -223,10 +214,10 @@ public class FeedbackController {
 	}
 
 	private String processEndResult(Model model, String freeText, Project project,
-			Participant participant, FeedbackContainer fbContainer) {
+			Participant participant, FeedbackDTO fbContainer) {
 		Map<Long, Integer> feedbackMap = fbContainer.getFeedbackMap();
 				
-		String resource = "redirect:" + ApplicationPathHelper.URL_FEEDBACK_END;
+		String resource = "redirect:" + ApplicationPaths.URL_FEEDBACK_END;
 		
 		try {
 			
@@ -243,18 +234,18 @@ public class FeedbackController {
 			//Send notification mail
 			String recepient = project.getNotificationMail();
 			if(recepient != null && ! recepient.equals("")) {
-				LOG.debug("Sending notification mail");
+				log.debug("Sending notification mail");
 				mailService.notifyParticipation(project);
 			} else {
-				LOG.debug("Not sending notification mail");
+				log.debug("Not sending notification mail");
 			}
 			
 		} catch (ParticipantAlreadyExistingException e) {
-			LOG.error("This should not happen, because session is destroyed on submitting feedback");
+			log.error("This should not happen, because session is destroyed on submitting feedback");
 			resource = ERROR_TEMPLATE;
 			
 		} catch (InvalidFeedbackException e) {
-			LOG.error("Project is not in all objects the same: project, participant, etc.");
+			log.error("Project is not in all objects the same: project, participant, etc.");
 			resource = ERROR_TEMPLATE;
 			
 		} finally {
@@ -281,7 +272,7 @@ public class FeedbackController {
 		}
 
 		if(mapEntryCount == 0) {
-			LOG.debug("No rating questions have been submitted");
+			log.debug("No rating questions have been submitted");
 			return;
 		}
 		

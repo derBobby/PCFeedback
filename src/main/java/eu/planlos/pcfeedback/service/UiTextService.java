@@ -1,29 +1,24 @@
 package eu.planlos.pcfeedback.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import eu.planlos.pcfeedback.exceptions.UiTextException;
 import eu.planlos.pcfeedback.model.UiTextKey;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.UiText;
 import eu.planlos.pcfeedback.repository.UiTextRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+@Slf4j
 @Service
 public class UiTextService {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(UiTextService.class);
+	private final UiTextRepository uiTextRepo;
 	
-	private UiTextRepository uiTextRepo;
-	
-	@Autowired
 	public UiTextService(UiTextRepository uiTextRepo) {
 		this.uiTextRepo = uiTextRepo;
 	}
@@ -32,12 +27,12 @@ public class UiTextService {
 		
 		UiText uiText = uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
 		uiText.setText(text);
-		LOG.debug("Updating UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
+		log.debug("Updating UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
 		uiTextRepo.save(uiText);
 	}
 
 	public UiText getUiText(Project project, UiTextKey uiTextKey) {
-		LOG.debug("Searching UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
+		log.debug("Searching UiText for: project={}, uiTextKey={}", project.getProjectName(), uiTextKey.name());
 		return uiTextRepo.findByProjectAndUiTextKey(project, uiTextKey);
 	}
 	
@@ -57,11 +52,6 @@ public class UiTextService {
 		return (List<UiText>) uiTextRepo.findAllByProject(project);
 	}
 
-	/**
-	 * Updates the text of given UiText, identified by idUiText.
-	 * @param uiText 
-	 * @throws UiTextException
-	 */
 	public void updateText(Long idUiText, String text) throws UiTextException {
 		Optional<UiText> optionalDdbUiText = uiTextRepo.findByIdUiText(idUiText);
 		if(! optionalDdbUiText.isPresent()) {
@@ -81,7 +71,7 @@ public class UiTextService {
 	public void checkEnoughUiTexts(Project project, boolean proactive) throws UiTextException {
 		if(uiTextRepo.countByProjectAndTextIsNull(project) > 0) {
 			if(!proactive) {
-				LOG.error("# ~~~~~~~~ Not enough rating questions initialized! ~~~~~~~~ #");
+				log.error("# ~~~~~~~~ Not enough rating questions initialized! ~~~~~~~~ #");
 			}
 			throw new UiTextException("Es wurden nicht für jedes UiTextField ein Element initialisiert oder der zugehörige Text fehlt.");
 		}

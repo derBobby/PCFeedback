@@ -31,11 +31,11 @@
 								</tr>
 								<tr>
 									<th>Aktiv:</th>
-									<td class="pl-3" th:text="*{active ? 'Ja' : 'Nein'}"></td>
+									<td class="pl-3" th:text="*{active} ? 'Ja' : 'Nein'"></td>
 								</tr>
 								<tr>
 									<th>Online:</th>
-									<td class="pl-3" th:text="*{online ? 'Ja' : 'Nein'}"></td>
+									<td class="pl-3" th:text="*{isNowOnline()} ? 'Ja' : 'Nein'"></td>
 								</tr>
 							</table>
 						</div>

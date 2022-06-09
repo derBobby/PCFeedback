@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.ApplicationPaths;
 import eu.planlos.pcfeedback.exceptions.UiTextException;
 import eu.planlos.pcfeedback.model.UiTextContainer;
 import eu.planlos.pcfeedback.model.db.Project;
@@ -28,27 +27,26 @@ import eu.planlos.pcfeedback.service.UiTextService;
 @Controller
 public class UiTextController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(UiTextController.class);
+	private static final Logger log = LoggerFactory.getLogger(UiTextController.class);
 	
-	private UiTextService uts;
-	private ModelFillerService mfs;
-	private ProjectService ps;
+	private final UiTextService uts;
+	private final ModelFillerService mfs;
+	private final ProjectService ps;
 	
-	@Autowired
 	public UiTextController(UiTextService uts, ModelFillerService mfs, ProjectService ps) {
 		this.uts = uts;
 		this.mfs = mfs;
 		this.ps = ps;
 	}
 	
-	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITUITEXT + "{idProject}", method = RequestMethod.GET)
+	@RequestMapping(path = ApplicationPaths.URL_ADMIN_EDITUITEXT + "{idProject}", method = RequestMethod.GET)
 	public String showUiText(ServletResponse response, @PathVariable(name = "idProject") Long idProject, Model model) throws IOException {
 	
 		Project project = ps.findProject(idProject);
 		if(project == null) {
 			
 			HttpServletResponse res = (HttpServletResponse) response;
-			LOG.error("Project id='{}' does not exist -> sending 404", idProject);
+			log.error("Project id='{}' does not exist -> sending 404", idProject);
 			res.sendError(404, String.format("Projekt mit id %d wurde nicht gefunden.", idProject));
 
 			return null;
@@ -58,17 +56,17 @@ public class UiTextController {
 		model.addAttribute("uiTextList", uiTextList);
 		
 		mfs.fillGlobal(model);
-		return ApplicationPathHelper.RES_ADMIN_EDITUITEXT;
+		return ApplicationPaths.RES_ADMIN_EDITUITEXT;
 	}
 	
-	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_EDITUITEXT, method = RequestMethod.POST)
+	@RequestMapping(path = ApplicationPaths.URL_ADMIN_EDITUITEXT, method = RequestMethod.POST)
 	public String submitEdit(@ModelAttribute UiTextContainer uiTextContainer, Model model) throws UiTextException {
 
 		try {
 			uts.updateText(uiTextContainer.getIdUiText(), uiTextContainer.getText());
-			return "redirect:" + ApplicationPathHelper.URL_ADMIN_EDITUITEXT + uiTextContainer.getIdProject().toString();
+			return "redirect:" + ApplicationPaths.URL_ADMIN_EDITUITEXT + uiTextContainer.getIdProject().toString();
 		} catch (UiTextException e) {
-			LOG.error(e.getMessage());
+			log.error(e.getMessage());
 			throw e;
 		}
 	}

@@ -3,6 +3,7 @@ package eu.planlos.pcfeedback.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +16,14 @@ import eu.planlos.pcfeedback.model.db.ParticipationResult;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
 
+@Slf4j
 @Service
 public class ParticipationService {
-
-	private static final Logger LOG = LoggerFactory.getLogger(ParticipationService.class);
 
 	private ParticipantService pService;
 	private RatingQuestionService rqService;
 	private ParticipationResultService prService;
 
-	@Autowired
 	public ParticipationService(ParticipantService pService, RatingQuestionService rqService, ParticipationResultService prService) {
 		this.pService = pService;
 		this.rqService = rqService;
@@ -51,7 +50,7 @@ public class ParticipationService {
 			return false;
 		}
 
-		LOG.debug("Gender was changed, need to update a lot including RatingQuestion change (depending on gender)");
+		log.debug("Gender was changed, need to update a lot including RatingQuestion change (depending on gender)");
 		ParticipationResult participationResult = prService.findByParticipant(participant);
 		Map<Long, Integer> feedbackMap = participationResult.getFeedbackMap();
 		Gender wantedGender = participant.getGender();
@@ -71,9 +70,9 @@ public class ParticipationService {
 
 			newFeedbackMap.put(newRatingQuestion.getIdRatingQuestion(), votedObject);
 		}
-		LOG.debug("Old RatingQuestions: {}", participationResult.printKeyList());
+		log.debug("Old RatingQuestions: {}", participationResult.printKeyList());
 		participationResult.setFeedbackMap(newFeedbackMap);
-		LOG.debug("New RatingQuestions: {}", participationResult.printKeyList());
+		log.debug("New RatingQuestions: {}", participationResult.printKeyList());
 
 		rqService.removeFeedback(feedbackMap);
 		rqService.saveFeedback(newFeedbackMap);
@@ -97,13 +96,13 @@ public class ParticipationService {
 		ParticipationResult participationResult = prService.findByParticipant(participant);
 		Map<Long, Integer> feedbackMap = participationResult.getFeedbackMap();
 
-		LOG.debug("Removing participants personal feedback entry");
+		log.debug("Removing participants personal feedback entry");
 		rqService.removeFeedback(feedbackMap);
 
-		LOG.debug("Deleting...");
+		log.debug("Deleting...");
 		prService.deleteParticipationResult(participationResult);
 
-		LOG.debug("Removing participant");
+		log.debug("Removing participant");
 		pService.delete(participant);
 	}
 }

@@ -8,9 +8,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.ApplicationPaths;
 import eu.planlos.pcfeedback.exceptions.DuplicateRatingObjectException;
 import eu.planlos.pcfeedback.exceptions.ProjectAlreadyExistingException;
 import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
@@ -34,20 +34,18 @@ import eu.planlos.pcfeedback.service.RatingObjectService;
 import eu.planlos.pcfeedback.service.RatingQuestionService;
 import eu.planlos.pcfeedback.service.UiTextService;
 
+@Slf4j
 @Controller
 public class ProjectController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ProjectController.class);
-
-	private ProjectService projectService;
-	private ParticipantService participantService;
-	private ParticipationResultService prs;
-	private UiTextService uts;
-	private ModelFillerService mfs;
-	private RatingObjectService ros;
-	private RatingQuestionService rqs;
+	private final ProjectService projectService;
+	private final ParticipantService participantService;
+	private final ParticipationResultService prs;
+	private final UiTextService uts;
+	private final ModelFillerService mfs;
+	private final RatingObjectService ros;
+	private final RatingQuestionService rqs;
 	
-	@Autowired
 	public ProjectController(ProjectService projectService, ParticipantService participantService,
 			ParticipationResultService prs, UiTextService uts,
 			ModelFillerService mfs, RatingObjectService ros, RatingQuestionService rqs) {
@@ -60,26 +58,22 @@ public class ProjectController {
 		this.rqs = rqs;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTS)
+	@RequestMapping(method = RequestMethod.GET, path = ApplicationPaths.URL_ADMIN_PROJECTS)
 	public String listProjects(Model model) {
 		
 		List<Project> projectList = projectService.findAll();
-		
-		for(Project project : projectList) {
-			project.setOnline(projectService.isOnline(project));
-		}
 
-		model.addAttribute("URL_ADMIN_PROJECTRUN", ApplicationPathHelper.URL_ADMIN_PROJECTRUN);
-		model.addAttribute("URL_ADMIN_PROJECTRESET", ApplicationPathHelper.URL_ADMIN_PROJECTRESET);
-		model.addAttribute("URL_ADMIN_PROJECTDELETE", ApplicationPathHelper.URL_ADMIN_PROJECTDELETE);
+		model.addAttribute("URL_ADMIN_PROJECTRUN", ApplicationPaths.URL_ADMIN_PROJECTRUN);
+		model.addAttribute("URL_ADMIN_PROJECTRESET", ApplicationPaths.URL_ADMIN_PROJECTRESET);
+		model.addAttribute("URL_ADMIN_PROJECTDELETE", ApplicationPaths.URL_ADMIN_PROJECTDELETE);
 		model.addAttribute("projectList", projectList);
 
 		mfs.fillGlobal(model);
 		
-		return ApplicationPathHelper.RES_ADMIN_PROJECTS;
+		return ApplicationPaths.RES_ADMIN_PROJECTS;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS)
+	@RequestMapping(method = RequestMethod.GET, path = ApplicationPaths.URL_ADMIN_PROJECTDETAILS)
 	public String addProject(Model model) {
 		
 		List<RatingObject> roList = new ArrayList<>();
@@ -91,10 +85,10 @@ public class ProjectController {
 		mfs.fillProjectDetails(model, project);
 		mfs.fillGlobal(model);
 
-		return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;
+		return ApplicationPaths.RES_ADMIN_PROJECTDETAILS;
 	}	
 	
-	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS + "/{projectName}")
+	@RequestMapping(path = ApplicationPaths.URL_ADMIN_PROJECTDETAILS + "/{projectName}")
 	public String editProject(Model model, @PathVariable("projectName") String projectName) {
 		
 		Project project = projectService.findProject(projectName);
@@ -102,10 +96,10 @@ public class ProjectController {
 		mfs.fillProjectDetails(model, project);
 		mfs.fillGlobal(model);
 
-		return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;
+		return ApplicationPaths.RES_ADMIN_PROJECTDETAILS;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, path = ApplicationPathHelper.URL_ADMIN_PROJECTDETAILS)
+	@RequestMapping(method = RequestMethod.POST, path = ApplicationPaths.URL_ADMIN_PROJECTDETAILS)
 	public String submitProject(Model model, ServletResponse response, @ModelAttribute("project") @Valid Project uiProject, BindingResult bindingResult) throws IOException {
 			
 		boolean isNewProject = false;
@@ -118,7 +112,7 @@ public class ProjectController {
 		if(! isNewProject) {
 			Project dbProject = projectService.findProject(uiProject.getIdProject());
 			if(dbProject.isActive()) {
-				LOG.error("Project name='{}' is active. Edit not allowed -> sending 403", dbProject.getProjectName());
+				log.error("Project name='{}' is active. Edit not allowed -> sending 403", dbProject.getProjectName());
 				res.sendError(403, String.format("Projekt %s ist nicht aktiv. Speichern verboten.", dbProject.getProjectName()));
 				return null;
 			}
@@ -126,19 +120,19 @@ public class ProjectController {
 		
 		// validate model input
 		if (bindingResult.hasErrors()) {
-			LOG.debug("Input from form not valid");
+			log.debug("Input from form not valid");
 
 			mfs.fillProjectDetails(model, uiProject);
 			mfs.fillGlobal(model);
 			
-			return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;
+			return ApplicationPaths.RES_ADMIN_PROJECTDETAILS;
 		}
 
-		LOG.debug("Form input is valid");
+		log.debug("Form input is valid");
 
 		try {
 			
-			LOG.debug("Trying to save project: id='{}' | name='{}'", uiProject.getIdProject(), uiProject.getProjectName());
+			log.debug("Trying to save project: id='{}' | name='{}'", uiProject.getIdProject(), uiProject.getProjectName());
 			
 			rqs.checkEnoughRatingQuestions(uiProject, false);
 			ros.validateAndSaveList(uiProject.getRatingObjectList());
@@ -146,36 +140,36 @@ public class ProjectController {
 			projectService.save(uiProject);
 
 			if(isNewProject) {
-				LOG.debug("Adding UiTexts for new Project");
+				log.debug("Adding UiTexts for new Project");
 				uts.initializeUiText(uiProject);
 			}
 			
 			
-			LOG.debug("Proceeding to projects page");
+			log.debug("Proceeding to projects page");
 			
-			return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
+			return "redirect:" + ApplicationPaths.URL_ADMIN_PROJECTS;
 
 		} catch (ProjectAlreadyExistingException | DuplicateRatingObjectException | WrongRatingQuestionCountExistingException e) {
 
-			LOG.error(e.getMessage());
+			log.error(e.getMessage());
 			
 			model.addAttribute("globalError", e.getMessage());
 			
 			mfs.fillProjectDetails(model, uiProject);
 			mfs.fillGlobal(model);
 			
-			return ApplicationPathHelper.RES_ADMIN_PROJECTDETAILS;
+			return ApplicationPaths.RES_ADMIN_PROJECTDETAILS;
 		}
 	}
 	
-	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_PROJECTRUN + "{projectName}")
+	@RequestMapping(path = ApplicationPaths.URL_ADMIN_PROJECTRUN + "{projectName}")
 	public String runProject(Model model, ServletResponse response, @PathVariable String projectName) throws ProjectAlreadyExistingException, IOException {
 		
 		HttpServletResponse res = (HttpServletResponse) response;
 
 		Project project = projectService.findProject(projectName);
 		if(project == null) {
-			LOG.error("Project name='{}' does not exist -> sending 400", projectName);
+			log.error("Project name='{}' does not exist -> sending 400", projectName);
 			res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
 			return null;
 		}
@@ -188,43 +182,43 @@ public class ProjectController {
 		rqs.saveAll(rqList);
 		projectService.save(project);
 		
-		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
+		return "redirect:" + ApplicationPaths.URL_ADMIN_PROJECTS;
 	}
 	
-	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_PROJECTRESET + "{projectName}")
+	@RequestMapping(path = ApplicationPaths.URL_ADMIN_PROJECTRESET + "{projectName}")
 	public String resetProject(Model model, ServletResponse response, @PathVariable String projectName) throws ProjectAlreadyExistingException, IOException {
 		
 		HttpServletResponse res = (HttpServletResponse) response;
 
 		Project project = projectService.findProject(projectName);
 		if(project == null) {
-			LOG.error("Project name='{}' does not exist -> sending 400", projectName);
+			log.error("Project name='{}' does not exist -> sending 400", projectName);
 			res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
 			return null;
 		}
 	
-		LOG.debug("Resetting Project name={}", projectName);
+		log.debug("Resetting Project name={}", projectName);
 		
 		prs.resetProject(project);
 		participantService.resetProject(project);
 		projectService.resetProject(project);
 		rqs.resetProject(project);
 		
-		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
+		return "redirect:" + ApplicationPaths.URL_ADMIN_PROJECTS;
 	}	
-	@RequestMapping(path = ApplicationPathHelper.URL_ADMIN_PROJECTDELETE+ "{projectName}")
+	@RequestMapping(path = ApplicationPaths.URL_ADMIN_PROJECTDELETE+ "{projectName}")
 	public String deleteProject(Model model, ServletResponse response, @PathVariable String projectName) throws IOException, ProjectAlreadyExistingException {
 		
 		HttpServletResponse res = (HttpServletResponse) response;
 
 		Project project = projectService.findProject(projectName);
 		if(project == null) {
-			LOG.error("Project name='{}' does not exist -> sending 400", projectName);
+			log.error("Project name='{}' does not exist -> sending 400", projectName);
 			res.sendError(404, String.format("Projekt %s wurde nicht gefunden.", projectName));
 			return null;
 		}
 	
-		LOG.debug("Deleting Project name='{}'", projectName);
+		log.debug("Deleting Project name='{}'", projectName);
 		
 		prs.resetProject(project);
 		participantService.resetProject(project);
@@ -238,6 +232,6 @@ public class ProjectController {
 		ros.deleteAll(roList);
 		projectService.deleteProject(project); 
 		
-		return "redirect:" + ApplicationPathHelper.URL_ADMIN_PROJECTS;
+		return "redirect:" + ApplicationPaths.URL_ADMIN_PROJECTS;
 	}
 }

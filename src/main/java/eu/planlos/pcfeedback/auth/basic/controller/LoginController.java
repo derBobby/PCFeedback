@@ -1,16 +1,16 @@
 package eu.planlos.pcfeedback.auth.basic.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.ApplicationPaths;
 import eu.planlos.pcfeedback.model.LoginFormContainer;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 
+@Slf4j
 @Controller
 public class LoginController {
 	
@@ -26,11 +26,11 @@ public class LoginController {
 	 * @param error Flag if errorous login request
 	 * @return name of template
 	 */
-	@GetMapping(path = ApplicationPathHelper.URL_LOGIN_FORM)
+	@GetMapping(path = ApplicationPaths.URL_LOGIN_FORM)
 	public String loginpage(Model model, @RequestParam(defaultValue = "false") boolean error) {
 		
 		prepareContent(model, error);
-		return ApplicationPathHelper.RES_LOGIN_FORM;
+		return ApplicationPaths.RES_LOGIN_FORM;
 	}
 	
 	private void prepareContent(Model model, boolean error) {
@@ -41,7 +41,6 @@ public class LoginController {
 		
 		mfs.fillGlobal(model);
 		model.addAttribute("loginFormContainer", new LoginFormContainer());
-		model.addAttribute("formAction", ApplicationPathHelper.URL_LOGIN);
-		
+		model.addAttribute("formAction", ApplicationPaths.URL_LOGIN);
 	}
 }

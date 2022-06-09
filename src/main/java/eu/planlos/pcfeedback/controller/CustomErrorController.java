@@ -1,15 +1,15 @@
 package eu.planlos.pcfeedback.controller;
 
-import static eu.planlos.pcfeedback.constants.ApplicationPathHelper.RES_ERROR;
+import static eu.planlos.pcfeedback.constants.ApplicationPaths.RES_ERROR;
 
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -20,18 +20,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 
-import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.ApplicationPaths;
 import eu.planlos.pcfeedback.service.ModelFillerService;
 
+@Slf4j
 @Controller
 public class CustomErrorController implements ErrorController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CustomErrorController.class);
+	private final ErrorAttributes errorAttributes;
+	private final ModelFillerService mfs;
 
-	private ErrorAttributes errorAttributes;
-	private ModelFillerService mfs;
-
-	@Autowired
 	public CustomErrorController(ErrorAttributes errorAttributes, ModelFillerService mfs) {
 		this.errorAttributes = errorAttributes;
 		this.mfs = mfs;
@@ -46,7 +44,7 @@ public class CustomErrorController implements ErrorController {
 	 * @param model      automatically provided
 	 * @return error template to load
 	 */
-	@RequestMapping(path = ApplicationPathHelper.URL_ERROR)
+	@RequestMapping(path = ApplicationPaths.URL_ERROR)
 	public String handleError(HttpServletRequest request, Authentication auth, WebRequest webRequest, Model model) {
 
 		String errorMessage = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
@@ -66,29 +64,29 @@ public class CustomErrorController implements ErrorController {
 
 		if (statusCode == HttpStatus.UNAUTHORIZED.value()) {
 			errorTitle = "Fehlende Authentifizierung";
-			LOG.error("User was not authenticated when requesting site: {}", requestedSite);
+			log.error("User was not authenticated when requesting site: {}", requestedSite);
 		}
 
 		else if (statusCode == HttpStatus.FORBIDDEN.value()) {
 			errorTitle = "Zugriff verboten";
-			LOG.error("User was not authorized for requested site: {}", requestedSite);
+			log.error("User was not authorized for requested site: {}", requestedSite);
 			if (auth != null) {
-				LOG.error("User was: {}", auth.getName());
+				log.error("User was: {}", auth.getName());
 			}
 		}
 
 		else if (statusCode == HttpStatus.NOT_FOUND.value()) {
 			errorTitle = "Ressource existiert nicht";
-			LOG.error("Requested ressource does not exist. Message: {}", errorMessage);
+			log.error("Requested ressource does not exist. Message: {}", errorMessage);
 		}
 
 		else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
 			errorTitle = "Fehler im Server";
-			LOG.error("Requested site produced internal server error: {}", requestedSite);
+			log.error("Requested site produced internal server error: {}", requestedSite);
 
 		} else {
 			errorTitle = "Unbekannter Fehler";
-			LOG.error("~~~ We should not have gotten here ¯\\_(ツ)_/¯ ~~~");
+			log.error("~~~ We should not have gotten here ¯\\_(ツ)_/¯ ~~~");
 		}
 
 		mfs.fillError(model, statusCode, errorTitle, errorMessage, errorException, errorTrace, true);
@@ -98,6 +96,6 @@ public class CustomErrorController implements ErrorController {
 
 	@Override
 	public String getErrorPath() {
-		return ApplicationPathHelper.URL_ERROR;
+		return ApplicationPaths.URL_ERROR;
 	}
 }

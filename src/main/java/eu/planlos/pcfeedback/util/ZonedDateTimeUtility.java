@@ -1,17 +1,15 @@
 package eu.planlos.pcfeedback.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+@Slf4j
 public class ZonedDateTimeUtility {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ZonedDateTimeUtility.class);
-	
 	public static final String CET = "Europe/Berlin";
 	public static final String UTC = "UTC";
 	public static final String FORMAT = "dd.MM.yyyy HH:mm:ss";
@@ -25,7 +23,7 @@ public class ZonedDateTimeUtility {
 	public static String nice(ZonedDateTime zdt) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT);
 		String nice = zdt.format(formatter);
-		LOG.debug("Nicing '{}' to '{}'", zdt.toString(), nice);
+		log.debug("Nicing '{}' to '{}'", zdt.toString(), nice);
 		return nice;
 	}
 	

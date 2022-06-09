@@ -1,5 +1,8 @@
 package eu.planlos.pcfeedback.model;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public enum UiTextKey {
 
 	MSG_PROJECTHOME("MSG_PROJECTHOME", "Begrüßung"),
@@ -11,11 +14,6 @@ public enum UiTextKey {
 	
 	private String uiTextField;
 	private String description;
-	
-	UiTextKey(String uiTextField, String description) {
-		this.uiTextField = uiTextField;
-		this.description = description;
-	}
 	
 	public String toString() {
 		return this.uiTextField;

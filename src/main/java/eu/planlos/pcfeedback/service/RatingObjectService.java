@@ -1,25 +1,20 @@
 package eu.planlos.pcfeedback.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import eu.planlos.pcfeedback.exceptions.DuplicateRatingObjectException;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.repository.RatingObjectRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
 @Service
 public class RatingObjectService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(RatingObjectService.class);
-	
-	private RatingObjectRepository ratingObjectRepository;
+	private final RatingObjectRepository ratingObjectRepository;
 
-	@Autowired
 	public RatingObjectService(RatingObjectRepository ratingObjectRepository) {
 		this.ratingObjectRepository = ratingObjectRepository;
 	}
@@ -30,7 +25,7 @@ public class RatingObjectService {
 		
 		for(RatingObject ro : ratingObjectList) {
 			
-			LOG.debug("Validate and save RatingObject {}", ro.getName());
+			log.debug("Validate and save RatingObject {}", ro.getName());
 			
 			if(saveList.contains(ro) ) {
 				throw new DuplicateRatingObjectException(String.format("Name des Bewertungsobjekt '%s' ist schon vergeben", ro.getName()));

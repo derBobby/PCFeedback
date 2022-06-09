@@ -1,18 +1,15 @@
 package eu.planlos.pcfeedback.util.csv;
 
+import eu.planlos.pcfeedback.model.Gender;
+import eu.planlos.pcfeedback.model.db.ParticipationResult;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.db.ParticipationResult;
-
+@Slf4j
 public class FreeTextRecordCSVExporter implements ICSVExporter {
-	
-	private static final Logger LOG = LoggerFactory.getLogger(FreeTextRecordCSVExporter.class);
 	
 	private static final String[] FILE_FREETEXT_HEADER = { "M/W","Text" };
 	
@@ -33,7 +30,7 @@ public class FreeTextRecordCSVExporter implements ICSVExporter {
 		freeTextRecord.add(gender.toString());
 		freeTextRecord.add(freeText);
 
-		LOG.debug(
+		log.debug(
 				"Created free text record: id={}", idParticipationResult);
 		
 		return freeTextRecord;

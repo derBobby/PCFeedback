@@ -1,24 +1,17 @@
 package eu.planlos.pcfeedback.util;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
+import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+
+@Slf4j
 public class RatingQuestionEvaluator {
 
-	private static final Logger LOG = LoggerFactory.getLogger(RatingQuestionEvaluator.class);
-	
+
 	/*
 	 * Rating happens in the following steps:
 	 * 
@@ -84,7 +77,7 @@ public class RatingQuestionEvaluator {
 			aggregateGendersInnerLoop(rqListAll, rqListFemale, rqMale);
 		}
 		
-		LOG.debug("Questions female-male have been aggregated for genders");
+		log.debug("Questions female-male have been aggregated for genders");
 	}
 
 	private void aggregateGendersInnerLoop(List<RatingQuestion> rqList, List<RatingQuestion> rqListFemale, RatingQuestion rqMale) {
@@ -116,7 +109,7 @@ public class RatingQuestionEvaluator {
 			}
 		}
 		
-		LOG.error("No matching female-male question pair found. This should never happen");
+		log.error("No matching female-male question pair found. This should never happen");
 	}
 
 	private void rate(List<RatingQuestion> rqList) {
@@ -143,7 +136,7 @@ public class RatingQuestionEvaluator {
 			ratingTwo = ratingTwo.divide(voteCount, 2, RoundingMode.HALF_EVEN);
 			rq.setRatingForObjectTwo(ratingTwo);
 			
-			LOG.debug("Result is '{}'={} '{}'={}", rq.getObjectOne(), ratingOne, rq.getObjectTwo(), ratingTwo);
+			log.debug("Result is '{}'={} '{}'={}", rq.getObjectOne(), ratingOne, rq.getObjectTwo(), ratingTwo);
 		}
 	}
 

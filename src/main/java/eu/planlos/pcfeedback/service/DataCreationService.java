@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,11 @@ import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.util.ZonedDateTimeUtility;
 
+@Slf4j
 @Service
 @Profile({"DEV", "REV"})
 public class DataCreationService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataCreationService.class);
-	
 	private RatingObjectService roService;
 	private RatingQuestionService rqService;
 	private UiTextService uiTextService;
@@ -44,7 +44,6 @@ public class DataCreationService {
 	private ParticipationResultService participationResultService;
 	private ProjectService projectService;
 	
-	@Autowired
 	public DataCreationService(RatingObjectService roService, RatingQuestionService rqService,
 			UiTextService uiTextService, ParticipantService participantService,
 			ParticipationResultService participationResultService, ProjectService projectService) {
@@ -60,7 +59,7 @@ public class DataCreationService {
 	private void initialize() throws WrongRatingQuestionCountExistingException, UiTextException,
 			RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 		
-		LOG.debug("Initializing database");
+		log.debug("Initializing database");
 		createSampleProject("Demo-Projekt", false, false, true);
 		createSampleProject("Demo-Projekt 1", false, true, true);
 		createSampleProject("Demo-Projekt 2", true, false, true);
@@ -68,12 +67,13 @@ public class DataCreationService {
 //		createSampleProject("Demo-Projekt 4", true);
 //		createSampleProject("Demo-Projekt 5", false);
 //		createSampleProject("Demo-Projekt 6", false);
-		LOG.debug("Initializing database ... DONE");		
+		log.debug("Initializing database ... DONE");		
 	}
 
 	private void createSampleProject(String projectName, boolean needMail, boolean needMobile, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {
 
-		LOG.debug("###### Creating sample project: {}", projectName);
+		log.debug("###### Creating sample project: {}", projectName);
+
 		ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 1, 14, 30, 0, 0, ZoneId.of(ZonedDateTimeUtility.CET));
 		ZonedDateTime endTime = ZonedDateTime.of(2021, 12, 30, 0, 50, 0, 0, ZoneId.of(ZonedDateTimeUtility.CET));
 		
@@ -105,8 +105,9 @@ public class DataCreationService {
 	}
 
 	private List<RatingObject> createRatingObjects() throws DuplicateRatingObjectException {
-		// ~~~~~~~~~~~~ RO ~~~~~~~~~~~~
-		
+
+		log.debug("# Creating rating objects");
+
 		List<RatingObject> roList = new ArrayList<>();
 		roList.add(new RatingObject("gute Zeit mit Freunden haben"));
 		roList.add(new RatingObject("guter Referent im Opening"));
@@ -125,23 +126,19 @@ public class DataCreationService {
 
 		roService.validateAndSaveList(roList);
 
-		
-		LOG.debug("Demo data created: rating objects");
-		
 		return roList;
 	}
 
 	private void createRatingQuestions(Project project) throws ProjectAlreadyExistingException {
 
-		// ~~~~~~~~~~~~ RQ ~~~~~~~~~~~~
-		
+		log.debug("# Creating rating questions");
+
 		List<RatingQuestion> rqList = new ArrayList<>();
 		rqList.addAll(rqService.create(project));
 		project.setActive(true);
 		rqService.saveAll(rqList);
 		projectService.save(project);
-		
-		LOG.debug("Demo data created: rating questions");	
+
 	}
 
 	private void createUiText(Project project) {
@@ -210,7 +207,9 @@ public class DataCreationService {
 	}
 
 	private void createParticipations(Project project, Gender gender, int count) throws RatingQuestionsNotExistentException, ParticipantAlreadyExistingException {
-		
+
+		log.debug("# Creating participations: {}");
+
 		int localCount = count;
 		
 		while(localCount != 0) {
@@ -219,7 +218,7 @@ public class DataCreationService {
 			
 			// Create and save Participant itself
 			Participant participant = participantService.createParticipantForDB(project, gender);
-			LOG.debug("# Creating sample participant: {} {}", participant.getFirstname(), participant.getName());
+			log.debug("Creating sample participant: {} {}", participant.getFirstname(), participant.getName());
 			participantService.save(participant);
 			
 			// Create and save ParticipationResult

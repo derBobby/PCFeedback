@@ -19,14 +19,19 @@ import javax.validation.constraints.NotNull;
 
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.util.ZonedDateTimeUtility;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(
-		uniqueConstraints={
-			@UniqueConstraint(columnNames = {"idParticipant"}),
-			@UniqueConstraint(columnNames = {"firstname", "name", "project"}),
-			@UniqueConstraint(columnNames = {"email"}),
-			@UniqueConstraint(columnNames = {"mobile"}),
+@Table(name = "Participant", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"idParticipant"}),
+		@UniqueConstraint(columnNames = {"firstname", "name", "project"}),
+		@UniqueConstraint(columnNames = {"email"}),
+		@UniqueConstraint(columnNames = {"mobile"})
 })
 public class Participant implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -73,109 +78,18 @@ public class Participant implements Serializable {
 	@JoinColumn(name="project", nullable=false)
 	private Project project;
 
-	public Participant() {
-	}
-	
 	public Participant(Project project) {
 		this.project = project;
 	}
 	
-	public Long getIdParticipant() {
-		return idParticipant;
-	}
-
-	public void setIdParticipant(Long idParticipant) {
-		this.idParticipant = idParticipant;
-	}
-	
-	public String getFirstname() {
-		return firstname;
-	}
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Gender getGender() {
-		return gender;
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
-	}
-
-	public boolean isDataPrivacyStatementAccepted() {
-		return dataPrivacyStatementAccepted;
-	}
-
-	public void setDataPrivacyStatementAccepted(boolean dataPrivacyStatementAccepted) {
-		this.dataPrivacyStatementAccepted = dataPrivacyStatementAccepted;
-	}
-
-	public boolean isPriceGameStatementAccepted() {
-		return priceGameStatementAccepted;
-	}
-
-	public void setPriceGameStatementAccepted(boolean priceGameStatementAccepted) {
-		this.priceGameStatementAccepted = priceGameStatementAccepted;
-	}
-
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-	
-	public String getUserAgent() {
-		return userAgent;
-	}
-
-	public void setUserAgent(String userAgent) {
-		this.userAgent = userAgent;
-	}
-
-	public Instant getParticipationTime() {
-		return participationTime;
-	}
-	
-	public void setParticipationTime(Instant participationTime) {
-		this.participationTime = participationTime;
-	}
-
 	public String getformattedParticipationTimeString() {
 		return ZonedDateTimeUtility.niceCET(participationTime);
 	}
 
-	public final void setParticipationTime() {
+	public final void participationTimeNow() {
 		this.participationTime = Instant.now();
 	}
 
-	public Project getProject() {
-		return project;
-	}
-
-	public void setProject(Project project) {
-		this.project = project;
-	}
-	
 	/*
 	 * Functions
 	 */

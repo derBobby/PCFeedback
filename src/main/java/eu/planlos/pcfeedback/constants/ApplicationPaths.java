@@ -1,6 +1,6 @@
 package eu.planlos.pcfeedback.constants;
 
-public class ApplicationPathHelper {
+public class ApplicationPaths {
 
 	/*
 	 * URL AREAS

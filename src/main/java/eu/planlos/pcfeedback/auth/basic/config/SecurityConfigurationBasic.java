@@ -2,10 +2,9 @@ package eu.planlos.pcfeedback.auth.basic.config;
 
 import javax.annotation.PostConstruct;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,13 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import eu.planlos.pcfeedback.auth.basic.service.LoginAccessDeniedHandler;
 import eu.planlos.pcfeedback.auth.basic.service.UserDetailsServiceImpl;
 import eu.planlos.pcfeedback.config.AuthConfiguration;
-import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.ApplicationPaths;
 
+@Slf4j
 @EnableWebSecurity
 public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SecurityConfigurationBasic.class);
-	
 	private final AuthConfiguration authConfiguration;
 	
 	private final UserDetailsServiceImpl userDetailService;
@@ -56,8 +54,8 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 				 * ADMIN
 				 */
 				.antMatchers(
-						ApplicationPathHelper.URL_AREA_ADMIN + "**",
-						ApplicationPathHelper.URL_AREA_ACTUATOR + "/**"
+						ApplicationPaths.URL_AREA_ADMIN + "**",
+						ApplicationPaths.URL_AREA_ACTUATOR + "/**"
 						
 					).hasRole(authConfiguration.getAdminRole())
 				
@@ -69,7 +67,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 						"/css/**",
 						"/img/**",
 						"/favicon.ico",
-						ApplicationPathHelper.URL_AREA_PUBLIC + "**"
+						ApplicationPaths.URL_AREA_PUBLIC + "**"
 						
 					).permitAll()
 					
@@ -80,26 +78,26 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 			.and().formLogin()
 				
 				// Overrides the default created login form site
-				.loginPage(ApplicationPathHelper.URL_LOGIN_FORM)
+				.loginPage(ApplicationPaths.URL_LOGIN_FORM)
 				
 				// Names URL on which Spring should listen itself
-				.loginProcessingUrl(ApplicationPathHelper.URL_LOGIN)
+				.loginProcessingUrl(ApplicationPaths.URL_LOGIN)
 				
 				// NOT USED - Controller for successfull login
 				//.successHandler(successHandler)
 				
 				// Redirects to given page 
-				.defaultSuccessUrl(ApplicationPathHelper.URL_ADMIN_PROJECTS, false)
+				.defaultSuccessUrl(ApplicationPaths.URL_ADMIN_PROJECTS, false)
 				
 				// Which site to load after login error
-				.failureUrl(ApplicationPathHelper.URL_LOGIN_FORM)
+				.failureUrl(ApplicationPaths.URL_LOGIN_FORM)
 										
 			/*
 			 * Logout procedure
 			 */
 			.and().logout()
 				.logoutUrl(authConfiguration.getLogoutUrl())
-				.logoutSuccessUrl(ApplicationPathHelper.URL_HOME)
+				.logoutSuccessUrl(ApplicationPaths.URL_HOME)
 				.invalidateHttpSession(true)
 				.clearAuthentication(true)
 				
@@ -126,7 +124,7 @@ public class SecurityConfigurationBasic extends WebSecurityConfigurerAdapter {
 	
 	@PostConstruct
 	private void init() {
-		LOG.debug("Configuration loaded");
+		log.debug("Configuration loaded");
 	}
 
 }

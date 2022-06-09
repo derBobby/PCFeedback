@@ -18,16 +18,21 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import eu.planlos.pcfeedback.model.Gender;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(
-		uniqueConstraints={
-				@UniqueConstraint(columnNames = {"idRatingQuestion"}),
-				@UniqueConstraint(columnNames = {"objectOne", "objectTwo", "gender"}),
+@Table(name = "RatingQuestion", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"idRatingQuestion"}),
+		@UniqueConstraint(columnNames = {"objectOne", "objectTwo", "gender"})
 })
 public class RatingQuestion implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="idRatingQuestion", unique=true, nullable=false)
@@ -55,12 +60,6 @@ public class RatingQuestion implements Serializable {
 	
 	@Transient
 	private BigDecimal ratingForObjectTwo;
-
-	/**
-	 * Required for JPA and reflection stuff.
-	 */
-	public RatingQuestion() {
-	}
 	
 	/*
 	 * Connection
@@ -74,102 +73,7 @@ public class RatingQuestion implements Serializable {
 	private RatingObject objectTwo;
 
 	/*
-	 * Getter and Setter
-	 */
-	public long getIdRatingQuestion() {
-		return idRatingQuestion;
-	}
-
-	public void setIdRatingQuestion(long idRatingQuestion) {
-		this.idRatingQuestion = idRatingQuestion;
-	}
-
-	public Gender getGender() {
-		return gender;
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
-	}
-
-	public int getVotesOne() {
-		return votesOne;
-	}
-
-	public void setVotesOne(int votesOne) {
-		this.votesOne = votesOne;
-	}
-	
-	public void increaseVotesOne(int additional) {
-		this.votesOne+=additional;
-	}
-
-	public int getVotesTwo() {
-		return votesTwo;
-	}
-
-	public void setVotesTwo(int votesTwo) {
-		this.votesTwo = votesTwo;
-	}
-	
-	public void increaseVotesTwo(int additional) {
-		this.votesTwo+=additional;
-	}
-
-	public int getCountVoted() {
-		return countVoted;
-	}
-
-	public void setCountVoted(int countVoted) {
-		this.countVoted = countVoted;
-	}
-	
-	public void increaseCountVoted(int countVoted) {
-		this.countVoted+=countVoted;
-	}
-
-	public RatingObject getObjectOne() {
-		return objectOne;
-	}
-
-	public void setObjectOne(RatingObject objectOne) {
-		this.objectOne = objectOne;
-	}
-
-	public RatingObject getObjectTwo() {
-		return objectTwo;
-	}
-
-	public void setObjectTwo(RatingObject objectTwo) {
-		this.objectTwo = objectTwo;
-	}
-
-	public BigDecimal getRatingForObjectOne() {
-		return ratingForObjectOne;
-	}
-
-	public void setRatingForObjectOne(BigDecimal ratingForObjectOne) {
-		this.ratingForObjectOne = ratingForObjectOne;
-	}
-
-	public BigDecimal getRatingForObjectTwo() {
-		return ratingForObjectTwo;
-	}
-
-	public void setRatingForObjectTwo(BigDecimal ratingForObjectTwo) {
-		this.ratingForObjectTwo = ratingForObjectTwo;
-	}
-
-	public Project getProject() {
-		return project;
-	}
-
-	public void setProject(Project project) {
-		this.project = project;
-	}
-
-	/*
-	 * METHODS
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -186,8 +90,8 @@ public class RatingQuestion implements Serializable {
         if (!(object instanceof RatingQuestion)) {
             return false;
         }
-        RatingQuestion ratingObject = (RatingQuestion) object;
-        return this.idRatingQuestion == ratingObject.getIdRatingQuestion();
+        RatingQuestion ratingQuestion = (RatingQuestion) object;
+        return this.idRatingQuestion == ratingQuestion.getIdRatingQuestion();
     }
 
     @Override

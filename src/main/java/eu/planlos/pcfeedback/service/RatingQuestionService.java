@@ -1,36 +1,29 @@
 package eu.planlos.pcfeedback.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import eu.planlos.pcfeedback.exceptions.InvalidFeedbackException;
 import eu.planlos.pcfeedback.exceptions.RatingQuestionsNotExistentException;
 import eu.planlos.pcfeedback.exceptions.WrongRatingQuestionCountExistingException;
+import eu.planlos.pcfeedback.model.FeedbackDTO;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.db.Project;
 import eu.planlos.pcfeedback.model.db.RatingObject;
 import eu.planlos.pcfeedback.model.db.RatingQuestion;
 import eu.planlos.pcfeedback.repository.RatingQuestionRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+@Slf4j
 @Service
 public class RatingQuestionService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(RatingQuestionService.class);
-
-	public static final int OBJECT_ONE = 1;
-	public static final int OBJECT_TWO = 2;
+	private final RatingQuestionRepository rqRepository;
 	
-	private RatingQuestionRepository rqRepository;
-	
-	@Autowired
 	public RatingQuestionService(RatingQuestionRepository rqRepository) {
 		this.rqRepository = rqRepository;
 	}
@@ -54,26 +47,26 @@ public class RatingQuestionService {
 
 		int totalQuestionCount = project.getRatingQuestionCount();
 				
-		LOG.debug("Needed ratingQuestion count for project is: {}", totalQuestionCount);
+		log.debug("Needed ratingQuestion count for project is: {}", totalQuestionCount);
 		
-		LOG.debug("Get the lowest number a ratingQuestion is voted for gender: {}", gender.toString());
+		log.debug("Get the lowest number a ratingQuestion is voted for gender: {}", gender.toString());
 		int lowestVotedCount = getLowestCountRatingQuestionIsVoted(project, gender);
 		
-		LOG.debug("Start adding ratingQuestions to result set");
+		log.debug("Start adding ratingQuestions to result set");
 		while(givenQuestions.size() <= totalQuestionCount) {
 			
 			int remainingQuestionCount = totalQuestionCount - givenQuestions.size();
-			LOG.debug("Question count remaining to load is '{}'", remainingQuestionCount);
+			log.debug("Question count remaining to load is '{}'", remainingQuestionCount);
 			
 			// Load IDs with minimum count of answers
-			LOG.debug("Load all questions for lowest number voted: {}", lowestVotedCount);
+			log.debug("Load all questions for lowest number voted: {}", lowestVotedCount);
 			List<RatingQuestion> loadedQuestions = rqRepository.findByProjectAndGenderAndCountVoted(project, gender, lowestVotedCount);
 			loadedQuestions.removeAll(givenQuestions);
 			
 			// If exact count is found
 			if(loadedQuestions.size() == remainingQuestionCount) {
 
-				LOG.debug("Required count was loaded, add to result set and stop");
+				log.debug("Required count was loaded, add to result set and stop");
 				givenQuestions.addAll(loadedQuestions);
 				break;
 			}
@@ -81,10 +74,10 @@ public class RatingQuestionService {
 			//If more questions are available chose random ones
 			if(loadedQuestions.size() > remainingQuestionCount) {
 
-				LOG.debug("Shuffle rating questions in list");
+				log.debug("Shuffle rating questions in list");
 				Collections.shuffle(loadedQuestions);
 				
-				LOG.debug("More than required count was loaded, get random ratingQuestions of that list");
+				log.debug("More than required count was loaded, get random ratingQuestions of that list");
 				List<RatingQuestion> shortenedList = loadedQuestions.subList(0, totalQuestionCount-givenQuestions.size());
 				givenQuestions.addAll(shortenedList);
 				break;
@@ -93,7 +86,7 @@ public class RatingQuestionService {
 			//If not enough questions are available
 			if(loadedQuestions.size() < remainingQuestionCount) {
 				
-				LOG.debug("Lesser than required count was loaded, get new lowest number voted");
+				log.debug("Lesser than required count was loaded, get new lowest number voted");
 				givenQuestions.addAll(loadedQuestions);
 				lowestVotedCount = getLowestCountRatingQuestionIsVoted(project, gender, lowestVotedCount);		
 			}
@@ -112,7 +105,7 @@ public class RatingQuestionService {
 		
 		if(lowestVotedCountQuestion == null) {
 			String message = String.format("FATAL - No rating questions found with more votes than: %s", chosenCount);
-			LOG.error(message);
+			log.error(message);
 			throw new RatingQuestionsNotExistentException(message);
 		}
 					
@@ -122,13 +115,13 @@ public class RatingQuestionService {
 	@Transactional
 	public void saveFeedback(Map<Long, Integer> feedbackMap) {
 			
-		LOG.debug("Save feedback to database");
+		log.debug("Save feedback to database");
 		for(Long idRatingQuestion : feedbackMap.keySet()) {
 			
 			int voteFor = feedbackMap.get(idRatingQuestion);
-			LOG.debug("Rating question {} got vote for rating object {}", idRatingQuestion, voteFor);
+			log.debug("Rating question {} got vote for rating object {}", idRatingQuestion, voteFor);
 			
-			if(voteFor == OBJECT_ONE) {
+			if(voteFor == FeedbackDTO.OBJECT_ONE) {
 				rqRepository.addVoteForRatingObjectOne(idRatingQuestion);
 				continue;
 			}
@@ -139,13 +132,13 @@ public class RatingQuestionService {
 	@Transactional
 	public void removeFeedback(Map<Long, Integer> feedbackMap) {
 		
-		LOG.debug("Remove feedback from database");
+		log.debug("Remove feedback from database");
 		for(Long idRatingQuestion : feedbackMap.keySet()) {
 			
 			int voteFor = feedbackMap.get(idRatingQuestion);
-			LOG.debug("Rating question {} gets vote for rating object {} removed", idRatingQuestion, voteFor);
+			log.debug("Rating question {} gets vote for rating object {} removed", idRatingQuestion, voteFor);
 			
-			if(voteFor == OBJECT_ONE) {
+			if(voteFor == FeedbackDTO.OBJECT_ONE) {
 				rqRepository.removeVoteForRatingObjectOne(idRatingQuestion);
 				continue;
 			}
@@ -180,10 +173,10 @@ public class RatingQuestionService {
 				rqMale.setObjectTwo(roTwo);
 				
 				rqList.add(rqMale);
-				LOG.debug("Created rating question: {}: {} - {}",
+				log.debug("Created rating question: {}: {} - {}",
 						Gender.MALE,
-						roOne.toString(),
-						roTwo.toString());
+						roOne,
+						roTwo);
 
 				// --- FEMALE ---
 				RatingQuestion rqFemale = new RatingQuestion();
@@ -196,10 +189,10 @@ public class RatingQuestionService {
 				rqFemale.setObjectTwo(roTwo);
 
 				rqList.add(rqFemale);
-				LOG.debug("Created rating question: {}: {} - {}",
+				log.debug("Created rating question: {}: {} - {}",
 						Gender.FEMALE,
-						roOne.toString(),
-						roTwo.toString());
+						roOne,
+						roTwo);
 
 			}
 		}
@@ -212,13 +205,13 @@ public class RatingQuestionService {
 			throw new InvalidFeedbackException("No feedback map was given.");
 		}
 		
-		LOG.debug("Reloaded rating questions");
+		log.debug("Reloaded rating questions");
 		List<RatingQuestion> reloadedList = (List<RatingQuestion>) rqRepository.findAllById(feedbackMap.keySet());
 		
 		List<RatingQuestion> rqList = new ArrayList<>();
 		rqList.addAll(reloadedList);
 		
-		LOG.debug("Loading additional rating questions");
+		log.debug("Loading additional rating questions");
 		addRatingQuestionsForProjectAndGenderToList(rqList, project, gender);
 		
 		return rqList;
@@ -231,7 +224,7 @@ public class RatingQuestionService {
 			rq.setVotesOne(0);
 			rq.setVotesTwo(0);
 		}
-		LOG.debug("RESET: RatingQuestion");
+		log.debug("RESET: RatingQuestion");
 		rqRepository.saveAll(rqList);
 	}
 	
@@ -249,7 +242,7 @@ public class RatingQuestionService {
 
 		if(possibleQuestionCount < neededQuestionCount) {
 			if(!proactive) {
-				LOG.error("# ~~~~~~~~ Not correct count of rating questions available! ~~~~~~~~ #");
+				log.error("# ~~~~~~~~ Not correct count of rating questions available! ~~~~~~~~ #");
 			}
 			throw new WrongRatingQuestionCountExistingException(String.format("Die Bewertungsobjekte reichen nur für %s von nötigen %s Paare.", possibleQuestionCount, neededQuestionCount));
 		}

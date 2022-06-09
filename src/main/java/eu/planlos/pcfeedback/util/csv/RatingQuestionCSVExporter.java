@@ -1,19 +1,16 @@
 package eu.planlos.pcfeedback.util.csv;
 
+import eu.planlos.pcfeedback.model.Gender;
+import eu.planlos.pcfeedback.model.db.RatingObject;
+import eu.planlos.pcfeedback.model.db.RatingQuestion;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.planlos.pcfeedback.model.Gender;
-import eu.planlos.pcfeedback.model.db.RatingObject;
-import eu.planlos.pcfeedback.model.db.RatingQuestion;
-
+@Slf4j
 public class RatingQuestionCSVExporter implements ICSVExporter {
-
-	private static final Logger LOG = LoggerFactory.getLogger(RatingQuestionCSVExporter.class);
 
 	private static final String[] FILE_RATINGQUESTION_HEADER = { "Geschlecht","A Bezeichnung","A Stimmen","B Stimmen","B Bezeichnung" };
 
@@ -55,7 +52,7 @@ public class RatingQuestionCSVExporter implements ICSVExporter {
 		rqRecord.add(votesTwoStr);
 		rqRecord.add(nameTwo);
 
-		LOG.debug("Created record: gender={} name1={} votes1={} name2={} votes2={}",
+		log.debug("Created record: gender={} name1={} votes1={} name2={} votes2={}",
 				genderString, nameOne, votesOneStr, nameTwo, votesTwoStr);
 
 		return rqRecord;

@@ -19,59 +19,73 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.planlos.pcfeedback.util.ZonedDateTimeUtility;
 
+@NoArgsConstructor
+@Getter
+@Setter
+@Slf4j
 @Entity
-@Table(
-		uniqueConstraints={
-			@UniqueConstraint(columnNames = {"idProject"}),
-			@UniqueConstraint(columnNames = {"projectName"}),
+@Table(name = "Project", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"idProject"}),
+		@UniqueConstraint(columnNames = {"projectName"})
 })
 public class Project implements Serializable {
 	private static final long serialVersionUID = -8958091265283715683L;
 
+	@ToString.Include
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
 	private Long idProject;
 	
+	@ToString.Include
 	@Column(unique=true, nullable=false)
 	@NotBlank
 	private String projectName;
 
+	@ToString.Include
 	@Column(nullable = false)
 	private boolean needMobile;
 	
+	@ToString.Include
 	@Column(nullable = false)
 	private boolean needMail;
 
+	@ToString.Include
 	@Column(nullable = false)
 	private boolean pricegame;
 	
+	@ToString.Include
 	@Column(nullable = false)
 	private boolean askFreetext;
 	
+	@ToString.Include
 	@Column(nullable=false)
 	private boolean active;
 	
+	@ToString.Include
 	@Column(nullable=false)
 	@DecimalMin("1")
 	private int ratingQuestionCount;
 	
-	private boolean online;
-
-	@Column
+	@ToString.Include
 	private Instant projectSaveInstant;
 
-	@Column
+	@ToString.Include
 	private Instant projectStartInstant;
 
-	@Column
+	@ToString.Include
 	private Instant projectEndInstant;
 	
-	@Column
+	@ToString.Include
 	private String notificationMail;
 
 	@Transient
@@ -87,13 +101,7 @@ public class Project implements Serializable {
 	private ZonedDateTime projectEnd;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	private List<RatingObject> ratingObjectList;
-
-	/*
-	 * Spring Data needs default constructor
-	 */
-	public Project() {
-	}
+	private List<RatingObject> ratingObjectList = new java.util.ArrayList<>();
 	
 	public Project(List<RatingObject> roList) {
 		this.ratingObjectList = roList;
@@ -101,7 +109,7 @@ public class Project implements Serializable {
 	
 	public Project(String projectName, List<RatingObject> ratingObjectList, boolean needMail, boolean needMobile, boolean active, ZonedDateTime projectStart, ZonedDateTime projectEnd, int ratingQuestionCount) {
 		this.ratingObjectList = ratingObjectList;
-		
+
 		this.projectName = projectName;
 		this.needMail = needMail;
 		this.needMobile = needMobile;
@@ -109,53 +117,13 @@ public class Project implements Serializable {
 
 		this.projectStart = projectStart;
 		this.projectStartInstant = projectStart.toInstant();
-		
+
 		this.projectEnd = projectEnd;
 		this.projectEndInstant = projectEnd.toInstant();
 		
 		this.ratingQuestionCount = ratingQuestionCount;
 	}
 	
-	public Long getIdProject() {
-		return idProject;
-	}
-
-	public void setIdProject(Long idProject) {
-		this.idProject = idProject;
-	}
-
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-
-	public boolean getNeedMobile() {
-		return this.needMobile;
-	}
-	
-	public void setNeedMobile(boolean needMobile) {
-		this.needMobile = needMobile;
-	}
-
-	public boolean getNeedMail() {
-		return this.needMail;
-	}
-	
-	public void setNeedMail(boolean needMail) {
-		this.needMail = needMail;
-	}
-	
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
 	public ZonedDateTime getProjectStart() {
 		// Should always be set
 		if (projectStartInstant != null) {
@@ -216,56 +184,39 @@ public class Project implements Serializable {
 		return String.format("idProject='%s', name='%s'", idProject, projectName);
 	}
 
-	public List<RatingObject> getRatingObjectList() {
-		return this.ratingObjectList;
+	public boolean isNowOffline() {
+		return ! isNowOnline();
 	}
 
-	public void setRatingObjectList(List<RatingObject> ratingObjectList) {
-		this.ratingObjectList = ratingObjectList;
-	}
+	public boolean isNowOnline() {
 
-	public boolean isOnline() {
-		return online;
-	}
+		if (!active) {
+			log.debug("Project '{}' not active", projectName);
+			return false;
+		}
 
-	public void setOnline(boolean online) {
-		this.online = online;
-	}
+		ZonedDateTime now = ZonedDateTimeUtility.nowCET();
+		ZonedDateTime projectStart = getProjectStart();
+		ZonedDateTime projectEnd = getProjectEnd();
 
-	public boolean isPricegame() {
-		return pricegame;
-	}
+		if (now.isBefore(projectStart)) {
+			log.debug("'{}' before '{}'",
+					ZonedDateTimeUtility.nice(now),
+					ZonedDateTimeUtility.nice(projectStart));
+			return false;
+		}
+		if (now.isAfter(projectEnd)) {
+			log.debug("'{}' after '{}'",
+					ZonedDateTimeUtility.nice(now),
+					ZonedDateTimeUtility.nice(projectEnd));
+			return false;
+		}
 
-	// Redundant for isPricegame for Thymeleaf compatibility 
-	public boolean getPricegame() {
-		return pricegame;
-	}
+		log.debug("Start='{}'   <   Now='{}'   <   End='{}'",
+				projectStart.toString(),
+				now.toString(),
+				projectEnd.toString());
 
-	public void setPricegame(boolean pricegame) {
-		this.pricegame = pricegame;
-	}
-
-	public boolean getAskFreetext() {
-		return askFreetext;
-	}
-
-	public void setAskFreetext(boolean askFreetext) {
-		this.askFreetext = askFreetext;
-	}
-
-	public int getRatingQuestionCount() {
-		return ratingQuestionCount;
-	}
-
-	public void setRatingQuestionCount(int ratingQuestionCount) {
-		this.ratingQuestionCount = ratingQuestionCount;
-	}
-
-	public String getNotificationMail() {
-		return notificationMail;
-	}
-
-	public void setNotificationMail(String notificationMail) {
-		this.notificationMail = notificationMail;
+		return true;
 	}
 }

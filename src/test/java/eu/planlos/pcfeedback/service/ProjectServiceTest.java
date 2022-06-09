@@ -17,9 +17,7 @@ class ProjectServiceTest {
         Project project = new Project();
         project.setActive(false);
 
-        boolean isOnline = service.isOnline(project);
-
-        assertFalse(isOnline);
+        assertTrue(project.isNowOffline());
     }
 
     @Test
@@ -34,9 +32,7 @@ class ProjectServiceTest {
         project.setProjectStart(pastStart);
         project.setProjectEnd(pastEnd);
 
-        boolean isOnline = service.isOnline(project);
-
-        assertFalse(isOnline);
+        assertFalse(project.isNowOnline());
     }
 
     @Test
@@ -51,9 +47,7 @@ class ProjectServiceTest {
         project.setProjectStart(pastStart);
         project.setProjectEnd(pastEnd);
 
-        boolean isOnline = service.isOnline(project);
-
-        assertFalse(isOnline);
+        assertFalse(project.isNowOnline());
     }
 
     @Test
@@ -68,8 +62,6 @@ class ProjectServiceTest {
         project.setProjectStart(pastStart);
         project.setProjectEnd(pastEnd);
 
-        boolean isOnline = service.isOnline(project);
-
-        assertTrue(isOnline);
+        assertTrue(project.isNowOnline());
     }
 }

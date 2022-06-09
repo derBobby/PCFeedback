@@ -7,29 +7,27 @@ import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.pcfeedback.constants.ApplicationProfileHelper;
+import eu.planlos.pcfeedback.constants.ApplicationProfiles;
 import eu.planlos.pcfeedback.mail.MailSender;
 import eu.planlos.pcfeedback.model.db.Project;
 
+@Slf4j
 @Service
 public class MailService implements EnvironmentAware {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(MailService.class);
-
 	private static final String MIME_TYPE = "text/html; charset=utf-8";
 	
 	private MailSender mailSender;
 	private MimeMessage preconfiguredMessage;
 
-	@Autowired
 	public MailService(MailSender mailSender, MimeMessage preconfiguredMessage) {
 		this.mailSender=mailSender;
 		this.preconfiguredMessage=preconfiguredMessage;
@@ -61,7 +59,7 @@ public class MailService implements EnvironmentAware {
 	
 	@PostConstruct
 	@Async
-	private void notifyStart() {
+	void notifyStart() {
 				
 		if(! mailSender.isActive()) {
 			logNotSending();
@@ -87,10 +85,10 @@ public class MailService implements EnvironmentAware {
 
 		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
 
-		if (profiles.contains(ApplicationProfileHelper.DEV_PROFILE)) {
+		if (profiles.contains(ApplicationProfiles.DEV_PROFILE)) {
 			return String.format("DEV - %s", subject);
 		}
-		if (profiles.contains(ApplicationProfileHelper.REV_PROFILE)) {
+		if (profiles.contains(ApplicationProfiles.REV_PROFILE)) {
 			return String.format("REV - %s", subject);
 		}
 
@@ -98,19 +96,19 @@ public class MailService implements EnvironmentAware {
 	}
 
 	private void logMailError(String message) {
-		LOG.error("Notification email could not been sent: {}", message);
+		log.error("Notification email could not been sent: {}", message);
 	}
 	
 	private void logMailOK() {
-		LOG.debug("Notification email has been sent.");
+		log.debug("Notification email has been sent.");
 	}
 
 	private void logNotSending() {
-		LOG.debug("Not sending notification email");
+		log.debug("Not sending notification email");
 	}
 	
 	private void logSending() {
-		LOG.debug("Sending notification email");
+		log.debug("Sending notification email");
 	}
 	
 	@Override

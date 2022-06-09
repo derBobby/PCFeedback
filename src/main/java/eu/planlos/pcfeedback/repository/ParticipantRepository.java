@@ -16,4 +16,7 @@ public interface ParticipantRepository extends CrudRepository<Participant, Long>
 	public boolean existsByProjectAndMobile(Project project, String mobile);
 	@Transactional
 	public void deleteByProject(Project project);
+
+
+	public Participant findAllByProjectAndFirstnameAndName(Project project, String firstname, String name);
 }

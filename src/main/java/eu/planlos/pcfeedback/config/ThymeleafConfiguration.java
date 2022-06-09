@@ -12,6 +12,7 @@ import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 @Configuration
 public class ThymeleafConfiguration {
 
+    //TODO is this still necessary?
     @Bean
     public SpringSecurityDialect springSecurityDialect() {
         return new SpringSecurityDialect();

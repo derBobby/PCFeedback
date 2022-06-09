@@ -12,9 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract interface ICSVExporter {
-		
-	static final Logger LOG = LoggerFactory.getLogger(ICSVExporter.class);
-	
+
+	static final Logger log = LoggerFactory.getLogger(ICSVExporter.class);
+
 	abstract List<Object> createRecord(Object object) throws InvalidObjectException;
 	abstract String[] getHeader();
 	
@@ -42,7 +42,7 @@ public abstract interface ICSVExporter {
 				writer.close();
 				csvPrinter.close();
 			} catch (IOException e) {
-				LOG.error("Error while flushing/closing fileWriter/csvPrinter !!!");
+				log.error("Error while flushing/closing fileWriter/csvPrinter !!!");
 			}
 		}
 	}

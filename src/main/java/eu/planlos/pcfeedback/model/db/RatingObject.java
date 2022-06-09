@@ -1,5 +1,9 @@
 package eu.planlos.pcfeedback.model.db;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -11,10 +15,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(
-		uniqueConstraints={
-			@UniqueConstraint(columnNames = {"idRatingObject"}),
+@Table(name = "RatingObject", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"idRatingObject"})
 })
 public class RatingObject implements Serializable {
 
@@ -27,12 +33,6 @@ public class RatingObject implements Serializable {
 	
 	@Column(name="name", nullable=false)
 	private String name;
-
-	/**
-	 * Required for JPA and reflection stuff.
-	 */
-	public RatingObject() {
-	}
 	
 	public RatingObject(String name) {
 		this.name = name;
@@ -44,22 +44,6 @@ public class RatingObject implements Serializable {
 	@Override
 	public String toString() {
 		return name;
-	}
-	
-	public long getIdRatingObject() {
-		return idRatingObject;
-	}
-
-	public void setIdRatingObject(long idRatingObject) {
-		this.idRatingObject = idRatingObject;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 	
     @Override

@@ -13,12 +13,17 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import eu.planlos.pcfeedback.model.UiTextKey;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(
-		uniqueConstraints={
-				@UniqueConstraint(columnNames = {"project", "uiTextKey"}),
-	})
+@Table(name = "UiText", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"project", "uiTextKey"})
+})
 public class UiText {
 
 	@Id
@@ -38,10 +43,6 @@ public class UiText {
 	@NotNull
 	@JoinColumn(name="project", nullable=false)
 	private Project project;
-
-
-	public UiText() {
-	}
 	
 	public UiText(Project project, UiTextKey uiTextKey, String text) {
 		this.project = project;
@@ -55,45 +56,5 @@ public class UiText {
 		this.uiTextKey = uiTextKey;
 		this.description = uiTextKey.getDescription();
 		this.text = "";
-	}
-	
-	public UiTextKey getUiTextKey() {
-		return this.uiTextKey;
-	}
-
-	public void setUiTextKey(UiTextKey uiTextKey) {
-		this.uiTextKey = uiTextKey;
-	}
-
-	public String getText() {
-		return this.text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public Project getProject() {
-		return project;
-	}
-
-	public void setProject(Project project) {
-		this.project = project;
-	}
-
-	public Long getIdUiText() {
-		return idUiText;
-	}
-
-	public void setIdUiText(Long idUiText) {
-		this.idUiText = idUiText;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 }

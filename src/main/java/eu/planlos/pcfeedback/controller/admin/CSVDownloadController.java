@@ -6,15 +6,15 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.planlos.pcfeedback.constants.ApplicationPathHelper;
+import eu.planlos.pcfeedback.constants.ApplicationPaths;
 import eu.planlos.pcfeedback.model.Gender;
 import eu.planlos.pcfeedback.model.db.Participant;
 import eu.planlos.pcfeedback.model.db.ParticipationResult;
@@ -30,17 +30,15 @@ import eu.planlos.pcfeedback.util.csv.ICSVExporter;
 import eu.planlos.pcfeedback.util.csv.ParticipantCSVExporter;
 import eu.planlos.pcfeedback.util.csv.RatingQuestionCSVExporter;
 
+@Slf4j
 @Controller
 public class CSVDownloadController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CSVDownloadController.class);
-	
-	private ProjectService pService;
-	private ParticipantService participantService;
-	private RatingQuestionService rqService;
-	private ParticipationResultService prService;
+	private final ProjectService pService;
+	private final ParticipantService participantService;
+	private final RatingQuestionService rqService;
+	private final ParticipationResultService prService;
 
-	@Autowired
 	public CSVDownloadController(ProjectService pService, ParticipantService participantService, RatingQuestionService rqService, ParticipationResultService prService) {
 		this.pService = pService;
 		this.participantService = participantService;
@@ -48,7 +46,7 @@ public class CSVDownloadController {
 		this.prService = prService;
 	}
 	
-	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVPARTICIPANTS + "{idProject}")
+	@GetMapping(ApplicationPaths.URL_ADMIN_CSVPARTICIPANTS + "{idProject}")
 	@ResponseBody
 	public void participantsToCSV(HttpServletResponse response, @PathVariable("idProject") Long idProject) throws IOException {
 		
@@ -61,7 +59,7 @@ public class CSVDownloadController {
 	    exporter.writeCSV(pList, response.getWriter());
 	}
 
-	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK + "{idProject}")
+	@GetMapping(ApplicationPaths.URL_ADMIN_CSVFEEDBACK + "{idProject}")
 	@ResponseBody
 	public void allFeedbackToCSV(HttpServletResponse response, @PathVariable("idProject") Long idProject) throws IOException {
 		
@@ -80,7 +78,7 @@ public class CSVDownloadController {
 	    exporter.writeCSV(rqList, response.getWriter());
 	}
 	
-	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK + "{idProject}" + ApplicationPathHelper.URL_DELIMETER + "{gender}")
+	@GetMapping(ApplicationPaths.URL_ADMIN_CSVFEEDBACK + "{idProject}" + ApplicationPaths.URL_DELIMETER + "{gender}")
 	@ResponseBody
 	public void genderSpecificFeedbackToCSV(HttpServletResponse response, @PathVariable("idProject") Long idProject, @PathVariable("gender") Gender gender) throws IOException {
 		
@@ -93,7 +91,7 @@ public class CSVDownloadController {
 		exporter.writeCSV(rqList, response.getWriter());
 	}
 	
-	@GetMapping(ApplicationPathHelper.URL_ADMIN_CSVFEEDBACK_FREETEXT + "{idProject}")
+	@GetMapping(ApplicationPaths.URL_ADMIN_CSVFEEDBACK_FREETEXT + "{idProject}")
 	@ResponseBody
 	public void feedbackFreeTextToCSV(HttpServletResponse response, @PathVariable("idProject") Long idProject) throws IOException {
 			
@@ -101,8 +99,8 @@ public class CSVDownloadController {
 		Project project = pService.findProject(idProject);
 		String projectName = project.getProjectName();
 		
-		if(! project.getAskFreetext()) {
-			LOG.error("Project name='{}' is not configured for free text. -> sending 404", projectName);
+		if(! project.isAskFreetext()) {
+			log.error("Project name='{}' is not configured for free text. -> sending 404", projectName);
 			response.sendError(404, String.format("Projekt %s ist nicht für Freitext konfiguriert", projectName));	
 		}
 		
