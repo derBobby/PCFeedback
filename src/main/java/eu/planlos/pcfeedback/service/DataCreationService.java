@@ -69,6 +69,7 @@ public class DataCreationService {
 //		createSampleProject("Demo-Projekt 5", false);
 //		createSampleProject("Demo-Projekt 6", false);
 		LOG.debug("Initializing database ... DONE");		
+		
 	}
 
 	private void createSampleProject(String projectName, boolean needMail, boolean needMobile, boolean active) throws WrongRatingQuestionCountExistingException, UiTextException, RatingQuestionsNotExistentException, ParticipantAlreadyExistingException, ProjectAlreadyExistingException, DuplicateRatingObjectException {

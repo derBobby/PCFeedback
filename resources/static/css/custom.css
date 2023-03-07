@@ -2,31 +2,11 @@
  * Bootstrap customization
  */
 
-/*
- * Custom style for the template template_old.html
- */
-/*
 body {
-	padding-top: 54px;
+  /* background-color: #000; */
+    max-width: 1200px;
 }
-@media (min-width: 992px) {
 
-	body {
-	 	padding-top: 56px;
-	}
-}
-*/
-
-
-
-/*
- * Background of global page
- */
-/*
-body {
-  background-color: #000;
-}
-*/
 
 
 /*

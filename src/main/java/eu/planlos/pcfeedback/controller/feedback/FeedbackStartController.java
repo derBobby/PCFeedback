@@ -31,7 +31,7 @@ import eu.planlos.pcfeedback.service.ParticipantService;
 import eu.planlos.pcfeedback.service.UiTextService;
 
 @Controller
-@SessionAttributes(names = {"participant", "project"})
+@SessionAttributes(names = {"project"})
 public class FeedbackStartController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FeedbackStartController.class);
@@ -87,7 +87,7 @@ public class FeedbackStartController {
 	public String participantSubmit(Model model,
 			HttpSession session,
 			@ModelAttribute(SessionAttributeHelper.PROJECT) Project project,
-			@ModelAttribute(SessionAttributeHelper.PARTICIPANT) @Valid Participant participant,
+			@Valid Participant participant,
 			BindingResult bindingResult) {
 
 		// validate model input
